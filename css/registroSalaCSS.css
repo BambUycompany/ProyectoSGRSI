@@ -8,11 +8,12 @@ main {
     padding: 2rem 0;
 }
 .seccionRegistroSala{
+
     color: white;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: stretch;
     background-color: #19337c;
     padding: 2rem;
     border-radius: 8px;
@@ -40,3 +41,36 @@ main {
     cursor: pointer;
     float: right;
 }
+
+.seccionVisualizarSolicitudes {
+    padding: 2rem;
+}
+
+.filtroFecha button {
+    background-color: #19337c;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+}
+
+.seccionVisualizarSolicitudes table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+}
+
+.seccionVisualizarSolicitudes th,
+.seccionVisualizarSolicitudes td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.seccionVisualizarSolicitudes thead {
+    background-color: #19337c;
+    color: white;
+}
+

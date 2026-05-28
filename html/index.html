@@ -23,13 +23,48 @@
     </header>
 
     <main>
-        <h2>Sistema de Gestion de recursos y soporte de informatica(Solicitante)</h2>
-        <section class="seccionInteractiva">
-            <a href="registro_sala.html" class="botones">Registro Sala</a>
-            <a href="prestamos.html" class="botones">Solicitar Préstamo</a>
-            <a href="visualizar_solicitudes.html" class="botones">Visualizar Solicitudes</a>
+        <section id="solicitante" class="role-section" style="display:none;">
+            <h2>Vista solicitante</h2>
+            <section class="seccionInteractiva">
+                <a href="registro_sala.html" class="botones">Registro Sala</a>
+                <a href="prestamos.html" class="botones">Solicitar Préstamo</a>
+                <a href="visualizar_solicitudes.html" class="botones">Visualizar Solicitudes</a>
+            </section>
+        </section>
+
+        <section id="administrador" class="role-section" style="display:none;">
+            <h2>Vista administrador</h2>
+            <section class="seccionInteractiva">
+                <a href="registro_sala.html" class="botones">Registro Sala</a>
+                <a href="prestamos.html" class="botones">Solicitar Préstamo</a>
+                <a href="visualizar_solicitudes.html" class="botones">Visualizar Solicitudes</a>
+            </section>
+            <div style="margin-top:1rem;">
+                <button type="button" class="botones">Agregar usuario</button>
+            </div>
+        </section>
+
+        <section id="soporte" class="role-section" style="display:none;">
+            <h2>Vista soporte técnico</h2>
+            <p>Este rol solo ve el apartado para recibir y organizar tickets emitidos.</p>
         </section>
     </main>
+
+        <!-- // Para facilitar la visualziacionde los diferentes roles con chatgpt implementamos esta corta funcion que muestra dependiendo del rol seleccionado diferentes opciones posibles
+    /*Procedo a explicar el funcionamiento linea por linea para que no piense profe que copie el codigo sin entenderlo:
+    URLsearchParams es una funcion de js que nos permite buscar parametros en la url, en este caso el rol que hayamos elegido se queda guardada en ella debido al method"get" del formulario del login
+    guardamos el rol sacado de la url en una variable local llamada "role" tomando el rol mediante el metodo.get de la variable anteriormente creada "params".
+    Luego creamos un array que contiene todos los roles habilitados, donde con otra variable designada(selectedRole) verificamos si el rol escogido en el login se encuentra dentro del array modelo de roles habilitados, si no lo encuentra
+    pone automaticamente el solicitante. Si lo encuentra, lo guarda dentro de la variable selectedRole y se muestra usando(style.display = "block") este habilita la section que visualiza las opciones de dicho rol que por default estan deshabilitadas(display: none).*/-->
+    
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const role = params.get('rol');
+        const validRoles = ['solicitante', 'administrador', 'soporte'];
+        const selectedRole = validRoles.includes(role) ? role : 'solicitante';
+        document.getElementById(selectedRole).style.display = 'block';
+    </script>
 
 </body>
 </html>

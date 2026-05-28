@@ -6,6 +6,7 @@
     <title>Visualizar Solicitudes</title>
     <link rel="stylesheet" href="../css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/registroSalaCSS.css">
 </head>
 <body>
     <header>
@@ -23,19 +24,53 @@
     <main> 
         <section class="seccionVisualizarSolicitudes">
             <h2>Visualizar Solicitudes</h2>
+            <div class="filtrarFecha">
+                <button type="button">Filtrar por fecha de expedición</button>
+            </div>
             <table>
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Nombre del Alumno</th>
-                        <th>Clase</th>
-                        <th>Email</th>
-                        <th>Cédula</th>
-                        <th>Teléfono</th>
+                        <th>Número de PC</th>
+                        <th>Número de laboratorio</th>
+                        <th>Problema</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Aquí se agregarán las filas de solicitudes -->
+                    <tr>
+                        <td>001</td>
+                        <td>Mario López</td>
+                        <td>PC-04</td>
+                        <td>Lab 2</td>
+                        <td>No enciende</td>
+                        <td>En proceso</td>
+                    </tr>
+                    <tr>
+                        <td>002</td>
+                        <td>Ana Pérez</td>
+                        <td>PC-11</td>
+                        <td>Lab 1</td>
+                        <td>Teclado malo</td>
+                        <td>Por hacer</td>
+                    </tr>
+                    <tr>
+                        <td>003</td>
+                        <td>Carlos Gómez</td>
+                        <td>PC-07</td>
+                        <td>Lab 3</td>
+                        <td>Red no conecta</td>
+                        <td>En proceso</td>
+                    </tr>
+                    <tr>
+                        <td>004</td>
+                        <td>María Ruiz</td>
+                        <td>PC-02</td>
+                        <td>Lab 2</td>
+                        <td>Monitor parpadea</td>
+                        <td>Culminado</td>
+                    </tr>
                 </tbody>
             </table>
         </section>
