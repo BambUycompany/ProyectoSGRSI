@@ -1,3 +1,27 @@
+body{
+    background-color: #ccc;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px);
+}
+
+.seccionPrestamos{ 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin: 0 auto;
+    width: 30%;
+    padding: 2rem;
+    background-color: #19337c;
+    border-radius: 0.5rem;
+}
+
 .botones {
     display: inline-flex;
     align-items: center;
@@ -19,22 +43,7 @@
     background-color: #1e3a8a;
 }
 
-nav a.botones:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.15);
-    background-color: #1e3a8a;
-    color: white;
-}
-
 .botones:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(25, 51, 124, 0.25);
-}
-.seccionInteractiva {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    justify-content: flex-start;
-   
-    margin-top: 2rem;
 }
