@@ -1,25 +1,26 @@
-
-
-main {
+.seccionMetrica{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 70px);
-}
-
-.seccionPrestamos{ 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    margin: 0 auto;
-    width: 30%;
-    padding: 2rem;
+    flex-direction: row;
     background-color: #19337c;
-    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    color: white;
+    padding: 3rem;
+    border-radius: 10%;
+    width: 20%;
+    margin: 1rem;
+}
+.seccionMetricas{
+    display: flex;
+    flex-direction: row;
+    color: white;
+    width: 100%;
+    margin: 0.5rem;
 }
 
+.seccionMetrica p{
+    color:yellow;
+    font-size: 6rem;
+}
 .botones {
     display: inline-flex;
     align-items: center;
