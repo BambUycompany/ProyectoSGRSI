@@ -48,3 +48,24 @@ body{
     outline: none;
     box-shadow: 0 0 0 3px rgba(25, 51, 124, 0.25);
 }
+
+.cajaDatos{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 1rem;
+    padding: 0.3rem;
+    
+}
+
+.cajaDatos label{
+    flex: 1;
+    margin-right: 2rem;
+}
+
+.selectRol{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}

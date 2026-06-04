@@ -74,3 +74,66 @@ main {
     color: white;
 }
 
+.formSala {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 0.7rem; 
+    width: 100%;
+}
+.formSala form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+    width: 110%;
+}
+.formSala label {
+    font-weight: bold;
+    color: white;
+    margin-bottom: -32px; 
+    align-self: flex-start;
+}
+
+.formSala input[type="text"],
+.formSala input[type="date"],
+.formSala input[type="time"],
+.formSala select {
+    width: 50%;            
+    align-self: flex-end;   
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.formSala input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+    border: none;
+    background-color: #ffffff;
+    color: #19337c;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.formSala .btnRegistrar {
+    grid-column: span 2;    
+    width: 100%;
+    padding: 0.8rem;          
+    margin-top: 0.7rem;
+    border-radius: 5%;  
+    background-color: transparent; 
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    
+}
+    
+.btnOperacion{
+
+}
+
+
+

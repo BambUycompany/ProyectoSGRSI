@@ -23,49 +23,51 @@
     <main>
         <section class="seccionRegistroSala">
             <h2>Registro de uso Sala informatica</h2>
-            <form action="index.html" method="post">
+            <section class="formSala">
+                <form action="index.html" method="post">
 
-                <label for="tipo">Tipo de sala:</label>
-                <select id="tipo" name="tipo" required onchange="actualizarNumeros()">
-                    <option value="">Seleccionar</option>
-                    <option value="laboratorio">Laboratorio</option>
-                    <option value="taller">Taller</option>
-                </select><br><br>
-                <label for="numero">Número:</label>
+                
+                    <label for="tipo">Tipo de sala:</label>
+                    <select id="tipo" name="tipo" required onchange="actualizarNumeros()">
+                        <option value="">Seleccionar</option>
+                        <option value="laboratorio">Laboratorio</option>
+                        <option value="taller">Taller</option>
+                    </select>
+                    <label for="numero">Número:</label>
                     <select id="numero" name="numero" required>
                         <option value="">Seleccionar</option>
-                    </select><br><br>
-                <label for="fecha">Fecha:</label>
-                <input type="date" id="fecha" name="fecha" required><br><br>
+                    </select>
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" name="fecha" required>
 
-                <label for="horaEntrada">Hora Entrada:</label>
-                <input type="time" id="horaEntrada" name="horaEntrada" required><br><br>
+                    <label for="horaEntrada">Hora Entrada:</label>
+                    <input type="time" id="horaEntrada" name="horaEntrada" required>
 
-                <label for="horaSalida">Hora Salida:</label>
-                <input type="time" id="horaSalida" name="horaSalida" required><br><br>  
+                    <label for="horaSalida">Hora Salida:</label>
+                    <input type="time" id="horaSalida" name="horaSalida" required> 
 
-                <label for="Asignatura">Asignatura:</label>
-                <input type="text" id="Asignatura" name="Asignatura" required><br><br>
+                    <label for="Asignatura">Asignatura:</label>
+                    <input type="text" id="Asignatura" name="Asignatura" required>
 
-                <label for="Docente">Docente:</label>
-                <input type="text" id="Docente" name="Docente" required><br><br>
+                    <label for="Docente">Docente:</label>
+                    <input type="text" id="Docente" name="Docente" required>
         
-                <label for="grupo">Grupo:</label>
-                <input type="text" id="grupo" name="grupo" required><br><br>
+                    <label for="grupo">Grupo:</label>
+                    <input type="text" id="grupo" name="grupo" required>
 
-                <label for="turno">Turno:</label>
-                <select id="turno" name="turno" required>
-                    <option value="">Seleccionar</option>
-                    <option value="mañana">Mañana</option>
-                    <option value="tarde">Tarde</option>
-                    <option value="noche">Noche</option>
-                </select><br><br>
+                    <label for="turno">Turno:</label>
+                    <select id="turno" name="turno" required>
+                        <option value="">Seleccionar</option>
+                        <option value="mañana">Mañana</option>
+                        <option value="tarde">Tarde</option>
+                        <option value="noche">Noche</option>
+                    </select>
 
-                <input type="submit" value="Registrar">
+                    <input type="submit" value="Registrar" class="btnRegistrar">  
             </form>
-
-            <button type="button" class="botonOperacion" id="btnCrearTicket">Reportar falla técnica</button>
+            
         </section>
+        <button type="button" class="btnOperacion" id="btnCrearTicket">Reportar falla técnica</button>
     </main>
     <section class="creacionTicket" id="creacionTicket">
         <button type="button" class="btnCerrarModal" onclick="cerrarModal()">x</button>
