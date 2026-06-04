@@ -78,7 +78,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-left: 0.7rem; 
+    margin-left: 0.01rem; 
     width: 100%;
 }
 .formSala form {
@@ -132,6 +132,18 @@ main {
 }
     
 .btnOperacion{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; 
+    background-color: 
+    white;
+    color: #19337c; 
+    border-radius: 0.3rem;
+    padding: 0.8rem 1.6rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
 
 }
 

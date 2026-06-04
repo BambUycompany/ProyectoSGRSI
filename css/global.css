@@ -56,7 +56,6 @@ nav a {
     font-size: 1rem;
     padding: 0.75rem 1.2rem;
     border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 nav a:hover,
