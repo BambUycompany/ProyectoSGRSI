@@ -2,24 +2,25 @@
     display: flex;
     flex-direction: row;
     background-color: #19337c;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     color: white;
     padding: 3rem;
     border-radius: 10%;
     width: 20%;
-    margin: 1rem;
+    margin-right: 0.5rem;
 }
 .seccionMetricas{
     display: flex;
     flex-direction: row;
     color: white;
     width: 100%;
-    margin: 0.5rem;
+    margin-right: 0.2rem;
 }
 
 .seccionMetrica p{
     color:yellow;
-    font-size: 6rem;
+    font-size: 2.5rem;
+    margin-right: 1rem;
 }
 .botones {
     display: inline-flex;
@@ -28,7 +29,6 @@
     text-decoration: none; 
     background-color: #19337c;
     color: white; 
-    border: 2px solid #19337c;
     border-radius: 1rem;
     padding: 0.8rem 1.6rem;
     cursor: pointer;
@@ -38,11 +38,13 @@
 
 .botones:hover {
     transform: scale(1.02); 
-    
     background-color: #1e3a8a;
 }
 
 .botones:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(25, 51, 124, 0.25);
+}
+
+.logo{
+    width: 3rem;
 }

@@ -106,9 +106,9 @@ main {
 }
 .formSala input[type="submit"] {
     width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 4px;
+    padding: 0.7rem;
+    margin-top: 1rem;
+    border-radius: 5%;
     border: none;
     background-color: #ffffff;
     color: #19337c;
