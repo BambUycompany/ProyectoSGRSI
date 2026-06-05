@@ -21,7 +21,7 @@ body{
     padding: 2rem;
     border-radius: 2%;
     
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   
 }
 .botones {
     display: inline-flex;
@@ -35,7 +35,6 @@ body{
     padding: 0.8rem 1.6rem;
     cursor: pointer;
     font-size: 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .botones:hover {
@@ -46,7 +45,6 @@ body{
 
 .botones:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(25, 51, 124, 0.25);
 }
 
 .cajaDatos{
