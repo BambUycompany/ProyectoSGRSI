@@ -4,7 +4,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 480px;
+    min-height: calc(100vh - 70px);
 }
 
 .seccionPrestamos{ 
@@ -46,6 +46,59 @@ main {
     align-items: center;
     justify-content: space-between;
     margin-left: 0.01rem; 
-    width: 100%;
+    width: 110%;
 
+}
+
+.formPrestamos form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+    width: 110%;
+}
+
+.formPrestamos label {
+    font-weight: bold;
+    color: white;
+    margin-bottom: -32px; 
+    margin-right: 5rem;
+    align-self: flex-start;
+}
+
+.formPrestamos input[type="text"],
+.formPrestamos input[type="date"],
+.formPrestamos input[type="time"],
+.formPrestamos input[type="number"], 
+.formPrestamos select {
+    width: 50%;            
+    align-self: flex-end;   
+    padding: 0.3rem 0.7rem;
+    border-radius: 3%;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    color: initial; 
+}
+
+.formPrestamos input[type="submit"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 1rem;
+    border-radius: 5%;
+    border: none;
+    background-color: #ffffff;
+    color: #19337c;
+    font-weight: bold;
+    cursor: pointer;
+}
+@media (max-width: 768px) {
+    .formPrestamos form {
+        gap: 0.5rem; 
+    }
+
+    .seccionPrestamos{
+        width: 100%;   
+        max-width: 450px;         
+        padding: 3rem;          
+        align-items: stretch;
+    }
 }
