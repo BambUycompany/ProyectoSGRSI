@@ -9,17 +9,27 @@
     <link rel="stylesheet" href="../css/registroSalaCSS.css">
 </head>
 <body>
-    <header>
-        <h1><a href="index.html"><img src="../html/assets\img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo">S.G.R.S.I</a>  </h1>
+    <header class="barraNav">
+        
         <nav>
-            <ul>
-                <li><a href="registro_sala.html">Registro Sala</a></li>
-                <li><a href="prestamos.html">Prestamos</a></li>
-                <li><a href="visualizar_solicitudes.html">Solicitudes</a></li>
-                <li><a href="login.html"><i class="bi bi-person-fill"></i></a></li>
+            <button class="btnMenu" id="btnMenu" type="button">
+                <i class="bi bi-list"></i>
+            </button>
+            <button class="btnCerrarMenu" id="btnCerrarMenu" type="button">
+                <i class="bi bi-list"></i>
+            </button>
+
+             <h1><a href="index.html"><img src="../html/assets\img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
+            <ul class="listaNavegacion">
+               
+                <li><a href="registro_sala.html" class="botones">Registro Sala</a></li>
+                <li><a href="prestamos.html" class="botones">Prestamos</a></li>
+                <li><a href="visualizar_solicitudes.html" class="botones">Solicitudes</a></li>
+                <li><a href="login.html" class="botones"><i class="bi bi-person-fill"></i></a></li>
             </ul>
         </nav>
     </header>
+
     <main>
         <section class="seccionRegistroSala">
             <h2>Registro de uso Sala informatica</h2>
@@ -95,34 +105,9 @@
         </form>
     </section>
     <script src="../js/creacion_ticket.js"></script>
-    <!--Script 100% de nuestra autoria profe, sabe que hay muchas cosas que son similares con java donde ya manejamos un nivel aceptable.-->
-    <script>
-        function actualizarNumeros() {
-         const tipo = document.getElementById("tipo").value;
-            const numeroSelect = document.getElementById("numero");
-            numeroSelect.innerHTML = ''; 
+    <script src="../js/actualizar_numero.js"> </script>
+    <script src="../js/navbar_responsive.js"></script>
 
-            if (tipo === "laboratorio") {
-                for (let i = 1; i <= 6; i++) {
-                    const option = document.createElement("option"); 
-                    option.value = "laboratorio-" + i;
-                option.textContent = "Laboratorio " + i;
-                    numeroSelect.appendChild(option);
-                }
-            } else if (tipo === "taller") {
-                for (let i = 1; i <= 3; i++) {
-                    const option = document.createElement("option");
-                    option.value = "taller-" + i; 
-                    option.textContent = "Taller " + i; 
-                    numeroSelect.appendChild(option);
-                }
-            } else {
-                const option = document.createElement("option");
-                option.textContent = "Seleccionar tipo primero";
-                numeroSelect.appendChild(option); 
-            }
-        }
-    </script>
     
 </body>
 </html>

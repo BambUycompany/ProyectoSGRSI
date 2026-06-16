@@ -80,3 +80,90 @@ main {
     height: 40px;
     margin-right: 0.5rem;
 }
+
+.btnCerrarMenu, .btnMenu{
+    display: none;
+}
+
+@media (max-width: 768px){
+    .logo{
+        display:none;
+    }
+   
+
+    .barraNav h1{
+        display: none;
+    }
+    
+    .barraNav{
+        justify-content: flex-end;
+        margin: auto;
+        align-items: center;
+    }
+    .barraNav .btnMenu{
+        display: flex;
+    }
+
+    .btnMenu, .btnCerrarMenu{
+        align-items: center;
+        background-color: #19337c;
+        color:white;
+        border:none;
+        padding: 0 0.5rem;
+        height: 100%;
+    }
+
+    .btnCerrarMenu i, .btnMenu i{
+        width: 2rem;
+        height: auto;
+        font-size: 2rem ;
+    }
+
+    
+
+    .btnCerrarMenu{
+        display: none;
+    }
+    .btnMenu.oculto{
+        display: none;
+    }
+    .btnCerrarMenu.visible{
+        display: flex;
+    }
+
+    .listaNavegacion{
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+
+        width: 250px;
+        height: 100vh;
+
+        background-color: #19337c;
+
+        flex-direction: column;
+        align-items: center;
+
+        padding-top: 5rem;
+        gap: 1rem;
+
+        z-index: 100;
+    }
+    .btnMenu,
+    .btnCerrarMenu{
+    position: relative;
+    z-index: 200;
+}
+    .listaNavegacion li{
+    width: 100%;
+    text-align: center;
+    }
+
+    .listaNavegacion a{
+    width: 100%;
+    }   
+    .listaNavegacion.visible{
+        display: flex;
+    }
+}
