@@ -26,7 +26,13 @@
                 <li><a href="registro_sala.html" class="botones">Registro Sala</a></li>
                 <li><a href="prestamos.html" class="botones">Prestamos</a></li>
                 <li><a href="visualizar_solicitudes.html" class="botones">Solicitudes</a></li>
-                <li><a href="login.html" class="botones"><i class="bi bi-person-fill"></i></a></li>
+                <li id="navAgregarUsuario"><a href="registro_empleados.html" class="botones">Agregar usuario</a></li>
+                <li class="menuUsuario">
+                    <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
+                    <ul class="opcionesUsuario" id="opcionesUsuario">
+                        <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </header>
@@ -49,8 +55,8 @@
                 <a href="visualizar_solicitudes.html" class="botones">Visualizar Solicitudes</a>
                 <a href="metricas.html" class="botones">Métricas</a>
             </section>
-            <div style="margin-top:1rem;">
-                <button type="button" class="botones">Agregar usuario</button>
+            <div class="seccionAgregarUsuario">
+                <a href="registro_empleados.html" class="botones">Agregar usuario</a>
             </div>
         </section>
 
