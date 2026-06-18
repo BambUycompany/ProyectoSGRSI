@@ -1,0 +1,23 @@
+.seccionListadoTickets {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+.seccionListadoTickets h2 {
+    color: #19337c;
+    text-align: center;
+}
+.tablaTickets {
+    width: 100%;
+    border-collapse: collapse;
+}
+.tablaTickets th, .tablaTickets td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+}
+.tablaTickets th {
+    background-color: #19337c;
+    color: white;
+}

@@ -52,7 +52,7 @@ nav a.botones:hover {
     list-style: none;
     background-color: #fff;
     border-radius: 0.5rem;
-    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.15);
+    
     z-index: 20;
 }
 

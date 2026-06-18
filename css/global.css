@@ -7,7 +7,12 @@
 body {
     padding-top: 90px;
 }
-
+button.botones {
+    border: none;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
 header {
     position: fixed;
     top: 0;
