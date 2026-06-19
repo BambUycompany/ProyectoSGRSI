@@ -1,23 +1,41 @@
 .seccionListadoTickets {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto;
 }
+
 .seccionListadoTickets h2 {
     color: #19337c;
-    text-align: center;
+    margin-bottom: 1rem;
 }
-.tablaTickets {
+
+.seccionListadoTickets table {
     width: 100%;
     border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
 }
-.tablaTickets th, .tablaTickets td {
-    border: 1px solid #ddd;
-    padding: 0.5rem;
-    text-align: left;
-}
-.tablaTickets th {
+
+.seccionListadoTickets thead {
     background-color: #19337c;
     color: white;
+}
+
+.seccionListadoTickets th,
+.seccionListadoTickets td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+}
+
+.seccionListadoTickets tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.seccionListadoTickets tbody tr:nth-child(even) {
+    background-color: #f5f7fb;
+}
+
+.seccionListadoTickets tbody tr:hover {
+    background-color: #e8edf7;
 }

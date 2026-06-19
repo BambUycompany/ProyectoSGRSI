@@ -89,6 +89,51 @@ main {
 .btnCerrarMenu, .btnMenu{
     display: none;
 }
+.menuUsuario {
+    position: relative;
+}
+
+.opcionesUsuario {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.3rem;
+    padding: 0.3rem;
+    list-style: none;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15);
+    z-index: 20;
+}
+
+.opcionesUsuario.visible {
+    display: block;
+}
+
+.opcionesUsuario button {
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    color: #19337c;
+    font-weight: bold;
+    padding: 0.6rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+}
+
+.opcionesUsuario button:hover {
+    background-color: rgba(25, 51, 124, 0.1);
+}
+
+/* El icono de usuario es un <button>: que no muestre el borde nativo */
+button.botones {
+    border: none;
+    font: inherit;
+    cursor: pointer;
+}
 
 @media (max-width: 768px){
     .logo{
