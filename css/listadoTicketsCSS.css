@@ -1,0 +1,41 @@
+.seccionListadoTickets {
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+.seccionListadoTickets h2 {
+    color: #19337c;
+    margin-bottom: 1rem;
+}
+
+.seccionListadoTickets table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
+}
+
+.seccionListadoTickets thead {
+    background-color: #19337c;
+    color: white;
+}
+
+.seccionListadoTickets th,
+.seccionListadoTickets td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+}
+
+.seccionListadoTickets tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.seccionListadoTickets tbody tr:nth-child(even) {
+    background-color: #f5f7fb;
+}
+
+.seccionListadoTickets tbody tr:hover {
+    background-color: #e8edf7;
+}

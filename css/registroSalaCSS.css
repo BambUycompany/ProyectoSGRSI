@@ -31,6 +31,7 @@ main {
     z-index: 1000;
     width: 90%;
     max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .btnCerrarModal{
@@ -39,6 +40,23 @@ main {
     font-size: 1.5rem;
     cursor: pointer;
     float: right;
+}
+
+.creacionTicket input[type="submit"]{
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 0.5rem;
+    border-radius: 0.3rem;
+    border: none;
+    background-color: #19337c;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.creacionTicket input[type="submit"]:hover{
+    background-color: #1e3a8a;
 }
 
 .seccionVisualizarSolicitudes {
