@@ -128,7 +128,6 @@ main {
     background-color: rgba(25, 51, 124, 0.1);
 }
 
-/* El icono de usuario es un <button>: que no muestre el borde nativo */
 button.botones {
     border: none;
     font: inherit;
