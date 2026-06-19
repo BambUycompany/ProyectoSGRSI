@@ -39,3 +39,21 @@
 .seccionListadoTickets tbody tr:hover {
     background-color: #e8edf7;
 }
+.botones {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: #19337c;
+    color: white;
+    border-radius: 1rem;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.botones:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: #1e3a8a;
+}
