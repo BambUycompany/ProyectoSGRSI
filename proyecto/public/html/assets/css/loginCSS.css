@@ -1,0 +1,69 @@
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 30%;
+    margin: 0 auto;
+}
+
+body{
+    background-color: #19337c;
+}
+
+.seccionLogin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 2%;
+    
+   
+}
+.botones {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; 
+    background-color: #19337c;
+    color: white; 
+    border: 2px solid #19337c;
+    border-radius: 1rem;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.botones:hover {
+    transform: scale(1.02); 
+    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: #1e3a8a;
+}
+
+.botones:focus {
+    outline: none;
+}
+
+.cajaDatos{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 1rem;
+    padding: 0.3rem;
+    
+}
+
+.cajaDatos label{
+    flex: 1;
+    margin-right: 2rem;
+}
+
+.selectRol{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}

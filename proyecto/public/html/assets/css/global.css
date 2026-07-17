@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 90px;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #19337c;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    
+}
+
+header h1 {
+    color: white;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+header h1 a:hover {
+    color: #ccc;
+}
+
+nav {
+    display: flex;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.75rem 1.2rem;
+    border-radius: 4px;
+}
+
+nav a:hover,
+nav a:focus,
+nav a:active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+main {
+    padding: 2rem;
+}
+
+.botones{
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.5rem;
+}
+
+.btnCerrarMenu, .btnMenu{
+    display: none;
+}
+
+@media (max-width: 768px){
+    .logo{
+        display:none;
+    }
+   
+
+    .barraNav h1{
+        display: none;
+    }
+    
+    .barraNav{
+        justify-content: flex-end;
+        margin: auto;
+        align-items: center;
+    }
+    .barraNav .btnMenu{
+        display: flex;
+    }
+
+    .btnMenu, .btnCerrarMenu{
+        align-items: center;
+        background-color: #19337c;
+        color:white;
+        border:none;
+        padding: 0 0.5rem;
+        height: 100%;
+    }
+
+    .btnCerrarMenu i, .btnMenu i{
+        width: 2rem;
+        height: auto;
+        font-size: 2rem ;
+    }
+
+    
+
+    .btnCerrarMenu{
+        display: none;
+    }
+    .btnMenu.oculto{
+        display: none;
+    }
+    .btnCerrarMenu.visible{
+        display: flex;
+    }
+
+    .listaNavegacion{
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+
+        width: 250px;
+        height: 100vh;
+
+        background-color: #19337c;
+
+        flex-direction: column;
+        align-items: center;
+
+        padding-top: 5rem;
+        gap: 1rem;
+
+        z-index: 100;
+    }
+    .btnMenu,
+    .btnCerrarMenu{
+    position: relative;
+    z-index: 200;
+}
+    .listaNavegacion li{
+    width: 100%;
+    text-align: center;
+    }
+
+    .listaNavegacion a{
+    width: 100%;
+    }   
+    .listaNavegacion.visible{
+        display: flex;
+    }
+}

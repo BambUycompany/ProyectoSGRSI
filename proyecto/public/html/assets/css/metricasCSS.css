@@ -1,0 +1,50 @@
+.seccionMetrica{
+    display: flex;
+    flex-direction: row;
+    background-color: #19337c;
+    font-size: 0.9rem;
+    color: white;
+    padding: 3rem;
+    border-radius: 10%;
+    width: 20%;
+    margin-right: 0.5rem;
+}
+.seccionMetricas{
+    display: flex;
+    flex-direction: row;
+    color: white;
+    width: 100%;
+    margin-right: 0.2rem;
+}
+
+.seccionMetrica p{
+    color:yellow;
+    font-size: 2.5rem;
+    margin-right: 1rem;
+}
+.botones {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; 
+    background-color: #19337c;
+    color: white; 
+    border-radius: 1rem;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+   
+}
+
+.botones:hover {
+    transform: scale(1.02); 
+    background-color: #1e3a8a;
+}
+
+.botones:focus {
+    outline: none;
+}
+
+.logo{
+    width: 3rem;
+}
