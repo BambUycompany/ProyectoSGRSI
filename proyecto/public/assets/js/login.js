@@ -1,8 +1,8 @@
-const SEMILLA_EMPLEADOS = [
+/*const SEMILLA_EMPLEADOS = [
     { cedula: "1111", nombre: "Ana", apellido: "Admin", email: "admin@cetp.edu", rol: "administrador" },
     { cedula: "2222", nombre: "Sergio", apellido: "Soporte", email: "soporte@cetp.edu", rol: "soporte" },
     { cedula: "3333", nombre: "Sofia", apellido: "Solicitante", email: "solicitante@cetp.edu", rol: "solicitante" }
-];
+];*/
 
 const formLogin = document.getElementById("formLogin");
 const inputCedulaLogin = document.getElementById("cedula");
