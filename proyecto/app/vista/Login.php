@@ -12,7 +12,7 @@
     <main>
         <section class="seccionLogin">
             <h2>Ingreso al sistema</h2>
-            <form action="procesarLogin.php" method="post">
+            <form action="../controlador/procesarLogin.php" method="post">
                
                 <div class="cajaDatos">
                     <label for="cedula">Cedula:</label>

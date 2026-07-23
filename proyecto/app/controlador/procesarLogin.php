@@ -1,5 +1,7 @@
 <?php
-
+if(isset($_GET["error"])){
+    echo "<p style='color:red;'>Cédula o contraseña incorrecta</p>";
+}
 require_once __DIR__ . "/../modelo/Usuario.php";
 require_once __DIR__ . "/../modelo/consultaUsuario.php";
 require_once __DIR__ . "/../modelo/Login.php";
@@ -34,9 +36,10 @@ session_regenerate_id(true);
 
 $_SESSION["cedula"] = $usuario->getCedula();
 $_SESSION["administrador"] = $usuario->esAdministrador();
-$_SESSION["logistica"] = $usuario->esLogistica();
+$_SESSION["soporte"] = $usuario->esSoporte();
+$_SESSION["solicitante"] = $usuario->esSolicitante();
 
-header("Location: administrador.php");
+header("Location: ../vista/administrador.php");
 exit;
 
 ?>

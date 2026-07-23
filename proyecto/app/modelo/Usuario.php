@@ -5,15 +5,16 @@ class Usuario {
     private string $claveHash;
     private bool $activo;
     private bool $administrador;
-    private bool $logistica;
+    private bool $soporte;
+    private bool $solicitante;
 
     public function __construct(string $cedula, string $claveHash, bool $activo, bool $administrador, bool $soporte, bool $solicitante) {
         $this->cedula = $cedula;
         $this->claveHash = $claveHash;
         $this->activo = $activo;
         $this->administrador = $administrador;
-        $this->solicitante = $solicitante;
         $this->soporte = $soporte;
+        $this->solicitante = $solicitante;
     }
 
     public function getCedula(): string {
