@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S.G.R.S.I</title>
-    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../public/assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/complete.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/indexCSS.css">
+    <link rel="stylesheet" href="../public/assets/css/indexCSS.css">
 </head>
 <body>
     <header class="barraNav">
@@ -66,12 +66,7 @@
         </section>
     </main>
 
-        <!-- // Para facilitar la visualziacionde los diferentes roles con chatgpt implementamos esta corta funcion que muestra dependiendo del rol seleccionado diferentes opciones posibles
-    /*Procedo a explicar el funcionamiento linea por linea para que no piense profe que copie el codigo sin entenderlo:
-    URLsearchParams es una funcion de js que nos permite buscar parametros en la url, en este caso el rol que hayamos elegido se queda guardada en ella debido al method"get" del formulario del login
-    guardamos el rol sacado de la url en una variable local llamada "role" tomando el rol mediante el metodo.get de la variable anteriormente creada "params".
-    Luego creamos un array que contiene todos los roles habilitados, donde con otra variable designada(selectedRole) verificamos si el rol escogido en el login se encuentra dentro del array modelo de roles habilitados, si no lo encuentra
-    pone automaticamente el solicitante. Si lo encuentra, lo guarda dentro de la variable selectedRole y se muestra usando(style.display = "block") este habilita la section que visualiza las opciones de dicho rol que por default estan deshabilitadas(display: none).*/-->
+        
     
 
     <script src="../js/seleccion_rol.js"></script>

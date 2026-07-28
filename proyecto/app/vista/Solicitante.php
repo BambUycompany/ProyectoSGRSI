@@ -66,12 +66,6 @@
         </section>
     </main>
 
-        <!-- // Para facilitar la visualziacionde los diferentes roles con chatgpt implementamos esta corta funcion que muestra dependiendo del rol seleccionado diferentes opciones posibles
-    /*Procedo a explicar el funcionamiento linea por linea para que no piense profe que copie el codigo sin entenderlo:
-    URLsearchParams es una funcion de js que nos permite buscar parametros en la url, en este caso el rol que hayamos elegido se queda guardada en ella debido al method"get" del formulario del login
-    guardamos el rol sacado de la url en una variable local llamada "role" tomando el rol mediante el metodo.get de la variable anteriormente creada "params".
-    Luego creamos un array que contiene todos los roles habilitados, donde con otra variable designada(selectedRole) verificamos si el rol escogido en el login se encuentra dentro del array modelo de roles habilitados, si no lo encuentra
-    pone automaticamente el solicitante. Si lo encuentra, lo guarda dentro de la variable selectedRole y se muestra usando(style.display = "block") este habilita la section que visualiza las opciones de dicho rol que por default estan deshabilitadas(display: none).*/-->
     
 
     <script src="../js/seleccion_rol.js"></script>
