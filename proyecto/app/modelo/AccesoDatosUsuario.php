@@ -78,11 +78,10 @@
         return new Usuario(
             $usuario["cedula"],
             $usuario["claveHash"],
-            (bool) $usuario["sesionActiva"],
+            (bool) $usuario["activo"],
             (bool) $usuario["administrador"],
+            (bool) $usuario["soporte"],
             (bool) $usuario["solicitante"]
-            (bool) $usuario["soporte
-            "]
 
         );
     }

@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $cedula = trim($_POST["cedula"] ?? "");
 $password = $_POST["password"] ?? "";
 
-$conectorPDO = new ConectorPDO("localhost:3306", "leandro", "123", "test");
+$conectorPDO = new ConectorPDO("localhost:3306", "root", "", "SGRSI_db");
 $conexion = $conectorPDO->establecerConexion();
 
     $accesoDatosUsuario = new AccesoDatosUsuario($conexion);
