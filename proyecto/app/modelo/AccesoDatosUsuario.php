@@ -28,7 +28,7 @@
     public function buscarUsuario(string $cedula): ?Usuario
     {
         $sql = "
-            SELECT
+           SELECT
                 u.cedula,
                 u.claveHash,
                 u.sesionActiva,
@@ -39,17 +39,25 @@
                 END AS administrador,
 
                 CASE
-                    WHEN l.cedula IS NOT NULL THEN TRUE
+                    WHEN s.cedula IS NOT NULL THEN TRUE
                     ELSE FALSE
-                END AS logistica
+                END AS solicitante,
+
+                CASE
+                    WHEN so.cedula IS NOT NULL THEN TRUE
+                    ELSE FALSE
+                END AS soporte
 
             FROM USUARIO AS u
 
             LEFT JOIN ADMINISTRADOR AS a
                 ON a.cedula = u.cedula
 
-            LEFT JOIN LOGISTICA AS l
-                ON l.cedula = u.cedula
+            LEFT JOIN SOLICITANTE AS s
+                ON s.cedula = u.cedula
+
+            LEFT JOIN SOPORTE AS so
+                ON so.cedula = u.cedula
 
             WHERE u.cedula = :cedula
         ";
@@ -72,7 +80,10 @@
             $usuario["claveHash"],
             (bool) $usuario["sesionActiva"],
             (bool) $usuario["administrador"],
-            (bool) $usuario["logistica"]
+            (bool) $usuario["solicitante"]
+            (bool) $usuario["soporte
+            "]
+
         );
     }
    }

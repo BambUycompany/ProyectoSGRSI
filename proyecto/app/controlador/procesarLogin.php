@@ -3,12 +3,15 @@ if(isset($_GET["error"])){
     echo "<p style='color:red;'>Cédula o contraseña incorrecta</p>";
 }
 require_once __DIR__ . "/../modelo/Usuario.php";
-require_once __DIR__ . "/../modelo/consultaUsuario.php";
+require_once __DIR__ . "/../modelo/ConectorPDO.php";
+require_once __DIR__ . "/../modelo/AccesoDatosUsuario.php";
 require_once __DIR__ . "/../modelo/Login.php";
 
 //Comprueba que el formulario haya sido enviado mediante POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: login.php");
+    $mensaje = "Acceso Denegado: petición inválida.";
+
+    header("Location: login.php?error=" . urlencode($mensaje));
     exit;
 }
 
@@ -16,14 +19,20 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $cedula = trim($_POST["cedula"] ?? "");
 $password = $_POST["password"] ?? "";
 
-$consultaUsuario = new ConsultaUsuario();
-$login = new Login($consultaUsuario);
+$conectorPDO = new ConectorPDO("localhost:3306", "leandro", "123", "test");
+$conexion = $conectorPDO->establecerConexion();
 
-$usuario = $login->autenticar($cedula, $password);
+    $accesoDatosUsuario = new AccesoDatosUsuario($conexion);
+    $login = new Login($accesoDatosUsuario);
+    $usuario = $login->autenticar($cedula, $password);
+
+$conectorPDO->desconectar();
+
 
 //Si las credenciales no coinciden, muestra el error y detiene el proceso
 if ($usuario === null) {
-    exit("La cédula o la contraseña son incorrectas.");
+    header("Location: login.php?error=" . urlencode("La cédula o la contraseña son incorrectas."));
+    exit;
 }
 
 //Solo se encuentra implementado el rol administrador
@@ -39,9 +48,18 @@ $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
-header("Location: ../vista/administrador.php"); 
-header("Location: ../vista/soporte.php"); 
-header("Location: ../vista/solicitante.php"); 
+if($_SESSION["administrador"]&&$_SESSION["soporte"]&&$_SESSION["solicitante"]){ 
+    header("Location: ../vista/administrador.php");
+    exit;
+} elseif($_SESSION["soporte"]) {
+    header("Location: ../vista/soporte.php");
+    exit;
+} elseif($_SESSION["solicitante"]) {
+    header("Location: ../vista/solicitante.php");
+    exit;
+
+}
+
 exit;
 
 ?>
