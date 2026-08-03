@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Sala informatica</title>
-    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/registroSalaCSS.css">
+    <link rel="stylesheet" href="assets/css/registroSalaCSS.css">
 </head>
 <body>
     <header class="barraNav">
@@ -19,13 +19,13 @@
                 <i class="bi bi-list"></i>
             </button>
 
-             <h1><a href="index.html"><img src="../assets\img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
+             <h1><a href="index.php"><img src="../assets\img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
             <ul class="listaNavegacion">
                
-                <li><a href="registro_sala.html" class="botones">Registro Sala</a></li>
-                <li><a href="prestamos.html" class="botones">Prestamos</a></li>
-                <li><a href="visualizar_solicitudes.html" class="botones">Solicitudes</a></li>
-                <li><a href="login.html" class="botones"><i class="bi bi-person-fill"></i></a></li>
+                <li><a href="registro_sala.php" class="botones">Registro Sala</a></li>
+                <li><a href="prestamos.php" class="botones">Prestamos</a></li>
+                <li><a href="visualizar_solicitudes.php" class="botones">Solicitudes</a></li>
+                <li><a href="login.php" class="botones"><i class="bi bi-person-fill"></i></a></li>
             </ul>
         </nav>
     </header>
@@ -34,7 +34,7 @@
         <section class="seccionRegistroSala">
             <h2>Registro de uso Sala informatica</h2>
             <section class="formSala">
-                <form action="index.html" method="post">
+                <form action="index.php" method="post">
 
                 
                     <label for="tipo">Tipo de sala:</label>
@@ -81,7 +81,7 @@
     </main>
     <section class="creacionTicket" id="creacionTicket">
         <button type="button" class="btnCerrarModal" onclick="cerrarModal()">x</button>
-        <form action="registro_sala.html" method="post">
+        <form action="registro_sala.php" method="post">
             <h2>Creacion de ticket </h2>
             <label for="numeroPc">Número de PC:</label><br>
             <input type="text" id="numeroPc" name="numeroPc" required><br><br>
