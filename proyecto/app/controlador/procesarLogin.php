@@ -27,9 +27,9 @@ if ($usuario === null) {
 }
 
 //Solo se encuentra implementado el rol administrador
-if (!$usuario->esAdministrador()) {
-    exit("El usuario no tiene acceso al panel de administración.");
-}
+//if (!$usuario->esAdministrador()) {
+    //exit("El usuario no tiene acceso al panel de administración.");
+//}
 
 session_start();
 session_regenerate_id(true);
@@ -39,7 +39,9 @@ $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
-header("Location: ../vista/administrador.php");
+header("Location: ../vista/administrador.php"); 
+header("Location: ../vista/soporte.php"); 
+header("Location: ../vista/solicitante.php"); 
 exit;
 
 ?>
