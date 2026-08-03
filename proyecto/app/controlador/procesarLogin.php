@@ -39,7 +39,7 @@ $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
-header("Location: ../vista/administrador.php");
+header("Location: ../../public/administrador.php");
 exit;
 
 ?>
