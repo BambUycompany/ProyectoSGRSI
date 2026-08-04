@@ -28,17 +28,29 @@ $conexion = $conectorPDO->establecerConexion();
 
 $conectorPDO->desconectar();
 
+//restricciones de acceso
 
-//Si las credenciales no coinciden, muestra el error y detiene el proceso
-if ($usuario === null) {
-    header("Location: login.php?error=" . urlencode("La cédula o la contraseña son incorrectas."));
+if($usuario === null){
+    header("Location: login.php?error=credenciales");
     exit;
 }
 
-//Solo se encuentra implementado el rol administrador
-//if (!$usuario->esAdministrador()) {
-    //exit("El usuario no tiene acceso al panel de administración.");
-//}
+if(!$usuario ->estaActivo()){
+    header("Location: login.php?error=usuarioInactivo");
+    exit;
+}
+
+$roles = [];
+if ($usuario->esAdministrador()) $roles[] = "administrador";
+if ($usuario->esSoporte())       $roles[] = "soporte";
+if ($usuario->esSolicitante())   $roles[] = "solicitante";
+
+
+if (count($roles) === 0) {
+    header("Location: ../vista/login.php?error=sinRol");
+    exit;
+}
+
 
 session_start();
 session_regenerate_id(true);
@@ -48,7 +60,13 @@ $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
-if($_SESSION["administrador"]&&$_SESSION["soporte"]&&$_SESSION["solicitante"]){ 
+if(count($roles) > 1){
+    header("Location: ../vista/seleccionDashboard.php");
+    exit;
+
+}
+
+if($_SESSION["administrador"]){ 
     header("Location: ../vista/administrador.php");
     exit;
 } elseif($_SESSION["soporte"]) {

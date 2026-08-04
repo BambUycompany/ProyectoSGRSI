@@ -10,6 +10,18 @@
 </head>
 <body>
     <main>
+        >?php
+            $mensajesError = [
+                "credenciales" => "la cedula o la contraseña son incorrectas. Intente nuevamente.",
+                    "usuarioInactivo" => "El usuario se encuentra inactivo. Contactese con el administrador del sistema."
+                    "sinRol" => "Este usuario no tiene ningun rol asignado. Contactese con el administrador del sistea.",
+                "sinSesion" => "No esta habilitado para ingresar a esta pagina. Inicie sesion nuevamente.",
+                "noAutorizado" => "No esta autorizado para ingresar a esta pagina. Inicie sesion nuevamente."
+            ];
+            if (isset($_GET['error']) && isset($mensajesError[$_GET['error']])) {
+                echo "<div class='mensajeError'>$mensaje</div>";
+            }
+        ?>
         <section class="seccionLogin">
             <h2>Ingreso al sistema</h2>
             <form action="../controlador/procesarLogin.php" method="POST">
