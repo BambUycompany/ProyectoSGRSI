@@ -57,7 +57,7 @@
                     <input type="time" id="horaSalida" name="horaSalida" required> 
 
                     <label for="Asignatura">Asignatura:</label>
-                    <input type="text" id="Asignatura" name="Asignatura" maxlength="50" required>
+                    <input type="text" id="Asignatura" name="Asignatura" maxlength="35" required>
 
                     <label for="Docente">Docente:</label>
                     <input type="text" id="Docente" name="Docente" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
@@ -84,7 +84,7 @@
         <form action="registro_sala.php" method="post">
             <h2>Creacion de ticket </h2>
             <label for="numeroPc">Número de PC:</label><br>
-            <input type="text" id="numeroPc" name="numeroPc" pattern="PC-[0-9]{2}" maxlength="6" required><br><br>
+            <input type="text" id="numeroPc" name="numeroPc" pattern="PC-[0-9]{2}" maxlength="5" required><br><br>
             <label for="nombreEstudiante">Nombre completo del estudiante:</label><br>
             <input type="text" id="nombreEstudiante" name="nombreEstudiante" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required><br><br>
             <label for="fallo" >Tipo de falla:</label><br>

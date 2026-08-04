@@ -40,11 +40,11 @@
                     <input type="text" id="NombreAlumno" name="NombreAlumno" required>
 
                     <label for="Clase">Clase:</label>
-                    <input type="text" id="Clase" name="Clase" required>
+                    <input type="text" id="Clase" name="Clase" maxlength="10" required>
 
                     <label for="Email">Email:</label>
                     <input type="email" id="Email" name="Email" maxlength="100" required>
-ti
+
                     <label for="Cedula">Cédula:</label>
                     <input type="text" id="Cedula" name="Cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
