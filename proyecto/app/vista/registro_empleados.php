@@ -55,16 +55,15 @@
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarEmpleado">x</button>
             <form action="registro_empleados.php" method="post" id="formAgregarEmpleado">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
 
                 <label for="apellido">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" required>
-
+                <input type="text" id="apellido" name="apellido" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
                 <label for="cedula">Cedula:</label>
-                <input type="text" id="cedula" name="cedula" required>
+                <input type="text" id="cedula" name="cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" maxlength="100" required>w
                 
                 <label for="rol">Rol:</label>
                 <select id="rol" name="rol" required>

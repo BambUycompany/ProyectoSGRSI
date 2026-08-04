@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="../../public/assets/css/loginCSS.css">
-<link rel="stylesheet" href="../../public/assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/loginCSS.css">
+<link rel="stylesheet" href="assets/css/global.css">
     <title>Ingreso</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
                
                 <div class="cajaDatos">
                     <label for="cedula">Cedula:</label>
-                    <input type="text" id="cedula" name="cedula" required><br><br>
+                    <input type="text" id="cedula" name="cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required><br><br>
                 </div>
                 <div class="cajaDatos">
                     <label for="password">Contraseña:</label>
