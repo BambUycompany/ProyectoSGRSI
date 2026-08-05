@@ -1,7 +1,5 @@
 <?php
-if(isset($_GET["error"])){
-    echo "<p style='color:red;'>Cédula o contraseña incorrecta</p>";
-}
+
 require_once __DIR__ . "/../modelo/Usuario.php";
 require_once __DIR__ . "/../modelo/ConectorPDO.php";
 require_once __DIR__ . "/../modelo/AccesoDatosUsuario.php";
@@ -10,8 +8,7 @@ require_once __DIR__ . "/../modelo/Login.php";
 //Comprueba que el formulario haya sido enviado mediante POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     $mensaje = "Acceso Denegado: petición inválida.";
-
-    header("Location: login.php?error=" . urlencode($mensaje));
+    header("Location: ../../public/login.php?error=sinSesion");
     exit;
 }
 
@@ -31,12 +28,12 @@ $conectorPDO->desconectar();
 //restricciones de acceso
 
 if($usuario === null){
-    header("Location: login.php?error=credenciales");
+    header("Location: ../../public/login.php?error=sinSesion");
     exit;
 }
 
 if(!$usuario ->estaActivo()){
-    header("Location: login.php?error=usuarioInactivo");
+    header("Location: ../../public/login.php?error=usuarioInactivo");
     exit;
 }
 
@@ -47,7 +44,7 @@ if ($usuario->esSolicitante())   $roles[] = "solicitante";
 
 
 if (count($roles) === 0) {
-    header("Location: ../vista/login.php?error=sinRol");
+    header("Location: ../../public/login.php?error=sinRol");
     exit;
 }
 
@@ -63,17 +60,16 @@ $_SESSION["solicitante"] = $usuario->esSolicitante();
 if(count($roles) > 1){
     header("Location: ../vista/seleccionDashboard.php");
     exit;
-
 }
 
 if($_SESSION["administrador"]){ 
-    header("Location: ../vista/administrador.php");
+    header("Location: ../../public/administrador.php");
     exit;
 } elseif($_SESSION["soporte"]) {
-    header("Location: ../vista/soporte.php");
+    header("Location: ../../public/soporte.php");
     exit;
 } elseif($_SESSION["solicitante"]) {
-    header("Location: ../vista/solicitante.php");
+    header("Location: ../../public/solicitante.php");
     exit;
 
 }

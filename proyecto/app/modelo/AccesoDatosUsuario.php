@@ -31,7 +31,7 @@
            SELECT
                 u.cedula,
                 u.claveHash,
-                u.sesionActiva,
+                u.activo,
 
                 CASE
                     WHEN a.cedula IS NOT NULL THEN TRUE
