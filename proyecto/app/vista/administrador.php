@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S.G.R.S.I</title>
-    <link rel="stylesheet" href="../../public/assets/css/global.css">
+    <link rel="stylesheet" href="../public/assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/complete.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../../public/assets/css/indexCSS.css">
+    <link rel="stylesheet" href="../public/assets/css/indexCSS.css">
 </head>
 <body>
     <header class="barraNav">
@@ -20,7 +20,7 @@
                 <i class="bi bi-list"></i>
             </button>
 
-             <h1><a href="index.html"><img src="../../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
+             <h1><a href="../public/administrador.php"><img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
             <ul class="listaNavegacion">
                
                 <li><a href="registro_sala.php" class="botones">Registro Sala</a></li>
@@ -32,8 +32,6 @@
     </header>
 
     <main>
-
-
         <section id="administrador">    
             <h2>Vista administrador</h2>
             <section class="seccionInteractiva">
@@ -48,12 +46,10 @@
         </section>
 
         
-        
     </main>
 
 
 
-    <script src="../public/assets/js/seleccion_rol.js"></script>
     <script src="../public/assets/js/navbar_responsive.js"></script>
 
 </body>

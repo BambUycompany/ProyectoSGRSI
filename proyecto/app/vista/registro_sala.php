@@ -34,7 +34,7 @@
         <section class="seccionRegistroSala">
             <h2>Registro de uso Sala informatica</h2>
             <section class="formSala">
-                <form action="index.php" method="post">
+                <form action="index.php" method="POST">
 
                 
                     <label for="tipo">Tipo de sala:</label>

@@ -28,7 +28,7 @@ $conectorPDO->desconectar();
 //restricciones de acceso
 
 if($usuario === null){
-    header("Location: ../../public/login.php?error=sinSesion");
+    header("Location: ../../public/login.php?error=credenciales");
     exit;
 }
 
@@ -56,19 +56,24 @@ $_SESSION["cedula"] = $usuario->getCedula();
 $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
+$_SESSION["roles"] = $roles; 
 
-if(count($roles) > 1){
-    header("Location: ../vista/seleccionDashboard.php");
+if (count($roles) === 1) {
+    $_SESSION["rolActivo"] = $roles[0];
+} 
+
+if (count($roles) > 1) {
+    header("Location: ../../public/seleccion_dashboard.php"); 
     exit;
 }
 
-if($_SESSION["administrador"]){ 
+if($_SESSION["rolActivo"] === "administrador") { 
     header("Location: ../../public/administrador.php");
     exit;
-} elseif($_SESSION["soporte"]) {
+} elseif($_SESSION["rolActivo"] === "soporte") {
     header("Location: ../../public/soporte.php");
     exit;
-} elseif($_SESSION["solicitante"]) {
+} elseif($_SESSION["rolActivo"] === "solicitante") {
     header("Location: ../../public/solicitante.php");
     exit;
 

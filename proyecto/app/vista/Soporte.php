@@ -20,7 +20,7 @@
                 <i class="bi bi-list"></i>
             </button>
 
-             <h1><a href="index.php"><img src="../html/assets\img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
+             <h1><a href="../public/soporte.php"><img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
             <ul class="listaNavegacion">
                
                 <li><a href="registro_sala.php" class="botones">Registro Sala</a></li>
@@ -46,7 +46,6 @@
     </main>
     
 
-    <script src="../js/seleccion_rol.js"></script>
     <script src="../js/navbar_responsive.js"></script>
 
 </body>
