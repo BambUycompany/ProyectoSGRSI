@@ -16,7 +16,7 @@
     $mensajesError = [
         "credenciales"     => "La cédula o la contraseña son incorrectas. Intente nuevamente.",
         "usuarioInactivo"  => "El usuario se encuentra inactivo. Contactese con el administrador del sistema.",
-        "sinRol"           => "Este usuario no tiene ningún rol asignado. Contactese con el administrador del sistea.",
+        "sinRol"           => "Este usuario no tiene ningún rol asignado. Contactese con el administrador del sistema.",
         "sinSesion"        => "No esta habilitado para ingresar a esta pagina. Inicie sesion nuevamente.",
         "noAutorizado"     => "No esta autorizado para ingresar a esta pagina. Inicie sesion nuevamente."
     ];

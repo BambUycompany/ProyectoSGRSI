@@ -14,7 +14,7 @@ $opciones = [
 </head>
 <body>
     <main>
-         <h1>¿Con qué rol querés ingresar?</h1>
+         <h1>Seleccione el rol requerido.</h1>
             <div class="seleccion_dashboard">
             <?php foreach ($_SESSION["roles"] as $rol): ?>
                 <a href="../app/controlador/fijarRol.php?rol=<?= urlencode($rol) ?>" class="btn-rol">

@@ -20,16 +20,12 @@
                 <i class="bi bi-list"></i>
             </button>
 
-             <h1><a href="index.php"><img src="../assets\img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
+             <<h1><a href="administrador.php"><img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
             <ul class="listaNavegacion">
                
-                <li data-roles="solicitante administrador soporte"><a href="registro_sala.php" class="botones">Registro Sala</a></li>
-                <li data-roles="solicitante administrador"><a href="prestamos.php" class="botones">Prestamos</a></li>
-                <li data-roles="solicitante administrador"><a href="visualizar_solicitudes.php" class="botones">Solicitudes</a></li>
-                <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
-                <li id="navAgregarUsuario" data-roles="administrador">
-                    <a href="registro_empleados.php" class="botones">Agregar usuario</a>
-                </li>
+                <li data-roles="solicitante administrador soporte"><a href="registro_sala.html" class="botones">Registro Sala</a></li>
+                <li data-roles="administrador soporte"><a href="metricas.html" class="botones">Métricas</a></li>
+                <li data-roles="soporte"><a href="listado_tickets.html" class="botones">Tickets</a></li>
                 <li class="menuUsuario">
                     <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                     <ul class="opcionesUsuario" id="opcionesUsuario">

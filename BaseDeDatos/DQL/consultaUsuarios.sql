@@ -6,30 +6,40 @@
 */
 
 /* Selecciona un usuario en base a su cédula, en PHP, donde aparece '00000000' debe ser remplazado por :cedula*/
-SELECT
+
+ SELECT
     u.cedula,
     u.claveHash,
-    u.sesionActiva,
+    u.activo,
 
     CASE
-        WHEN a.cedula IS NOT NULL THEN 1
-        ELSE 0
+    WHEN a.cedula IS NOT NULL THEN TRUE
+    ELSE FALSE
     END AS administrador,
 
     CASE
-        WHEN l.cedula IS NOT NULL THEN 1
-        ELSE 0
-    END AS logistica
+    WHEN s.cedula IS NOT NULL THEN TRUE
+    ELSE FALSE
+    END AS solicitante,
 
-FROM USUARIO AS u
+    CASE
+    WHEN so.cedula IS NOT NULL THEN TRUE
+    ELSE FALSE
+    END AS soporte
+
+    FROM USUARIO AS u
 
     LEFT JOIN ADMINISTRADOR AS a
     ON a.cedula = u.cedula
 
-    LEFT JOIN LOGISTICA AS l
-    ON l.cedula = u.cedula
+    LEFT JOIN SOLICITANTE AS s
+    ON s.cedula = u.cedula
 
-WHERE u.cedula = '00000000';
+    LEFT JOIN SOPORTE AS so
+    ON so.cedula = u.cedula
+
+    WHERE u.cedula = :cedula
+
 
 /* Selecciona y muestra todos los datos de los usuarios en el sistema, dirigido al administrador */
 SELECT
