@@ -29,6 +29,9 @@
                 <li class="menuUsuario">
                     <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                     <ul class="opcionesUsuario" id="opcionesUsuario">
+                        <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
+                            <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
+                        <?php endif; ?>
                         <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                     </ul>
                 </li>
