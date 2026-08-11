@@ -84,8 +84,8 @@
         </dialog>
     </main>
 
-    <script src="../assets/js/navbar_responsive.js"></script>
-    <script src="../assets/js/registro_empleados.js"></script>
+    <script src="../public/assets/js/navbar_responsive.js"></script>
+    <script src="../public/assets/js/registro_empleados.js"></script>
 
     
 </body>

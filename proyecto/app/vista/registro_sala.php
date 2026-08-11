@@ -109,9 +109,9 @@
             <input type="submit" value="Enviar Reporte">
         </form>
     </section>
-    <script src="../assets/js/creacion_ticket.js"></script>
-    <script src="../assets/js/actualizar_numero.js"> </script>
-    <script src="../assets/js/navbar_responsive.js"></script>
+    <script src="../public/assets/js/creacion_ticket.js"></script>
+    <script src="../public/assets/js/actualizar_numero.js"> </script>
+    <script src="../public/assets/js/navbar_responsive.js"></script>
 
     
 </body>

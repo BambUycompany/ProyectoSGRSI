@@ -49,9 +49,11 @@
                 <a href="metricas.php" class="botones">Métricas</a>
             </section>
             <div style="margin-top:1rem;">
-                <button type="button" class="botones">Agregar usuario</button>
+                <a href="registro_empleados.php" class="botones">Agregar empleado</a>
+                <a href="registro_aulas.php" class="botones">Agregar aula</a>
             </div>
         </section>
+
 
         
     </main>

@@ -18,17 +18,22 @@ INSERT INTO SOPORTE (cedula) VALUES ('3333');
 
 //Usuario con dos rols
 INSERT INTO usuario (cedula, nombre, apellido, claveHash, activo)
-VALUES ('87654321', 'Elvis', 'Fernandez', 'PEGAR_AQUI_EL_HASH_1', TRUE);
+VALUES ('87654321', 'Elvis', 'Fernandez', '$2y$10$p6h7E6FLv.gx6N9GG6lh3ecLVdNnLH5gGZxj0AmlibC6lTiHXMAaS', TRUE);
 INSERT INTO soporte (cedula) VALUES ('87654321');
 INSERT INTO solicitante (cedula) VALUES ('87654321');
 
 //Usuario con tres roles
 INSERT INTO usuario (cedula, nombre, apellido, claveHash, activo)
-VALUES ('87654322', 'Maria', 'Gonzalez', 'PEGAR_AQUI_EL_HASH_2', TRUE);
+VALUES ('87654322', 'Maria', 'Gonzalez', '$2y$10$UQ.xRRJNSAY8LszoLR9tiunHONTWLuu.RbLK2LjiQY93esXYtrAiK', TRUE);
 
 INSERT INTO administrador (cedula) VALUES ('87654322');
 INSERT INTO soporte (cedula) VALUES ('87654322');
 INSERT INTO solicitante (cedula) VALUES ('87654322');
+
+//Usuario sin rol
+INSERT INTO usuario (cedula, nombre, apellido, claveHash, activo)
+VALUES ('87654323', 'Juan', 'Perez', '$2y$10$V5k2en.l4goJX8kkUzGQVeJR.qK3/W0bFT.56xK02OffnZ01rLcw6', TRUE);
+
 /*
     "clave1234567" ~ "$2y$12$ki0bVkt8cnZuR4v6aJvhhelaeQc1/4fec2txUcuG1Ybr4cvnhg2sS"
 

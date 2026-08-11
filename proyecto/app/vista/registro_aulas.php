@@ -116,9 +116,9 @@
             
         </section>
     </main>
-    <script src="../assets/js/navbar_responsive.js"></script>
-    <script src="../assets/js/registro_aulas.js"></script>
-    <script src="../assets/js/seleccion_rol.js"></script>
+    <script src="../public/assets/js/navbar_responsive.js"></script>
+    <script src="../public/assets/js/registro_aulas.js"></script>
+    
 
 </body>
 </html>
