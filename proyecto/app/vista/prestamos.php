@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.G.R.S.I</title>
+    <title>Prestamos</title>
     <link rel="stylesheet" href="assets/css/global.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/complete.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="assets/css/indexCSS.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/prestamosCSS.css">
 </head>
 <body>
     <header class="barraNav">
@@ -29,9 +28,6 @@
                 <li class="menuUsuario">
                     <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                     <ul class="opcionesUsuario" id="opcionesUsuario">
-                        <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
-                            <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
-                        <?php endif; ?>
                         <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                     </ul>
                 </li>
@@ -39,22 +35,34 @@
         </nav>
     </header>
 
-    <main>
 
-        <section id="soporte">
-            <h2>Vista soporte técnico</h2>
-            <section class="seccionInteractiva">
-                <a href="registro_sala.php" class="botones">Registro Sala</a>
-                <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
-                <a href="visualizar_solicitudes.php" class="botones">Visualizar Solicitudes</a>
-                <a href="metricas.php" class="botones">Métricas</a>
+    <main> 
+        <section class="seccionPrestamos">
+            <h2>Gestion de Prestamos</h2>
+            <section class="formPrestamos"> 
+                <form action="index.php" method="post">
+                    <label for="NombreAlumno">Nombre del Alumno:</label>
+                    <input type="text" id="NombreAlumno" name="NombreAlumno" required>
+
+                    <label for="Clase">Clase:</label>
+                    <input type="text" id="Clase" name="Clase" maxlength="10" required>
+
+                    <label for="Email">Email:</label>
+                    <input type="email" id="Email" name="Email" maxlength="100" required>
+
+                    <label for="Cedula">Cédula:</label>
+                    <input type="text" id="Cedula" name="Cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
+
+                    <label for="Telefono">Teléfono:</label>
+                    <input type="text" id="Telefono" name="Telefono" pattern="[0-9]{8,9}" maxlength="9" inputmode="numeric" required>
+
+                    <input type="submit" class="botones" value="Solicitar">
+                </form>
             </section>
-            
         </section>
     </main>
-    
+    <script src="../assets/js/navbar_responsive.js"></script>
 
-    <script src="../js/navbar_responsive.js"></script>
 
 </body>
 </html>

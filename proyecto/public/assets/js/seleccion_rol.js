@@ -41,7 +41,7 @@ function cerrarSesion() {
  
 function iniciar() {
     if (rolActual === null || !ROLES_VALIDOS.includes(rolActual)) {
-        window.location.href = "login.html";
+        window.location.href = "login.php";
         return;
     }
  
@@ -49,10 +49,7 @@ function iniciar() {
     aplicarPermisosNavbar();
     configurarMenuUsuario();
  
-    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
-    if (btnCerrarSesion !== null) {
-        btnCerrarSesion.addEventListener("click", cerrarSesion);
-    }
+
 }
  
 iniciar();

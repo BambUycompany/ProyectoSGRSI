@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.G.R.S.I</title>
+    <title>Listado de Tickets</title>
     <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/complete.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="assets/css/indexCSS.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/listadoTicketsCSS.css">
 </head>
 <body>
     <header class="barraNav">
-        
         <nav>
             <button class="btnMenu" id="btnMenu" type="button">
                 <i class="bi bi-list"></i>
@@ -29,9 +28,6 @@
                 <li class="menuUsuario">
                     <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                     <ul class="opcionesUsuario" id="opcionesUsuario">
-                        <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
-                            <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
-                        <?php endif; ?>
                         <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                     </ul>
                 </li>
@@ -40,21 +36,32 @@
     </header>
 
     <main>
-
-        <section id="soporte">
-            <h2>Vista soporte técnico</h2>
-            <section class="seccionInteractiva">
-                <a href="registro_sala.php" class="botones">Registro Sala</a>
-                <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
-                <a href="visualizar_solicitudes.php" class="botones">Visualizar Solicitudes</a>
-                <a href="metricas.php" class="botones">Métricas</a>
-            </section>
-            
+        <section class="seccionListadoTickets">
+            <h2>Listado de Tickets</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NumPC</th>
+                        <th>Nombre estudiante</th>
+                        <th>falla</th>
+                        <th>Descripcion</th>
+                    </tr>
+                </thead>
+                <tbody class="listadoTablaTickets">
+                     <tr>
+                        <td>001</td>
+                        <td>PC-01</td>
+                        <td>John Doe</td>
+                        <td>El equipo no responde al botón de encendido.</td>
+                        <td>Descripcion del ticket</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
     </main>
-    
-
-    <script src="../js/navbar_responsive.js"></script>
-
+    <script src="../assets/js/listado_tickets.js"></script>
+<script src="../assets/js/seleccion_rol.js"></script>
+<script src="../assets/js/navbarResponsive.js"></script>
 </body>
 </html>
