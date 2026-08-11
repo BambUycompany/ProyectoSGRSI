@@ -33,7 +33,7 @@
                
                 <div class="cajaDatos">
                     <label for="cedula">Cedula:</label>
-                    <input type="text" id="cedula" name="cedula" required><br><br>
+                    <input type="text" id="cedula" name="cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required><br><br>
                 </div>
                 <div class="cajaDatos">
                     <label for="password">Contraseña:</label>

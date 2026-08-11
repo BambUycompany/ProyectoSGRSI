@@ -45,16 +45,16 @@
                     <input type="text" id="NombreAlumno" name="NombreAlumno" required>
 
                     <label for="Clase">Clase:</label>
-                    <input type="text" id="Clase" name="Clase" required>
+                    <input type="text" id="Clase" name="Clase" maxlength="10" required>
 
                     <label for="Email">Email:</label>
-                    <input type="text" id="Email" name="Email" required>
+                    <input type="email" id="Email" name="Email" maxlength="100" required>
 
                     <label for="Cedula">Cédula:</label>
-                    <input type="text" id="Cedula" name="Cedula" required>
+                    <input type="text" id="Cedula" name="Cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
                     <label for="Telefono">Teléfono:</label>
-                    <input type="text" id="Telefono" name="Telefono" required>
+                    <input type="text" id="Telefono" name="Telefono" pattern="[0-9]{8,9}" maxlength="9" inputmode="numeric" required>
 
                     <input type="submit" class="botones" value="Solicitar">
                 </form>
