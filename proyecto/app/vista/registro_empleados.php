@@ -68,7 +68,7 @@
                 <input type="text" id="cedula" name="cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" maxlength="100" required>w
+                <input type="email" id="email" name="email" maxlength="100" required>
                 
                 <label for="rol">Rol:</label>
                 <select id="rol" name="rol" required>
