@@ -30,7 +30,7 @@ function cerrarAltaEmpleado() {
     dialogAgregarEmpleado.close();
 }
 
-function abrirModificarEmpleado(cedula) {
+/*function abrirModificarEmpleado(cedula) {
     const empleados = cargarEmpleadosGuardadosLocal();
     const empleadoAModificar = empleados.find(emp => emp.cedula === cedula);
     if (empleadoAModificar === undefined) {
@@ -189,12 +189,12 @@ function gestionarEmpleado(evento) {
 
     cerrarAltaEmpleado();
     actualizarTabla();
-}
+}*/
 
-formAgregarEmpleado.addEventListener("submit", gestionarEmpleado);
+//formAgregarEmpleado.addEventListener("submit", gestionarEmpleado);
 btnAltaEmpleado.addEventListener("click", abrirAltaEmpleado);
 btnCerrarAgregarEmpleado.addEventListener("click", cerrarAltaEmpleado);
 
 dialogAgregarEmpleado.addEventListener("cancel", limpiarEstadoGestionarEmpleado);
 
-actualizarTabla();
+

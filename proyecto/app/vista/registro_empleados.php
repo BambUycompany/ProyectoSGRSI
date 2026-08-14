@@ -58,7 +58,7 @@
 
         <dialog class="dialogAgregarEmpleado" >
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarEmpleado">x</button>
-            <form action="registro_empleados.php" method="post" id="formAgregarEmpleado">
+            <form action="../app/controlador/procesarAltaUsuario.php" method="post" id="formAgregarEmpleado">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
 
@@ -67,15 +67,18 @@
                 <label for="cedula">Cedula:</label>
                 <input type="text" id="cedula" name="cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" maxlength="100" required>
-                
+                <label for="claveHash">Contraseña:</label>
+                <input type="password" id="claveHash" name="claveHash" maxlength="100" required>
+
+                <label for="confirmarClave">Confirmar Contraseña:</label>
+                <input type="password" id="confirmarClave" name="confirmarClave" maxlength="100" required>
+
                 <label for="rol">Rol:</label>
                 <select id="rol" name="rol" required>
                     <option value="">Seleccione un rol</option>
                     <option value="administrador">Administrador</option>
                     <option value="solicitante">Solicitante</option>
-                    <option value="soporte">Soporte Técnico</option>
+                    <option value="soporte">Soporte Tecnico</option>
                 </select>
 
                 <button type="submit">Agregar</button>

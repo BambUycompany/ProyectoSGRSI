@@ -21,7 +21,7 @@
         "noAutorizado"     => "No esta autorizado para ingresar a esta pagina. Inicie sesion nuevamente."
     ];
 
-    if (isset($_GET['error']) && isset($mensajesError[$_GET['error']])) {
+    if (isset($_GET['error']) && isset($mensajesError[$_GET['error']])) { 
         $mensaje = $mensajesError[$_GET['error']];
         echo "<div class='mensajeError'>$mensaje</div>";
     }
