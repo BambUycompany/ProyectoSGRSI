@@ -46,7 +46,7 @@ class AltaDatosUsuarios {
             
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
-        }
+            }
         return false;
         }
 

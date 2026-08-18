@@ -35,6 +35,7 @@
     </header>
     
     <main>
+        
         <section class="seccionTablaEmpleados">
             <div class="cabeceraTabla">
                 <h2>Registro de Empleados</h2>
@@ -43,20 +44,85 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Cedula</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Email</th>
                         <th>Rol</th>
-                        <th id="colOperaciones">Operaciones</th>
+                        <th id="colOperacionesAcciones">Acciones</th>
                     </tr>
+                <?php //Mejorar cosméticamente en un futuro este tipo de captura información con GET ?>
+            <?= htmlspecialchars($_GET["error"] ?? "") ?>
+            <?= htmlspecialchars($_GET["resultado"] ?? "") ?>
                 </thead>
-                <tbody id="listadoTablaEmpleados">
+
+                <tbody id="cuerpoTablaEmpleados">
+                    <?php foreach ($usuarios as $usuario) { ?>
+
+                        <?php
+                            $roles = "";
+
+                            if ($usuario["administrador"] == 1) {
+                                $roles = "Administrador";
+                            }
+
+                            if ($usuario["soporte"] == 1) {
+                                if ($roles != "") {
+                                    $roles = $roles . ", ";
+                                }
+
+                                $roles = $roles . "Soporte";
+                            }
+                            if ($usuario["solicitante"] == 1) {
+                                if ($roles != "") {
+                                    $roles = $roles . ", ";
+                                }
+
+                                $roles = $roles . "Solicitante";
+                            }
+
+                            if ($roles == "") {
+                                $roles = "Sin rol";
+                            }
+                            /* <?php echo $variable ?> equivalente a <?= $variable ?>*/ 
+                        ?>
+
+                        <tr>
+                            <td><?= htmlspecialchars($usuario["cedula"]) ?></td>
+                            <td><?= htmlspecialchars($usuario["nombre"]) ?></td>
+                            <td><?= htmlspecialchars($usuario["apellido"]) ?></td>
+                            <td><?= htmlspecialchars($roles) ?></td>
+
+                            <td>
+                                <div class="cajaOperaciones">
+                                    <button type="button" class="btnOperacion btnModificar">Modificar</button>
+                                    
+                                    <form action="procesarBajaUsuario.php" method="post" class="formularioEliminarEmpleado">
+                                        <input type="hidden" name="cedula" value="<?=htmlspecialchars($usuario["cedula"])?>">
+                                        <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
+                                        <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
+                                    </form>
+                                    
+                                    
+                                </div>
+                            </td>
+                        </tr>
+
+                    <?php } ?>
                 </tbody>
+          
+       
             </table>
         </section>
 
         <dialog class="dialogAgregarEmpleado" >
+            <?php
+            if (isset($_GET["error"])) {
+                echo "<p style='color:red;'>" . htmlspecialchars($_GET["error"]) . "</p>";
+            }
+            if (isset($_GET["resultado"])) {
+                echo "<p style='color:green;'>" . htmlspecialchars($_GET["resultado"]) . "</p>";
+            }
+            ?>
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarEmpleado">x</button>
             <form action="../app/controlador/procesarAltaUsuario.php" method="post" id="formAgregarEmpleado">
                 <label for="nombre">Nombre:</label>

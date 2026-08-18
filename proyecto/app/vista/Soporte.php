@@ -44,7 +44,7 @@
         <section id="soporte">
             <h2>Vista soporte técnico</h2>
             <section class="seccionInteractiva">
-                <a href="registro_sala.php" class="botones">Registro Sala</a>
+                <a href="registro_planilla.php" class="botones">Registro Planilla</a>
                 <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
                 <a href="visualizar_solicitudes.php" class="botones">Visualizar Solicitudes</a>
                 <a href="metricas.php" class="botones">Métricas</a>
