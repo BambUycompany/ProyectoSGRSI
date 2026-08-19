@@ -1,200 +1,91 @@
-const btnAltaEmpleado = document.getElementById("btnAgregarEmpleado");
+const btnAgregarEmpleado = document.getElementById("btnAgregarEmpleado");
 const btnCerrarAgregarEmpleado = document.getElementById("btnCerrarAgregarEmpleado");
 const dialogAgregarEmpleado = document.querySelector(".dialogAgregarEmpleado");
 
-const listadoEmpleados = document.getElementById("listadoTablaEmpleados");
+const cuerpoTablaEmpleados = document.getElementById("cuerpoTablaEmpleados");
 const formAgregarEmpleado = document.getElementById("formAgregarEmpleado");
-const colOperaciones = document.getElementById("colOperaciones");
 
-const inputCedula = document.getElementById("cedula");
-const inputNombre = document.getElementById("nombre");
-const inputApellido = document.getElementById("apellido");
-const inputRol = document.getElementById("rol");
-const inputEmail = document.getElementById("email");
+const entradaCedula = document.getElementById("cedula");
+const entradaNombre = document.getElementById("nombre");
+const entradaApellido = document.getElementById("apellido");
+const entradaClave = document.getElementById("claveHash");
+const entradaConfirmarClave = document.getElementById("confirmarClave");
+const entradaRol = document.getElementById("rol");
 
-let empleadoEnEdicion = false;
+let modoFormulario = "";
+
+const formulariosEliminar = document.querySelectorAll(".formularioEliminarEmpleado");
+
+function rolATextoValue(textoRol) {
+    const mapa = {
+        "Administrador": "administrador",
+        "Soporte": "soporte",
+        "Solicitante": "solicitante"
+    };
+    return mapa[textoRol] ?? "";
+}
 
 function limpiarEstadoGestionarEmpleado() {
-    empleadoEnEdicion = false;
-    inputCedula.readOnly = false;
+    modoFormulario = "";
+    entradaCedula.readOnly = false;
     formAgregarEmpleado.reset();
 }
 
 function abrirAltaEmpleado() {
     limpiarEstadoGestionarEmpleado();
+    modoFormulario = "alta";
     dialogAgregarEmpleado.showModal();
 }
 
-function cerrarAltaEmpleado() {
+function cerrarGestionarEmpleado() {
     limpiarEstadoGestionarEmpleado();
     dialogAgregarEmpleado.close();
 }
 
-/*function abrirModificarEmpleado(cedula) {
-    const empleados = cargarEmpleadosGuardadosLocal();
-    const empleadoAModificar = empleados.find(emp => emp.cedula === cedula);
-    if (empleadoAModificar === undefined) {
-        alert("Empleado no encontrado");
-        return;
+function confirmarEliminacion(eventoEliminar) {
+    const confirmacion = confirm("¿Está seguro de eliminar usuario?");
+    if (!confirmacion) {
+        eventoEliminar.preventDefault();
     }
+}
 
-    empleadoEnEdicion = true;
-    inputCedula.value = empleadoAModificar.cedula;
-    inputNombre.value = empleadoAModificar.nombre;
-    inputApellido.value = empleadoAModificar.apellido;
-    inputEmail.value = empleadoAModificar.email;
-    inputRol.value = empleadoAModificar.rol;
-    inputCedula.readOnly = true;
+function abrirModificarEmpleado(eventoModificar) {
+    const btnModificar = eventoModificar.target.closest(".btnModificar");
+    if (btnModificar === null) return;
+
+    const fila = btnModificar.closest("tr");
+
+    entradaCedula.readOnly = true;
+    formAgregarEmpleado.reset();
+    modoFormulario = "modificar";
+
+    entradaCedula.value = fila.cells[0].textContent.trim();
+    entradaNombre.value = fila.cells[1].textContent.trim();
+    entradaApellido.value = fila.cells[2].textContent.trim();
+
+    // Como el texto de la celda puede ser "Administrador, Soporte" (varios roles), tomamos solo el primero para precargar
+    const primerRol = fila.cells[3].textContent.trim().split(",")[0].trim();
+    entradaRol.value = rolATextoValue(primerRol);
+
     dialogAgregarEmpleado.showModal();
 }
 
-function cargarEmpleadosGuardadosLocal() {
-    const empleadosGuardados = localStorage.getItem("empleados");
-    if (empleadosGuardados === null) return [];
-    return JSON.parse(empleadosGuardados);
-}
-
-function actualizarEmpleadosGuardadosLocal(empleados) {
-    localStorage.setItem("empleados", JSON.stringify(empleados));
-}
-
-function obtenerDatosFormularioEmpleado() {
-    const cedula = inputCedula.value.trim();
-    const nombre = inputNombre.value.trim();
-    const apellido = inputApellido.value.trim();
-    const email = inputEmail.value.trim();
-    const rol = inputRol.value.trim();
-
-    const empleado = {
-        cedula: cedula,
-        nombre: nombre,
-        apellido: apellido,
-        email: email,
-        rol: rol
-    };
-
-    return empleado;
-}
-
-function agregarFilaEmpleado(empleado) {
-    const fila = document.createElement("tr");
-    const campoCedula = document.createElement("td");
-    campoCedula.textContent = empleado.cedula;
-
-    const campoNombre = document.createElement("td");
-    campoNombre.textContent = empleado.nombre;
-
-    const campoApellido = document.createElement("td");
-    campoApellido.textContent = empleado.apellido;
-
-    const campoEmail = document.createElement("td");
-    campoEmail.textContent = empleado.email;
-
-    const campoRol = document.createElement("td");
-    campoRol.textContent = empleado.rol;
-
-    const campoOperaciones = document.createElement("td");
-
-    const cajaOperaciones = document.createElement("div");
-    cajaOperaciones.classList.add("cajaOperaciones");
-
-    const btnModificar = document.createElement("button");
-    btnModificar.type = "button";
-    btnModificar.textContent = "Modificar";
-    btnModificar.classList.add("btnOperacion");
-    btnModificar.addEventListener("click", () => {
-        abrirModificarEmpleado(empleado.cedula);
-    });
-
-    const btnEliminar = document.createElement("button");
-    btnEliminar.type = "button";
-    btnEliminar.textContent = "Eliminar";
-    btnEliminar.classList.add("btnOperacion");
-    btnEliminar.addEventListener("click", () => {
-        if (confirm("¿Está seguro que desea eliminar este empleado?")) {
-            eliminarEmpleadoLocal(empleado.cedula);
-        }
-    });
-
-    cajaOperaciones.appendChild(btnModificar);
-    cajaOperaciones.appendChild(btnEliminar);
-    campoOperaciones.appendChild(cajaOperaciones);
-
-    fila.appendChild(campoCedula);
-    fila.appendChild(campoNombre);
-    fila.appendChild(campoApellido);
-    fila.appendChild(campoEmail);
-    fila.appendChild(campoRol);
-    fila.appendChild(campoOperaciones);
-
-    listadoEmpleados.appendChild(fila);
-}
-
-function actualizarTabla() {
-    listadoEmpleados.replaceChildren();
-    const empleados = cargarEmpleadosGuardadosLocal();
-
-    colOperaciones.style.display = empleados.length > 0 ? "" : "none";
-
-    for (const empleado of empleados) {
-        agregarFilaEmpleado(empleado);
-    }
-}
-
-function guardarEmpleadoLocal(empleadoEnFormulario) {
-    const empleados = cargarEmpleadosGuardadosLocal();
-
-    const yaExiste = empleados.some(emp => emp.cedula === empleadoEnFormulario.cedula);
-    if (yaExiste) {
-        alert("Ya existe un empleado con esa cédula");
-        return;
-    }
-
-    empleados.push(empleadoEnFormulario);
-    actualizarEmpleadosGuardadosLocal(empleados);
-}
-
-function modificarEmpleadoLocal(empleadoEnFormulario) {
-    const empleados = cargarEmpleadosGuardadosLocal();
-    const empleadoAModificar = empleados.find(emp => emp.cedula === empleadoEnFormulario.cedula);
-
-    if (empleadoAModificar === undefined) {
-        return;
-    }
-
-    empleadoAModificar.nombre = empleadoEnFormulario.nombre;
-    empleadoAModificar.apellido = empleadoEnFormulario.apellido;
-    empleadoAModificar.email = empleadoEnFormulario.email;
-    empleadoAModificar.rol = empleadoEnFormulario.rol;
-
-    actualizarEmpleadosGuardadosLocal(empleados);
-}
-
-function eliminarEmpleadoLocal(cedula) {
-    const empleados = cargarEmpleadosGuardadosLocal();
-    const empleadosRestantes = empleados.filter(emp => emp.cedula !== cedula);
-    actualizarEmpleadosGuardadosLocal(empleadosRestantes);
-    actualizarTabla();
-}
-
 function gestionarEmpleado(evento) {
-    evento.preventDefault();
-    const empleadoEnFormulario = obtenerDatosFormularioEmpleado();
-
-    if (empleadoEnEdicion) {
-        modificarEmpleadoLocal(empleadoEnFormulario);
+    if (modoFormulario === "alta") {
+        formAgregarEmpleado.action = "../app/controlador/procesarAltaUsuario.php";
+    } else if (modoFormulario === "modificar") {
+        formAgregarEmpleado.action = "../app/controlador/procesarModificarUsuario.php";
     } else {
-        guardarEmpleadoLocal(empleadoEnFormulario);
+        evento.preventDefault();
     }
+}
 
-    cerrarAltaEmpleado();
-    actualizarTabla();
-}*/
-
-//formAgregarEmpleado.addEventListener("submit", gestionarEmpleado);
-btnAltaEmpleado.addEventListener("click", abrirAltaEmpleado);
-btnCerrarAgregarEmpleado.addEventListener("click", cerrarAltaEmpleado);
-
+btnAgregarEmpleado.addEventListener("click", abrirAltaEmpleado);
+cuerpoTablaEmpleados.addEventListener("click", abrirModificarEmpleado);
+btnCerrarAgregarEmpleado.addEventListener("click", cerrarGestionarEmpleado);
 dialogAgregarEmpleado.addEventListener("cancel", limpiarEstadoGestionarEmpleado);
+formAgregarEmpleado.addEventListener("submit", gestionarEmpleado);
 
-
+for (const formulario of formulariosEliminar) {
+    formulario.addEventListener("submit", confirmarEliminacion);
+}

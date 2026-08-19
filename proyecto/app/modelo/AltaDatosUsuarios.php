@@ -52,8 +52,27 @@ class AltaDatosUsuarios {
 
        
     }
+    public function listarUsuarios() {
+    $sql = "SELECT 
+                u.cedula, 
+                u.nombre, 
+                u.apellido,
+                CASE WHEN a.cedula IS NOT NULL THEN 1 ELSE 0 END AS administrador,
+                CASE WHEN so.cedula IS NOT NULL THEN 1 ELSE 0 END AS soporte,
+                CASE WHEN s.cedula IS NOT NULL THEN 1 ELSE 0 END AS solicitante
+            FROM usuario u
+            LEFT JOIN administrador a ON a.cedula = u.cedula
+            LEFT JOIN soporte so ON so.cedula = u.cedula
+            LEFT JOIN solicitante s ON s.cedula = u.cedula
+            ORDER BY u.nombre";
 
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute();
+
+    return $consulta->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+}
    
 ?>

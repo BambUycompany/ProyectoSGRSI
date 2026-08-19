@@ -115,14 +115,7 @@
         </section>
 
         <dialog class="dialogAgregarEmpleado" >
-            <?php
-            if (isset($_GET["error"])) {
-                echo "<p style='color:red;'>" . htmlspecialchars($_GET["error"]) . "</p>";
-            }
-            if (isset($_GET["resultado"])) {
-                echo "<p style='color:green;'>" . htmlspecialchars($_GET["resultado"]) . "</p>";
-            }
-            ?>
+           
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarEmpleado">x</button>
             <form action="../app/controlador/procesarAltaUsuario.php" method="post" id="formAgregarEmpleado">
                 <label for="nombre">Nombre:</label>
