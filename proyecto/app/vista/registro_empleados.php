@@ -96,10 +96,10 @@
                                 <div class="cajaOperaciones">
                                     <button type="button" class="btnOperacion btnModificar">Modificar</button>
                                     
-                                    <form action="procesarBajaUsuario.php" method="post" class="formularioEliminarEmpleado">
+                                    <form action="../app/controlador/procesarBajaUsuario.php" method="post" class="formularioEliminarEmpleado">
                                         <input type="hidden" name="cedula" value="<?=htmlspecialchars($usuario["cedula"])?>">
                                         <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
-                                        <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
+                                        <button type="submit" class="btnOperacion" id="btnEliminar">Eliminar</button>
                                     </form>
                                     
                                     

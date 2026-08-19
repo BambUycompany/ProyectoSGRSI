@@ -15,28 +15,28 @@ $rol = trim($_POST["rol"] ?? "");
 //Sección que valida los datos recibidos del formulario
 if ($cedula === "" || $nombre === "" || $apellido === "" || $clave === "" || $confirmarClave === "" || $rol === "" ) {
     $mensaje = "No se pudo modificar el empleado: existen campos vacíos.";
-    header("Location: registrar_empleado.php?error=" . urlencode($mensaje));
+    header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
     exit;
 }
 
 if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)) {
     $mensaje = "No se pudo modificar el empleado: cédula incorrecta.";
 
-    header("Location: registrar_empleado.php?error=" . urlencode($mensaje));
+    header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
     exit;
 }
 
 if (strlen($clave) < 12) {
     $mensaje = "La contraseña debe contener al menos 12 caracteres.";
 
-    header("Location: registrar_empleado.php?error=" . urlencode($mensaje));
+    header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
     exit;
 }
 
 if ($clave !== $confirmarClave) {
     $mensaje = "Las contraseñas ingresadas no coinciden.";
 
-    header("Location: registrar_empleado.php?error=" . urlencode($mensaje));
+    header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
     exit;
 }
 
@@ -49,7 +49,7 @@ $conexion = $conectorPDO->establecerConexion();
 
     if ($conexion === null) {
         $mensaje = "No se pudo establecer conexión con la base de datos.";
-        header("Location: registrar_empleado.php?error=" . urlencode($mensaje));
+        header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
         exit;
     }
 
@@ -60,11 +60,11 @@ $conectorPDO->desconectar();
 
 if (!$resultado) {
     $mensaje = "No se pudo modificar el usuario";
-    header("Location: administrador.php?error=" . urlencode($mensaje));
+    header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
     exit;
 }
 
 $mensaje = "Usuario modificado exitosamente";
-header("Location: administrador.php?resultado=" . urlencode($mensaje));
+header("Location: ../../public/registro_empleados.php?resultado=" . urlencode($mensaje));
 exit;
 ?>
