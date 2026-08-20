@@ -27,12 +27,12 @@ main h1 {
     font-weight: bold;
     border-radius: 0.5rem;
     box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15);
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease;
 }
  
 .btn-rol:hover {
     background-color: #274a9e;
-    transform: translateY(-2px);
+    transform: scale(1.02)
 }
 
 
@@ -69,51 +69,10 @@ main h1 {
     align-items: center;
 }
 
-.btn-rol {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0.9rem 1.5rem;
-    background-color: #19337c;
-    color: #ffffff;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(25, 51, 124, 0.2);
-    transition: all 0.2s ease-in-out;
-}
 
-.btn-rol:hover {
-    background-color: #274a9e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(25, 51, 124, 0.3);
-}
 
 .btn-rol:active {
-    transform: translateY(0);
+    transform:  scale(1.02);
 }
  
 
-.btn-rol {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0.85rem 1.5rem;
-    background-color: #19337c; /* Azul institucional */
-    color: #ffffff;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    font-size: 1.05rem;
-    font-weight: 500;
-    text-decoration: none;
-    border-radius: 25px; /* Bordes redondeados estilo cápsula como el Login */
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-rol:hover {
-    background-color: #12255e;
-    transform: translateY(-1px);
-}

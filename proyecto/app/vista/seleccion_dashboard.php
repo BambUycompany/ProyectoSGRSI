@@ -12,8 +12,8 @@ $opciones = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selección de rol</title>
-    <link rel="stylesheet" href="/proyecto/public/assets/css/dashboardCSS.css">
-    <link rel="stylesheet" href="/proyecto/public/assets/css/global.css">
+    <link rel="stylesheet" href="../public/assets/css/dashboardCSS.css">
+    <link rel="stylesheet" href="../public/assets/css/global.css">
 </head>
 <body>
     <main>
@@ -24,7 +24,7 @@ $opciones = [
             if (isset($_SESSION["roles"]) && is_array($_SESSION["roles"])): 
                 foreach ($_SESSION["roles"] as $rol): 
                     if (isset($opciones[$rol])): ?>
-                        <a href="../controlador/fijarRol.php?rol=<?= urlencode($rol) ?>" class="btn-rol">
+                        <a href="../app/controlador/fijarRol.php?rol=<?= urlencode($rol) ?>" class="btn-rol">
                             <?= htmlspecialchars($opciones[$rol]["label"]) ?>
                         </a>
                     <?php 

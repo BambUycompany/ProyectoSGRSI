@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizar Solicitudes</title>
+    <title>Listado de Registros</title>
     <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/registroSalaCSS.css">
@@ -36,56 +36,39 @@
     </header>
 
     <main> 
-        <section class="seccionVisualizarRegistros">
+        <section class="seccionListadoRegistros">
             <h2>Visualizar Registros de uso de laboratorios</h2>
             <div class="filtrarFecha">
                 <button type="button">Filtrar por fecha de expedición</button>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tipo de aula</th>
-                        <th>Número de PC</th>
-                        <th>Número de laboratorio</th>
-                        <th>Problema</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>001</td>
-                        <td>Mario López</td>
-                        <td>PC-04</td>
-                        <td>Lab 2</td>
-                        <td>No enciende</td>
-                        <td>En proceso</td>
-                    </tr>
-                    <tr>
-                        <td>002</td>
-                        <td>Ana Pérez</td>
-                        <td>PC-11</td>
-                        <td>Lab 1</td>
-                        <td>Teclado malo</td>
-                        <td>Por hacer</td>
-                    </tr>
-                    <tr>
-                        <td>003</td>
-                        <td>Carlos Gómez</td>
-                        <td>PC-07</td>
-                        <td>Lab 3</td>
-                        <td>Red no conecta</td>
-                        <td>En proceso</td>
-                    </tr>
-                    <tr>
-                        <td>004</td>
-                        <td>María Ruiz</td>
-                        <td>PC-02</td>
-                        <td>Lab 2</td>
-                        <td>Monitor parpadea</td>
-                        <td>Culminado</td>
-                    </tr>
-                </tbody>
-            </table>
+             <?php if (count($planillas) === 0): ?>
+                <p>Todavía no hay registros cargados.</p>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora de expedicion</th>
+                            <th>Aula</th>
+                            <th>Solicitante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <?php foreach ($planillas as $planilla): ?>
+                                <tr>
+                                    <td>
+                                        <a href="detalle_registros.php?id=<?= (int) $planilla['ID'] ?>"> 
+                                            <?= htmlspecialchars($planilla['Fecha']) ?>
+                                        </a>
+                                    </td>
+                                    <td><?= htmlspecialchars(ucfirst($planilla['AulaTipo'])) ?> <?= htmlspecialchars($planilla['AulaNumero']) ?></td>
+                                    <td><?= htmlspecialchars($planilla['HoraEntrada']) ?></td>
+                                    <td><?= htmlspecialchars($planilla['NombreSolicitante'] ?? '-') ?></td>
+                                </tr>
+                            <?php endforeach; ?>    
+                    </tbody>
+                </table>
+            <?php endif; ?>
         </section>
     </main>
     <script src="../js/navbar_responsive.js"></script>

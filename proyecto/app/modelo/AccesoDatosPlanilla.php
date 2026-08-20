@@ -45,45 +45,102 @@ class AccesoDatosPlanilla {
         ]);
     }
 
-public function listarAulas(){
-        $sql = "SELECT AULA.Numero, 'laboratorio' AS Tipo 
-                FROM AULA JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID
-                UNION ALL
-                SELECT AULA.Numero, 'taller' AS Tipo 
-                FROM AULA JOIN TALLER ON AULA.ID = TALLER.AulaID";
+    public function listarAulas(){
+            $sql = "SELECT AULA.Numero, 'laboratorio' AS Tipo 
+                    FROM AULA JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID
+                    UNION ALL
+                    SELECT AULA.Numero, 'taller' AS Tipo 
+                    FROM AULA JOIN TALLER ON AULA.ID = TALLER.AulaID";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->execute();
+
+            return $consulta->fetchAll(PDO::FETCH_ASSOC);//devuelve la consulta en un array asociativo es decir cada espacio esta vinculado a una clave
+        }
+
+    public function buscarAulaId(string $tipo, string $numero) {
+        if ($tipo === "laboratorio") {
+            $sql = "SELECT AULA.ID 
+                    FROM AULA 
+                    JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID 
+                    WHERE AULA.Numero = :numero";
+        } elseif ($tipo === "taller") {
+            $sql = "SELECT AULA.ID 
+                    FROM AULA 
+                    JOIN TALLER ON AULA.ID = TALLER.AulaID 
+                    WHERE AULA.Numero = :numero";
+        } else {
+            return null;
+        }
 
         $consulta = $this->conexion->prepare($sql);
-        $consulta->execute();
+        $consulta->execute(["numero" => $numero]);
 
-        return $consulta->fetchAll(PDO::FETCH_ASSOC);//devuelve la consulta en un array asociativo es decir cada espacio esta vinculado a una clave
+        $fila = $consulta->fetch(PDO::FETCH_ASSOC); 
+
+        if ($fila === false) {
+            return null; 
+        }
+
+        return $fila["ID"];
     }
 
-public function buscarAulaId(string $tipo, string $numero) {
-    if ($tipo === "laboratorio") {
-        $sql = "SELECT AULA.ID 
-                FROM AULA 
-                JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID 
-                WHERE AULA.Numero = :numero";
-    } elseif ($tipo === "taller") {
-        $sql = "SELECT AULA.ID 
-                FROM AULA 
-                JOIN TALLER ON AULA.ID = TALLER.AulaID 
-                WHERE AULA.Numero = :numero";
-    } else {
-        return null;
-    }
+    public function listarRegistroPlanilla() {
+         $sql = "SELECT 
+                PLANILLA.ID,
+                PLANILLA.Fecha,
+                PLANILLA.HoraEntrada,
+                PLANILLA.HoraSalida,
+                PLANILLA.NombreSolicitante,
+                AULA.Numero AS AulaNumero,
+                CASE 
+                    WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
+                    ELSE 'taller'
+                END AS AulaTipo
+            FROM PLANILLA
+            JOIN AULA ON AULA.ID = PLANILLA.AulaID
+            ORDER BY PLANILLA.Fecha DESC, PLANILLA.HoraEntrada DESC";
 
     $consulta = $this->conexion->prepare($sql);
-    $consulta->execute(["numero" => $numero]);
+    $consulta->execute();
 
-    $fila = $consulta->fetch(PDO::FETCH_ASSOC); 
-
-    if ($fila === false) {
-        return null; 
+    return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    return $fila["ID"];
-}
-}
+    public function obtenerPlanillaPorId(int $planillaId) {
+    $sql = "SELECT 
+                PLANILLA.ID,
+                PLANILLA.Fecha,
+                PLANILLA.HoraEntrada,
+                PLANILLA.HoraSalida,
+                PLANILLA.NombreSolicitante,
+                AULA.Numero AS AulaNumero,
+                CASE 
+                    WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
+                    ELSE 'taller'
+                END AS AulaTipo
+            FROM PLANILLA
+            JOIN AULA ON AULA.ID = PLANILLA.AulaID
+            WHERE PLANILLA.ID = :planillaId";
 
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute(["planillaId" => $planillaId]);
+
+    $fila = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    return $fila === false ? null : $fila;
+    }
+    public function listarTicketsDePlanilla(int $planillaId) {
+    $sql = "SELECT ID, Descripcion, Fallo, Estado, PcNumPc, FechaCreacion
+            FROM TICKET
+            WHERE PlanillaId = :planillaId
+            ORDER BY FechaCreacion";
+
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute(["planillaId" => $planillaId]);
+
+    return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+}
 ?>
