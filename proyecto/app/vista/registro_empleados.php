@@ -35,6 +35,7 @@
     </header>
     
     <main>
+        
         <section class="seccionTablaEmpleados">
             <div class="cabeceraTabla">
                 <h2>Registro de Empleados</h2>
@@ -43,22 +44,80 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Cedula</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Email</th>
                         <th>Rol</th>
-                        <th id="colOperaciones">Operaciones</th>
+                        <th id="colOperacionesAcciones">Acciones</th>
                     </tr>
+                <?php //Mejorar cosméticamente en un futuro este tipo de captura información con GET ?>
+            <?= htmlspecialchars($_GET["error"] ?? "") ?>
+            <?= htmlspecialchars($_GET["resultado"] ?? "") ?>
                 </thead>
-                <tbody id="listadoTablaEmpleados">
+
+                <tbody id="cuerpoTablaEmpleados">
+                    <?php foreach ($usuarios as $usuario) { ?>
+
+                        <?php
+                            $roles = "";
+
+                            if ($usuario["administrador"] == 1) {
+                                $roles = "Administrador";
+                            }
+
+                            if ($usuario["soporte"] == 1) {
+                                if ($roles != "") {
+                                    $roles = $roles . ", ";
+                                }
+
+                                $roles = $roles . "Soporte";
+                            }
+                            if ($usuario["solicitante"] == 1) {
+                                if ($roles != "") {
+                                    $roles = $roles . ", ";
+                                }
+
+                                $roles = $roles . "Solicitante";
+                            }
+
+                            if ($roles == "") {
+                                $roles = "Sin rol";
+                            }
+                            /* <?php echo $variable ?> equivalente a <?= $variable ?>*/ 
+                        ?>
+
+                        <tr>
+                            <td><?= htmlspecialchars($usuario["cedula"]) ?></td>
+                            <td><?= htmlspecialchars($usuario["nombre"]) ?></td>
+                            <td><?= htmlspecialchars($usuario["apellido"]) ?></td>
+                            <td><?= htmlspecialchars($roles) ?></td>
+
+                            <td>
+                                <div class="cajaOperaciones">
+                                    <button type="button" class="btnOperacion btnModificar">Modificar</button>
+                                    
+                                    <form action="../app/controlador/procesarBajaUsuario.php" method="post" class="formularioEliminarEmpleado">
+                                        <input type="hidden" name="cedula" value="<?=htmlspecialchars($usuario["cedula"])?>">
+                                        <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
+                                        <button type="submit" class="btnOperacion" id="btnEliminar">Eliminar</button>
+                                    </form>
+                                    
+                                    
+                                </div>
+                            </td>
+                        </tr>
+
+                    <?php } ?>
                 </tbody>
+          
+       
             </table>
         </section>
 
         <dialog class="dialogAgregarEmpleado" >
+           
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarEmpleado">x</button>
-            <form action="registro_empleados.php" method="post" id="formAgregarEmpleado">
+            <form action="../app/controlador/procesarAltaUsuario.php" method="post" id="formAgregarEmpleado">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
 
@@ -67,15 +126,18 @@
                 <label for="cedula">Cedula:</label>
                 <input type="text" id="cedula" name="cedula" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" maxlength="100" required>w
-                
+                <label for="claveHash">Contraseña:</label>
+                <input type="password" id="claveHash" name="claveHash" maxlength="100" required>
+
+                <label for="confirmarClave">Confirmar Contraseña:</label>
+                <input type="password" id="confirmarClave" name="confirmarClave" maxlength="100" required>
+
                 <label for="rol">Rol:</label>
                 <select id="rol" name="rol" required>
                     <option value="">Seleccione un rol</option>
                     <option value="administrador">Administrador</option>
                     <option value="solicitante">Solicitante</option>
-                    <option value="soporte">Soporte Técnico</option>
+                    <option value="soporte">Soporte Tecnico</option>
                 </select>
 
                 <button type="submit">Agregar</button>

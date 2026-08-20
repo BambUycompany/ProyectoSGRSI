@@ -36,16 +36,15 @@
     </header>
 
     <main> 
-        <section class="seccionVisualizarSolicitudes">
-            <h2>Visualizar Solicitudes</h2>
+        <section class="seccionVisualizarRegistros">
+            <h2>Visualizar Registros de uso de laboratorios</h2>
             <div class="filtrarFecha">
                 <button type="button">Filtrar por fecha de expedición</button>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre del Alumno</th>
+                        <th>Tipo de aula</th>
                         <th>Número de PC</th>
                         <th>Número de laboratorio</th>
                         <th>Problema</th>
