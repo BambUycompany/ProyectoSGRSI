@@ -42,10 +42,8 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>NumPC</th>
-                        <th>Nombre estudiante</th>
-                        <th>falla</th>
-                        <th>Descripcion</th>
+                        <th>Numero PC</th>
+                        <th>Numero Laboratorio</th>
                     </tr>
                 </thead>
                 <tbody class="listadoTablaTickets">
