@@ -60,7 +60,7 @@ function quitarTicket(idTemporal) {
     const indice = ticketsAgregados.findIndex(t => t.idTemporal === idTemporal);
     if (indice !== -1) ticketsAgregados.splice(indice, 1);
 
-    document.querySelectorAll(`input[name^="tickets[${idTemporal}]"]`).forEach(input => input.remove());
+    document.querySelectorAll(`input[name^="tickets[${idTemporal}]"]`).forEach(input => input.remove()); 
 
     renderizarResumen();
 }
