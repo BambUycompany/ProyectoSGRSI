@@ -48,8 +48,9 @@
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>Hora de expedicion</th>
                             <th>Aula</th>
+                            <th>Hora de expedicion</th>
+
                             <th>Solicitante</th>
                         </tr>
                     </thead>
@@ -62,7 +63,7 @@
                                         </a>
                                     </td>
                                     <td><?= htmlspecialchars(ucfirst($planilla['AulaTipo'])) ?> <?= htmlspecialchars($planilla['AulaNumero']) ?></td>
-                                    <td><?= htmlspecialchars($planilla['HoraEntrada']) ?></td>
+                                    <td><?= htmlspecialchars($planilla['HoraSalida'] ?? '-') ?></td>
                                     <td><?= htmlspecialchars($planilla['NombreSolicitante'] ?? '-') ?></td>
                                 </tr>
                             <?php endforeach; ?>    

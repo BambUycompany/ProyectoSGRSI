@@ -45,6 +45,18 @@ class AccesoDatosPlanilla {
         ]);
     }
 
+    public function listarTicketsDePlanilla(int $planillaId) {
+        $sql = "SELECT ID, Descripcion, Fallo, Estado, PcNumPc, FechaCreacion
+                FROM TICKET
+                WHERE PlanillaId = :planillaId AND PcNumPc 
+                ORDER BY FechaCreacion";
+
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["planillaId" => $planillaId]);
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function listarAulas(){
             $sql = "SELECT AULA.Numero, 'laboratorio' AS Tipo 
                     FROM AULA JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID
@@ -130,17 +142,7 @@ class AccesoDatosPlanilla {
 
     return $fila === false ? null : $fila;
     }
-    public function listarTicketsDePlanilla(int $planillaId) {
-    $sql = "SELECT ID, Descripcion, Fallo, Estado, PcNumPc, FechaCreacion
-            FROM TICKET
-            WHERE PlanillaId = :planillaId
-            ORDER BY FechaCreacion";
-
-    $consulta = $this->conexion->prepare($sql);
-    $consulta->execute(["planillaId" => $planillaId]);
-
-    return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
+   
 
 }
 ?>
