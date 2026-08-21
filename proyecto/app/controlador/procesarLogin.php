@@ -79,6 +79,18 @@ if($_SESSION["rolActivo"] === "administrador") {
 
 }
 
-exit;
-
+if ($usuario->esAdministrador()) {
+    header("Location: ../vista/administrador.php");
+    exit;
+} elseif ($usuario->esSoporte()) {
+    header("Location: ../vista/soporte.php");
+    exit;
+} elseif ($usuario->esSolicitante()) {
+    header("Location: ../vista/solicitante.php");
+    exit;
+} else {
+    // Si no tiene un rol asignado válido
+    header("Location: ../vista/Login.php?error=sin_rol");
+    exit;
+}
 ?>

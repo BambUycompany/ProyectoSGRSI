@@ -58,6 +58,11 @@
         
     </main>
 
+<<<<<<< HEAD
+        
+    
+=======
+>>>>>>> admin
 
 
     <script src=    "../public/assets/js/navbar_responsive.js"></script>

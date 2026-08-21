@@ -29,7 +29,7 @@
         
         <section class="seccionLogin">
             <h2>Ingreso al sistema</h2>
-            <form action="../app/controlador/procesarLogin.php" method="POST">
+            <form action="../controlador/procesarLogin.php" method="POST">
                
                 <div class="cajaDatos">
                     <label for="cedula">Cedula:</label>
