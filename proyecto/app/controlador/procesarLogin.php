@@ -1,14 +1,14 @@
 <?php
-if(isset($_GET["error"])){
-    echo "<p style='color:red;'>Cédula o contraseña incorrecta</p>";
-}
+
 require_once __DIR__ . "/../modelo/Usuario.php";
-require_once __DIR__ . "/../modelo/consultaUsuario.php";
+require_once __DIR__ . "/../modelo/ConectorPDO.php";
+require_once __DIR__ . "/../modelo/AccesoDatosUsuario.php";
 require_once __DIR__ . "/../modelo/Login.php";
 
 //Comprueba que el formulario haya sido enviado mediante POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: login.php");
+    $mensaje = "Acceso Denegado: petición inválida.";
+    header("Location: ../../public/login.php?error=sinSesion");
     exit;
 }
 
@@ -16,20 +16,38 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $cedula = trim($_POST["cedula"] ?? "");
 $password = $_POST["password"] ?? "";
 
-$consultaUsuario = new ConsultaUsuario();
-$login = new Login($consultaUsuario);
+$conectorPDO = new ConectorPDO("localhost:3306", "root", "", "SGRSI_db");
+$conexion = $conectorPDO->establecerConexion();
 
-$usuario = $login->autenticar($cedula, $password);
+    $accesoDatosUsuario = new AccesoDatosUsuario($conexion);
+    $login = new Login($accesoDatosUsuario);
+    $usuario = $login->autenticar($cedula, $password);
 
-//Si las credenciales no coinciden, muestra el error y detiene el proceso
-if ($usuario === null) {
-    exit("La cédula o la contraseña son incorrectas.");
+$conectorPDO->desconectar();
+
+//restricciones de acceso
+
+if($usuario === null){
+    header("Location: ../../public/login.php?error=credenciales");
+    exit;
 }
 
-//Solo se encuentra implementado el rol administrador
-if (!$usuario->esAdministrador()) {
-    exit("El usuario no tiene acceso al panel de administración.");
+if(!$usuario ->estaActivo()){
+    header("Location: ../../public/login.php?error=usuarioInactivo");
+    exit;
 }
+
+$roles = [];
+if ($usuario->esAdministrador()) $roles[] = "administrador";
+if ($usuario->esSoporte())       $roles[] = "soporte";
+if ($usuario->esSolicitante())   $roles[] = "solicitante";
+
+
+if (count($roles) === 0) {
+    header("Location: ../../public/login.php?error=sinRol");
+    exit;
+}
+
 
 session_start();
 session_regenerate_id(true);
@@ -38,8 +56,29 @@ $_SESSION["cedula"] = $usuario->getCedula();
 $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
+$_SESSION["roles"] = $roles; 
 
-header("Location: ../vista/administrador.php");
+if (count($roles) === 1) {
+    $_SESSION["rolActivo"] = $roles[0];
+} 
+
+if (count($roles) > 1) {
+    header("Location: ../../public/seleccion_dashboard.php"); 
+    exit;
+}
+
+if($_SESSION["rolActivo"] === "administrador") { 
+    header("Location: ../../public/administrador.php");
+    exit;
+} elseif($_SESSION["rolActivo"] === "soporte") {
+    header("Location: ../../public/soporte.php");
+    exit;
+} elseif($_SESSION["rolActivo"] === "solicitante") {
+    header("Location: ../../public/solicitante.php");
+    exit;
+
+}
+
 exit;
 
 ?>
