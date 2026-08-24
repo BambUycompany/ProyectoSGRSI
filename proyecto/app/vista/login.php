@@ -41,7 +41,7 @@
                 </div>
                 <input type="submit" value="Ingresar" class="botones">
             </form>
-            <span>¿No tienes una cuenta? <a href="mailto:direccioniti.cetp">Solicitala aqui </a> atraves del mail: direccioniti.cetp@gmail.com</span>
+            <span>¿No tienes una cuenta? <a href="mailto:direccioniti.cetp">Solicitala aqui </a> a través del mail: direccioniti.cetp@gmail.com</span>
         </section>
         
     </main>
