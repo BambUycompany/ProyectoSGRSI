@@ -1,12 +1,37 @@
 <?php
-//comentar
+
+
+/**
+ * Clase encargada de dar de alta usuarios y de listarlos dentro del sistema.
+ */
 class AltaDatosUsuarios {
     private PDO $conexion;  
 
+
+     /**
+     * Constructor parametrizado que recibe una conexión a la base de datos.
+     *
+     * @param PDO $conexion La conexión a la base de datos. PRECONDICIÓN: No debe ser NULL.
+     */
     public function __construct(PDO $conexion) {
         $this->conexion = $conexion;
     }
 
+     /**
+     * Registra un nuevo usuario y su correspondiente rol en el sistema.
+     *
+     * Primero inserta al usuario y luego, según el rol recibido, lo registra
+     *  en la tabla del rol que corresponde (administrador, soporte
+     * o solicitante). Si el rol no es válido, se revierted la transacción.
+     *
+     * @param string $cedula Cédula del usuario a registrar.
+     * @param string $nombre Nombre del usuario.
+     * @param string $apellido Apellido del usuario.
+     * @param string $claveHash Hash de la contraseña del usuario.
+     * @param string $rol Rol a asignar ("administrador", "soporte" o "solicitante").
+     *
+     * @return bool TRUE si el registro se realiza correctamente, FALSE en caso contrario.
+     */
     public function registrarUsuario(string $cedula, string $nombre, string $apellido, string $claveHash, string $rol) {
 
         try{
@@ -52,6 +77,13 @@ class AltaDatosUsuarios {
 
        
     }
+
+     /**
+     * Lista todos los usuarios registrados junto con los roles que tienen asignados.
+     *
+     * @return array Array asociado con los datos de cada usuario (cedula, nombre,
+     * apellido y banderas administrador/soporte/solicitante).
+     */
     public function listarUsuarios() {
     $sql = "SELECT 
                 u.cedula, 
