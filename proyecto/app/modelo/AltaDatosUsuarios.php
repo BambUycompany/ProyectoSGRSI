@@ -1,5 +1,5 @@
 <?php
-
+//comentar
 class AltaDatosUsuarios {
     private PDO $conexion;  
 

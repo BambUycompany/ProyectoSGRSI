@@ -1,5 +1,5 @@
 <?php
-
+//COMENTAR
 class Usuario {
     private string $cedula;
     private string $claveHash;

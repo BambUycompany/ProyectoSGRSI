@@ -6,5 +6,5 @@ $conectorPDO = new ConectorPDO("localhost:3306", "root", "", "SGRSI_db");
 $conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosPlanilla = new AccesoDatosPlanilla($conexion);
-$planillas = $accesoDatosPlanilla->listarPlanillas();
+$planillas = $accesoDatosPlanilla->listarRegistroPlanilla();
 ?>

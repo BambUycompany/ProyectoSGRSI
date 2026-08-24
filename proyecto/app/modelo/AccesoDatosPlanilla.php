@@ -49,7 +49,7 @@ class AccesoDatosPlanilla {
     public function listarTicketsDePlanilla(int $planillaId) {
         $sql = "SELECT ID, Descripcion, Fallo, Estado, PcNumPc, FechaCreacion
                 FROM TICKET
-                WHERE PlanillaId = :planillaId AND PcNumPc 
+                WHERE PlanillaId = :planillaId 
                 ORDER BY FechaCreacion";
 
         $consulta = $this->conexion->prepare($sql);
