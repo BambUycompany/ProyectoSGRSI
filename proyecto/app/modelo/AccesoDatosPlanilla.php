@@ -1,4 +1,5 @@
 <?php
+//commentar
 class AccesoDatosPlanilla {
     private PDO $conexion;
 
