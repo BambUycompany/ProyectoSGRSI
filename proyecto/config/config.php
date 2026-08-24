@@ -17,4 +17,4 @@ require_once RUTA_RAIZ . "/vendor/autoload.php";
 $dotenv = Dotenv\Dotenv::createImmutable(RUTA_RAIZ);
 //Carga las variables de entorno provenientes de .env, si hay errores retornará excepciones (InvalidPathException, InvalidEncodingException, InvalidFileException)
 $dotenv->load();
-?>
+?>  

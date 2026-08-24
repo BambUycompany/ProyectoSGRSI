@@ -44,7 +44,7 @@ if ($clave !== $confirmarClave) {
 $claveHash = password_hash($clave, PASSWORD_DEFAULT);
 
 
-$conectorPDO = new ConectorPDO("localhost:3306", "root", "", "sgrsi_db");
+$conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 
     if ($conexion === null) {

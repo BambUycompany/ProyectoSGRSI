@@ -11,7 +11,7 @@ if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)) {
     exit;
 }
 
-$conectorPDO = new ConectorPDO("localhost:3306", "root", "", "sgrsi_db");
+$conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 
     if ($conexion === null) {
