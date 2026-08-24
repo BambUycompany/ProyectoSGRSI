@@ -1,9 +1,10 @@
 <?php
 session_start();
+require_once __DIR__ . "/../config/config.php";
 
-require_once __DIR__ . "/../app/controlador/control_acceso.php";
+require_once RUTA_CONTROLADOR . "/control_acceso.php";
 requerirRol("soporte");
 
-require_once __DIR__ . "/../app/controlador/prepararListadoRegistro.php";
-require_once __DIR__ . "/../app/vista/listado_registros.php";
+require_once RUTA_CONTROLADOR . "/prepararListadoRegistro.php";
+require_once RUTA_VISTA . "/listado_registros.php";
 ?>

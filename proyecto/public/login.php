@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once __DIR__ . "/../config/config.php";
+
 if (isset($_SESSION["cedula"]) && !isset($_GET["error"])) {
     if (!empty($_SESSION["administrador"])) {
         header("Location: administrador.php");
@@ -14,5 +16,5 @@ if (isset($_SESSION["cedula"]) && !isset($_GET["error"])) {
 }
 
 
-require_once __DIR__ . "/../app/vista/login.php";
+require_once RUTA_VISTA . "/login.php";
 ?>

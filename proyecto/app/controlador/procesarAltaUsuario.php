@@ -1,11 +1,12 @@
 <?php 
+require_once __DIR__ . "/../../config/config.php";
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosUsuarios.php";
 
 session_start();
 
 if($_SERVER["REQUEST_METHOD"] !== "POST"){
-    header("Location: RUTA_PUBLIC . "/altaUsuario.php?error=metodoNoPermitido");
+    header("Location: ../../public/altaUsuario.php?error=metodoNoPermitido");
     exit;
 }
 

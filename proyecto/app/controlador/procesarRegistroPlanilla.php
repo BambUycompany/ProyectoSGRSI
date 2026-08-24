@@ -1,8 +1,11 @@
 <?php
+require_once __DIR__ . "/../../config/config.php";
+
 session_start();
 
-require_once __DIR__ . "/../modelo/ConectorPDO.php";
-require_once __DIR__ . "/../modelo/AccesoDatosPlanilla.php";
+require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once RUTA_MODELO . "/AccesoDatosPlanilla.php";
+
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../../public/registro_planilla.php?error=" . urlencode("Método no permitido."));

@@ -1,9 +1,10 @@
 <?php
+require_once __DIR__ . "/../../config/config.php";
+require_once RUTA_MODELO . "/Usuario.php";
+require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once RUTA_MODELO . "/AccesoDatosUsuario.php";
+require_once RUTA_MODELO . "/Login.php";
 
-require_once __DIR__ . "/../modelo/Usuario.php";
-require_once __DIR__ . "/../modelo/ConectorPDO.php";
-require_once __DIR__ . "/../modelo/AccesoDatosUsuario.php";
-require_once __DIR__ . "/../modelo/Login.php";
 
 //Comprueba que el formulario haya sido enviado mediante POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
