@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en,es">
 <head>
@@ -6,7 +7,7 @@
     <title>Registro de Sala informatica</title>
     <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/registroSalaCSS.css">
+    <link rel="stylesheet" href="assets/css/registroPlanillaCSS.css">
 </head>
 <body>
     <header class="barraNav">
@@ -33,13 +34,22 @@
                 </li>
             </ul>
         </nav>
+
     </header>
 
     <main>
+        <?php
+            if (isset($_GET["error"])) {
+                echo "<p style='color:red;'>" . htmlspecialchars($_GET["error"]) . "</p>";
+            }
+            if (isset($_GET["resultado"])) {
+                echo "<p style='color:green;'>" . htmlspecialchars($_GET["resultado"]) . "</p>";
+            }
+        ?>
         <section class="seccionRegistroSala">
             <h2>Registro de uso Sala informatica</h2>
             <section class="formSala">
-                <form action="index.php" method="POST">
+                <form action="../app/controlador/procesarRegistroPlanilla.php" method="POST">
 
                 
                     <label for="tipo">Tipo de sala:</label>
@@ -61,12 +71,13 @@
                     <label for="horaSalida">Hora Salida:</label>
                     <input type="time" id="horaSalida" name="horaSalida" required> 
 
+                    <label for="nombreSolicitante">Solicitante:</label>
+                    <input type="text" id="nombreSolicitante" name="nombreSolicitante" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
+
+                 <?php if ($_SESSION["rolActivo"] !== "soporte"): ?>
                     <label for="Asignatura">Asignatura:</label>
                     <input type="text" id="Asignatura" name="Asignatura" maxlength="35" required>
 
-                    <label for="Docente">Docente:</label>
-                    <input type="text" id="Docente" name="Docente" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required>
-        
                     <label for="grupo">Grupo:</label>
                     <input type="text" id="grupo" name="grupo" maxlength="10" required>
 
@@ -77,41 +88,47 @@
                         <option value="tarde">Tarde</option>
                         <option value="noche">Noche</option>
                     </select>
+                <?php endif; ?>
+                    <div id="hiddenInputsTickets"></div>
 
-                    <input type="submit" value="Registrar" class="btnRegistrar">  
-            </form>
-            
+                    <input type="submit" value="Registrar" class="btnRegistrar">
+                </form>
+            </section>
+
+            <div id="resumenTickets"></div>
+
+            <button type="button" class="btnOperacion" id="btnCrearTicket">Reportar falla técnica</button>
         </section>
-        <button type="button" class="btnOperacion" id="btnCrearTicket">Reportar falla técnica</button>
     </main>
+
     <section class="creacionTicket" id="creacionTicket">
-        <button type="button" class="btnCerrarModal" onclick="cerrarModal()">x</button>
-        <form action="registro_sala.php" method="post">
-            <h2>Creacion de ticket </h2>
-            <label for="numeroPc">Número de PC:</label><br>
-            <input type="text" id="numeroPc" name="numeroPc" pattern="PC-[0-9]{2}" maxlength="5" required><br><br>
-            <label for="nombreEstudiante">Nombre completo del estudiante:</label><br>
-            <input type="text" id="nombreEstudiante" name="nombreEstudiante" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" maxlength="50" required><br><br>
-            <label for="fallo" >Tipo de falla:</label><br>
-            <select id="fallo" name="fallo" required>
-                <option value="">Seleccionar</option>
-                <option value="hardware">Falta mouse</option>
-                <option value="software">Falta teclado</option>
-                <option value="red">No prende</option>
-                <option value="otro">No tiene almacenamiento</option>
-                <option value="otro">Otro</option>
-            </select><br><br>
+        <button type="button" class="btnCerrarModal" id="btnCerrarModalTicket">x</button>
+        <h2>Creación de ticket</h2>
 
-            </label>
-            <label for="descripcion">Descripción de la falla:</label><br>
-            <textarea id="descripcion" name="descripcion" rows="4" cols="50" required></textarea><br><br>
+        <label for="numeroPc">Número de PC:</label><br>
+        <input type="text" id="numeroPc" pattern="PC-[0-9]{2}" maxlength="5" placeholder="Ej: PC-01" required><br><br>
 
-            <input type="submit" value="Enviar Reporte">
-        </form>
+        <label for="fallo">Tipo de falla:</label><br>
+        <select id="fallo" required>
+            <option value="">Seleccionar</option>
+            <option value="falta_mouse">Falta mouse</option>
+            <option value="falta_teclado">Falta teclado</option>
+            <option value="no_prende">No prende</option>
+            <option value="sin_almacenamiento">No tiene almacenamiento</option>
+            <option value="otro">Otro</option>
+        </select><br><br>
+
+        <label for="descripcion">Descripción de la falla:</label><br>
+        <textarea id="descripcion" rows="4" cols="50" required></textarea><br><br>
+
+        <button type="button" id="btnAgregarTicketALaLista">Agregar a la lista</button>
     </section>
-    <script src="../public/assets/js/creacion_ticket.js"></script>
-    <script src="../public/assets/js/actualizar_numero.js"> </script>
-    <script src="../public/assets/js/navbar_responsive.js"></script>
+
+   
+    <script src="assets/js/registro_planilla.js"></script>
+
+    <script src="assets/js/actualizar_numero.js"> </script>
+    <script src="assets/js/navbar_responsive.js"></script>
 
     
 </body>
