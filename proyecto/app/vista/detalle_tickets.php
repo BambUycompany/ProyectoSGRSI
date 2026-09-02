@@ -17,8 +17,9 @@
 
             <?php if (count($tickets) === 0): ?>
                 <p>No se encontraron tickets para la PC <?= htmlspecialchars($numPc) ?>;
+            <?php else: ?>
                 <table>
-                    <legend>Tickets para la <?= htmlspecialchars($numPc) ?> en la sala <?= htmlspecialchars($tickets[0]['AulaTipo']) ?> número <?= htmlspecialchars($tickets[0]['AulaNumero']) ?></legend>
+                    <legend>Tickets para la <?= htmlspecialchars($numPc) ?> en la sala <?= htmlspecialchars($tickets[0]['AulaTipo']) ?> <?= htmlspecialchars($tickets[0]['AulaNumero']) ?></legend>
                     <thead>
                         <tr>
                             <th>ID</th>
