@@ -28,7 +28,7 @@
     </header>
 
     <main>
-        <a href="listado_registros.php">&larr; Volver al listado</a> 
+        <a href="listado_registros.php">&larr; Volver</a> 
 
         <section class="seccionDetalleRegistro">
             <h2>Detalle del Registro</h2>

@@ -47,6 +47,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Fecha</th>
                             <th>Aula</th>
                             <th>Hora de expedicion</th>
@@ -57,14 +58,17 @@
                     <tbody>
                             <?php foreach ($planillas as $planilla): ?>
                                 <tr>
+                                    <td><?= htmlspecialchars($planilla['ID']) ?></td>
                                     <td>
-                                        <a href="detalle_registros.php?id=<?= (int) $planilla['ID'] ?>"> 
-                                            <?= htmlspecialchars($planilla['Fecha']) ?>
-                                        </a>
+                                        <?= htmlspecialchars($planilla['Fecha']) ?>
                                     </td>
                                     <td><?= htmlspecialchars(ucfirst($planilla['AulaTipo'])) ?> <?= htmlspecialchars($planilla['AulaNumero']) ?></td>
                                     <td><?= htmlspecialchars($planilla['HoraSalida'] ?? '-') ?></td>
                                     <td><?= htmlspecialchars($planilla['NombreSolicitante'] ?? '-') ?></td>
+                                    <td>
+                                        <a href="detalle_registros.php?id=<?= (int) $planilla['ID'] ?>" class="botones">Ver Detalle</a>
+                                    </td>
+                                    <td> <a href= "listado_tickets.php" class="botones">Ver en Listado tickets</a></td>
                                 </tr>
                             <?php endforeach; ?>    
                     </tbody>

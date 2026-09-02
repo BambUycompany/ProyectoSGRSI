@@ -38,24 +38,29 @@
     <main>
         <section class="seccionListadoTickets">
             <h2>Listado de Tickets</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Numero PC</th>
-                        <th>Numero Laboratorio</th>
+            <?php if (count($ticketsAgrupados) === 0): ?>
+                <p>No hay tickets registrados.</p>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PC</th>
+                            <th>Sala</th>
+                        <th>Cantidad de reportes</th>
                     </tr>
                 </thead>
                 <tbody class="listadoTablaTickets">
-                     <tr>
-                        <td>001</td>
-                        <td>PC-01</td>
-                        <td>John Doe</td>
-                        <td>El equipo no responde al botón de encendido.</td>
-                        <td>Descripcion del ticket</td>
-                    </tr>
+                    <?php foreach ($ticketsAgrupados as $grupo): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($grupo['PcNumPc']) ?></td>
+                            <td><?= htmlspecialchars($grupo['AulaTipo']) ?> <?= htmlspecialchars($grupo['AulaNumero']) ?></td>
+                            <td><?= $grupo['CantidadReportes'] ?></td>
+                            <td><a href="detalle_tickets.php?pc=<?= urlencode($grupo['PcNumPc']) ?>&aulaId=<?= (int) $grupo['PcAulaID'] ?>" class="botones">Ver Detalle</a></td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php endif; ?>
         </section>
     </main>
     <script src="../assets/js/listado_tickets.js"></script>

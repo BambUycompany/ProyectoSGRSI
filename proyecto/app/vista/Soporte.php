@@ -47,7 +47,7 @@
                 <a href="registro_planilla.php" class="botones">Registro Planilla</a>
                 <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
                 <a href="listado_registros.php" class="botones">Listado de Registros</a>
-                <a href="metricas.php" class="botones">Métricas</a>
+                <a href="listado_tickets.php" class="botones">Listado de tickets</a>
             </section>
             
         </section>
