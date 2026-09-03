@@ -43,14 +43,11 @@
         <section id="administrador">    
             <h2>Vista administrador</h2>
             <section class="seccionInteractiva">
-                <a href="registro_planilla.php" class="botones">Registro Planilla</a>
-                <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
-                <a href="visualizar_solicitudes.php" class="botones">Visualizar Solicitudes</a>
                 <a href="metricas.php" class="botones">Métricas</a>
             </section>
             <div style="margin-top:1rem;">
                 <a href="registro_empleados.php" class="botones">Agregar empleado</a>
-                <a href="registro_aulas.php" class="botones">Agregar aula</a>
+                <a href="gestor_recursos.php" class="botones">Gestionar recursos</a>
             </div>
         </section>
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de recursos</title>
-    link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/gestorRecursosCSS.css">
 
@@ -38,6 +38,7 @@
         </nav>
     </header>
     <main>
+        <h1>Gestor de recursos</h1>
         <?php if (isset($_GET["error"])): ?>
             <p style="color:red;"><?= htmlspecialchars($_GET["error"]) ?></p>
         <?php endif; ?>
@@ -45,12 +46,72 @@
             <p style="color:green;"><?= htmlspecialchars($_GET["resultado"]) ?></p>
         <?php endif; ?>
         <section class="seccionGestorRecursos">
-            <h2>Gestor de recursos</h2>
-            <div class="opcionesGestor">
-                <a href="gestor_aulas.php" class="botones">Gestión de aulas</a>
-                <a href="gestor_recursos.php" class="botones">Gestión de recursos</a>
+            <div class="cabeceraTabla">
+                <h2>Gestor de Aulas</h2>
+                <button type="button" class="btnOperacion" id="btnAgregarAula">Agregar Aula</button>
             </div>
+            <?php if (count($aulas) === 0): ?>
+                <p>No hay aulas registradas.</p>    
+            <?php else: ?>    
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo</th>
+                        <th>Número</th>
+                        <th>Capacidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($aulas as $aula): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($aula['ID']) ?></td>
+                            <td><a href="detalle_aula.php?aulaId=<?= urlencode($aula['ID']) ?>"> <?= htmlspecialchars($aula['Tipo']) ?> <?= htmlspecialchars($aula['Numero']) ?></a></td>
+                            <td><?= htmlspecialchars($aula['CantidadPcs']) ?></td>
+                            <td>
+                                <div class="cajaOperaciones">
+                                    <button type="button" class="btnOperacion btnModificar">Modificar</button>
+                                    
+                                    <form action="../app/controlador/procesarBajaUsuario.php" method="post" class="formularioEliminarEmpleado">
+                                        <input type="hidden" name="cedula" value="<?=htmlspecialchars($usuario["cedula"])?>">
+                                        <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
+                                        <button type="submit" class="btnOperacion" id="btnEliminar">Eliminar</button>
+                                    </form>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
         </section>
+
+        <dialog class="dialogAgregarAula" id="dialogAgregarAula">
+            <button type="button" class="btnCerrarModal" id="btnCerrarModal">&times;</button>
+            <form action="../app/controlador/procesarAgregarAula.php" method="post">
+                <h2>Agregar Aula</h2>
+                <label for="tipo">Tipo:</label>
+                <select name="tipo" id="tipo" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option value="Laboratorio">Laboratorio</option>
+                    <option value="Aula">Aula</option>        
+                </select>
+
+                <label for="numero">Número:</label>
+                <input type="text" name="numero" id="numero" pattern="[0-9]{2}" maxlength="2" inputmode="numeric" required>
+                <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
+
+                <button type="submit">Agregar</button>
+                    
+                
+            </form>
+        </dialog>
+    </main>
+    <script src="../js/navbar_responsive.js"></script>
+    <script src="../js/gestor_recursos.js"></script>
+
     
 </body>
 </html>
