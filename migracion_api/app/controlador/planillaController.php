@@ -1,40 +1,37 @@
 <?php
-require_once __DIR__ . "/../../config/config.php";
 
-session_start();
+require_once RUTA_MODELO "/PlanillaDAO.php";
 
-require_once RUTA_MODELO . "/ConectorPDO.php";
-require_once RUTA_MODELO . "/AccesoDatosPlanilla.php";
+class planillaController
 
+{
+private function Registro(): void
+  
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../../public/registro_planilla.php?error=" . urlencode("Método no permitido."));
-    exit;
-}
-$tipo = trim($_POST["tipo"] ?? "");
-$numero = trim($_POST["numero"] ?? "");
-$fecha = trim($_POST["fecha"] ?? "");
+$this->verificarCsrf();
+$datos = json_decode(file_get_contents("php://input"), true) ?? [];
+
+    { 
+$tipo = trim($datos["tipo"] ?? "");
+$numero = trim($datos["numero"] ?? "");
+$fecha = trim($datos["fecha"] ?? "");
 $horaEntrada = trim($_POST["horaEntrada"] ?? "");
 $horaSalida = trim($_POST["horaSalida"] ?? "");
-$nombreSolicitante = trim($_POST["nombreSolicitante"] ?? "");
-$asignatura = trim($_POST["Asignatura"] ?? "") ?: null;
-$grupo = trim($_POST["grupo"] ?? "") ?: null;
-$turno = trim($_POST["turno"] ?? "") ?: null;
-
-$tickets = $_POST["tickets"] ?? []; 
-
-$documentoRegistrante = $_SESSION["cedula"];
+$nombreSolicitante = trim($datos["nombreSolicitante"] ?? "");
+$asignatura = trim($datos["Asignatura"] ?? "") ?: null;
+$grupo = trim($datos["grupo"] ?? "") ?: null;
+$turno = trim($datos["turno"] ?? "") ?: null;
+$tickets = $datos["tickets"] ?? []; 
+$documentoRegistrante = $datos["cedula"];
 
 if ($tipo === "" || $numero === "" || $fecha === "" || $horaEntrada === "" || $horaSalida === "" || $nombreSolicitante === "") {
     header("Location: ../../public/registro_planilla.php?error=" . urlencode("Faltan campos obligatorios."));
     exit;
 }
-$conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
-$conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosPlanilla = new AccesoDatosPlanilla($conexion);
 
-$aulaId = $accesoDatosPlanilla->buscarAulaId($tipo, $numero);
+$aulaId = $dao->buscarAulaId($tipo, $numero);
 
 if ($aulaId === null) {
     header("Location: ../../public/registro_planilla.php?error=" . urlencode("El aula seleccionada no existe."));
@@ -52,7 +49,7 @@ $datosPlanilla = [
     "aulaId" => $aulaId,
 ];
 
-$planillaId = $accesoDatosPlanilla->registrarPlanilla($datosPlanilla);
+$planillaId = $dao->registrarPlanilla($datosPlanilla);
 
 foreach ($tickets as $ticket) {
     $datosTicket = [
@@ -69,4 +66,17 @@ foreach ($tickets as $ticket) {
 
 header("Location: ../../public/registro_planilla.php?resultado=" . urlencode("Registro guardado correctamente."));
 exit;
+
+
+    }
+
+
+}
 ?>
+
+
+
+
+
+
+

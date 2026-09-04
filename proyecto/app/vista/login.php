@@ -29,7 +29,7 @@
         
         <section class="seccionLogin">
             <h2>Ingreso al sistema</h2>
-            <form action="../controlador/procesarLogin.php" method="POST">
+            <form action="../app/controlador/procesarLogin.php" method="POST">
                
                 <div class="cajaDatos">
                     <label for="cedula">Cedula:</label>
@@ -41,7 +41,7 @@
                 </div>
                 <input type="submit" value="Ingresar" class="botones">
             </form>
-            <span>¿No tienes una cuenta? <a href="mailto:direccioniti.cetp">Solicitala aqui </a> atraves del mail: direccioniti.cetp@gmail.com</span>
+            <span>¿No tienes una cuenta? <a href="mailto:direccioniti.cetp">Solicitala aqui </a> a través del mail: direccioniti.cetp@gmail.com</span>
         </section>
         
     </main>

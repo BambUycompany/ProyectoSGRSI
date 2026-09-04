@@ -1,6 +1,9 @@
 <?php
-require_once __DIR__ . "/../modelo/ConectorPDO.php";
-require_once __DIR__ . "/../modelo/ModificarDatosUsuario.php";
+require_once __DIR__ . "/../../config/config.php";
+
+require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once RUTA_MODELO . "/ModificarDatosUsuario.php";
+
 
 
 //Recupera los datos enviados por el formulario

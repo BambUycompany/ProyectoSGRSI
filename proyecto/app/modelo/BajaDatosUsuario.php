@@ -35,29 +35,11 @@ class BajaDatosUsuario {
 
         try {
             $this->conexion->beginTransaction();
+                    $sql = "UPDATE usuario SET activo = 0 WHERE cedula = :cedula";
 
-            $sqlRol = "DELETE FROM rol WHERE cedula = :cedula";
-            $consultaRol = $this->conexion->prepare($sqlRol);
-            $consultaRol->execute(["cedula" => $cedula]);
+                    $consulta = $this->conexion->prepare($sql);
 
-            $sqlSoporte = "DELETE FROM soporte WHERE cedula = :cedula";
-            $consultaSoporte = $this->conexion->prepare($sqlSoporte);
-            $consultaSoporte->execute(["cedula" => $cedula]);
-
-            $sqlSolicitante = "DELETE FROM solicitante WHERE cedula = :cedula";
-            $consultaSolicitante = $this->conexion->prepare($sqlSolicitante);
-            $consultaSolicitante->execute(["cedula" => $cedula]);
-
-            $sqlAdministrador = "DELETE FROM ADMINISTRADOR WHERE cedula = :cedula";
-            $consultaAdministrador = $this->conexion->prepare($sqlAdministrador);
-            $consultaAdministrador->execute(["cedula" => $cedula]);
-
-            $sqlUsuario = "DELETE FROM USUARIO WHERE cedula = :cedula";
-            $consultaUsuario = $this->conexion->prepare($sqlUsuario);
-            $consultaUsuario->execute(["cedula" => $cedula]);
-
-            $this->conexion->commit();
-            return true;
+                    return $consulta->execute(["cedula" => $cedula]);
 
         } catch (PDOException $error) {
             if ($this->conexion->inTransaction()) {
