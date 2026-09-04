@@ -60,5 +60,23 @@ class AccesoDatosAula {
         $fila = $consulta->fetch(PDO::FETCH_ASSOC);
         return $fila === false ? null : $fila;
     }
+    public function existeAula(string $tipo, string $numero): bool {
+    $sql = "SELECT 1 
+            FROM AULA 
+            WHERE Numero = :numero 
+              AND (
+                (:tipo = 'laboratorio' AND EXISTS (SELECT 1 FROM LABORATORIO WHERE AulaID = AULA.ID))
+                OR
+                (:tipo = 'taller' AND EXISTS (SELECT 1 FROM TALLER WHERE AulaID = AULA.ID))
+              )";
+
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute([
+        "numero" => $numero,
+        "tipo" => strtolower(trim($tipo))
+    ]);
+
+    return $consulta->fetch() !== false;
+}
 
 }

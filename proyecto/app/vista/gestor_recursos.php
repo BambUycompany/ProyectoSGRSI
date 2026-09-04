@@ -67,18 +67,24 @@
                     <?php foreach ($aulas as $aula): ?>
                         <tr>
                             <td><?= htmlspecialchars($aula['ID']) ?></td>
-                            <td><a href="detalle_aula.php?aulaId=<?= urlencode($aula['ID']) ?>"> <?= htmlspecialchars($aula['Tipo']) ?> <?= htmlspecialchars($aula['Numero']) ?></a></td>
+                            <td><a href="detalle_aula.php?aulaId=<?= urlencode($aula['ID']) ?>"> <?= htmlspecialchars($aula['Tipo']) ?> </a></td>
+                            <td><?= htmlspecialchars($aula['Numero']) ?> </td>
                             <td><?= htmlspecialchars($aula['CantidadPcs']) ?></td>
                             <td>
                                 <div class="cajaOperaciones">
-                                    <button type="button" class="btnOperacion btnModificar">Modificar</button>
+                                    <button type="button" 
+                                            class="btnOperacion btnModificar" 
+                                            data-id="<?= htmlspecialchars($aula['ID']) ?>"
+                                            data-tipo="<?= htmlspecialchars($aula['Tipo']) ?>"
+                                            data-numero="<?= htmlspecialchars($aula['Numero']) ?>">
+                                        Modificar
+                                    </button>
                                     
-                                    <form action="../app/controlador/procesarBajaUsuario.php" method="post" class="formularioEliminarEmpleado">
-                                        <input type="hidden" name="cedula" value="<?=htmlspecialchars($usuario["cedula"])?>">
-                                        <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
-                                        <button type="submit" class="btnOperacion" id="btnEliminar">Eliminar</button>
+                                    <form action="../app/controlador/procesarBajaAula.php" method="post" class="formularioEliminarAula" onsubmit="return confirm('¿Está seguro de eliminar esta aula?');">
+                                        <input type="hidden" name="aulaId" value="<?= htmlspecialchars($aula['ID']) ?>">
+                                        <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                                        <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
                                     </form>
-                                    
                                 </div>
                             </td>
                         </tr>
@@ -90,13 +96,13 @@
 
         <dialog class="dialogAgregarAula" id="dialogAgregarAula">
             <button type="button" class="btnCerrarModal" id="btnCerrarModal">&times;</button>
-            <form action="../app/controlador/procesarAgregarAula.php" method="post">
+            <form action="../app/controlador/procesarAgregarAula.php" method="post" id="formAgregarAula">
                 <h2>Agregar Aula</h2>
                 <label for="tipo">Tipo:</label>
                 <select name="tipo" id="tipo" required>
                     <option value="">Seleccione un tipo</option>
-                    <option value="Laboratorio">Laboratorio</option>
-                    <option value="Aula">Aula</option>        
+                    <option value="laboratorio">Laboratorio</option>
+                    <option value="taller">Taller</option>        
                 </select>
 
                 <label for="numero">Número:</label>
@@ -108,10 +114,28 @@
                 
             </form>
         </dialog>
-    </main>
-    <script src="../js/navbar_responsive.js"></script>
-    <script src="../js/gestor_recursos.js"></script>
+        <dialog class="dialogModificarAula" id="dialogModificarAula">
+            <button type="button" class="btnCerrarModal" id="btnCerrarModalModificar">&times;</button>
+            <form action="../app/controlador/procesarModificarAula.php" method="post" id="formModificarAula">
+                <h2>Modificar Aula</h2>
+                <input type="hidden" name="aulaId" id="modificarAulaId">
 
+                <label for="modificarTipo">Tipo:</label>
+                <select name="tipo" id="modificarTipo" required>
+                    <option value="laboratorio">Laboratorio</option>
+                    <option value="taller">Taller</option>        
+                </select>
+
+                <label for="modificarNumero">Número:</label>
+                <input type="text" name="numero" id="modificarNumero" pattern="[0-9]{2}" maxlength="2" inputmode="numeric" required>
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </dialog>
+    </main>
+    <script src="assets/js/navbar_responsive.js"></script>
+    <script src="assets/js/gestor_recursos.js"></script>
     
 </body>
 </html>

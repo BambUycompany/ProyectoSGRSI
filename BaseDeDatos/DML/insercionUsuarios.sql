@@ -24,7 +24,7 @@ INSERT INTO solicitante (cedula) VALUES ('87654321');
 
 //Usuario con tres roles
 INSERT INTO usuario (cedula, nombre, apellido, claveHash, activo)
-VALUES ('87654322', 'Maria', 'Gonzalez', '$2y$10$UQ.xRRJNSAY8LszoLR9tiunHONTWLuu.RbLK2LjiQY93esXYtrAiK', TRUE);
+VALUES ('44444444', 'Maria', 'Gonzalez', '$2y$12$ki0bVkt8cnZuR4v6aJvhhelaeQc1/4fec2txUcuG1Ybr4cvnhg2sS', TRUE);
 
 INSERT INTO administrador (cedula) VALUES ('87654322');
 INSERT INTO soporte (cedula) VALUES ('87654322');

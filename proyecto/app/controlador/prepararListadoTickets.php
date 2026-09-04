@@ -8,4 +8,4 @@ $conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosTickets = new AccesoDatosTickets($conexion);
 $ticketsAgrupados = $accesoDatosTickets->listarTicketsAgrupados();
-?>
+?> 

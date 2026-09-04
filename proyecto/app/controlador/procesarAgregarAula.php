@@ -23,6 +23,13 @@ $conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_EN
 $conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosAula = new AccesoDatosAula($conexion);
+
+if ($accesoDatosAula->existeAula($tipo, $numero)) {
+    header("Location: ../../public/gestor_recursos.php?error=" . urlencode("El " . $tipo . " número " . $numero . " ya existe."));
+    exit();
+}
+
+
 $accesoDatosAula->crearAula($tipo, $numero);
 
 header("Location: ../../public/gestor_recursos.php?resultado=" . urlencode("Aula agregada correctamente."));
