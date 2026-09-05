@@ -1,7 +1,7 @@
 <?php 
 require_once RUTA_MODELO . "/ConectorPDO";
 require_once RUTA_MODELO . "/TicketDAO.php";
-require_once RUTA_VISTA . "/Respuestajson.php";
+require_once RUTA_VISTA . "/RespuestajsonTicket.php";
 
 class TicketController{
     public function gestionar(string $metodo): void
@@ -32,6 +32,7 @@ class TicketController{
     }
 
     public function registrarTicket():void{
+        $this->verificarCsrf();
         $conexion = $this->conectar();
         $dao = new TicketDAO($conexion);
         RespuestaJson::exito($dao->registrarTicket());
