@@ -18,8 +18,7 @@ class planillaController
         match ($metodo) {
             "GET" => $this->listarRegistroPlanilla(),
             "POST" => $this->Registro(),
-           // "PATCH" => $this->modificar(),
-            //"DELETE" => $this->baja(),
+          
             default => RespuestaJson::error("Método no permitido", 405),
         };
     }

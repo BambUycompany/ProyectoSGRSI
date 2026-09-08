@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// 1. Cargar las aulas desde el controlador/modelo antes de renderizar
+require_once __DIR__ . "/../app/controlador/prepararObtenerAulas.php";
+
+// Generar Token CSRF si no existe
+if (empty($_SESSION["csrfToken"])) {
+    $_SESSION["csrfToken"] = bin2hex(random_bytes(32));
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

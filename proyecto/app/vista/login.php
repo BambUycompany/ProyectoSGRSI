@@ -11,7 +11,8 @@
 </head>
 <body>
     <main>
-        
+       <legend class="tituloLogin">Sistema de Gestión de Registros de Salas de Informática</legend> 
+
     <?php
     $mensajesError = [
         "credenciales"     => "La cédula o la contraseña son incorrectas. Intente nuevamente.",

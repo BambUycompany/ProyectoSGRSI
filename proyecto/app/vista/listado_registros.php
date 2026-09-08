@@ -66,7 +66,7 @@
                                     <td><?= htmlspecialchars($planilla['HoraSalida'] ?? '-') ?></td>
                                     <td><?= htmlspecialchars($planilla['NombreSolicitante'] ?? '-') ?></td>
                                     <td>
-                                        <a href="detalle_registros.php?id=<?= (int) $planilla['ID'] ?>" class="botones">Ver Detalle</a>
+                                        <a href="detalle_registros.php?id=<?= (int) $planilla['ID'] ?>" class="botones">Ver Detalle</a> 
                                     </td>
                                     <td> <a href= "listado_tickets.php" class="botones">Ver en Listado tickets</a></td>
                                 </tr>
