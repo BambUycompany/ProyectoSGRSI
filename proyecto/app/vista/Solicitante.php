@@ -44,8 +44,8 @@
             <h2>Vista solicitante</h2>
             <section class="seccionInteractiva">
                 <a href="registro_planilla.php" class="botones">Registro Planilla</a>
-                <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
-                <a href="visualizar_solicitudes.php" class="botones">Visualizar Solicitudes</a>
+                <a href="solicitar_prestamos.php" class="botones">Solicitar Préstamo</a>
+                <a href="visualizar_registros.php" class="botones">Visualizar Registros</a>
             </section>
         </section>
     </main>
