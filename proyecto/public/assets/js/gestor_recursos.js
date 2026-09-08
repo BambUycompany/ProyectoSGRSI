@@ -18,6 +18,11 @@ function abrirAgregarAula() {
 function cerrarAgregarAula() {
     dialogAgregarAula.close();
 }
+
+if (btnAgregarAula) btnAgregarAula.addEventListener("click", abrirAgregarAula);
+if (btnCerrarAgregarAula) btnCerrarAgregarAula.addEventListener("click", cerrarAgregarAula);
+dialogAgregarAula?.addEventListener("cancel", () => formAgregarAula.reset());
+
 document.querySelectorAll(".btnModificar").forEach(boton => {
     boton.addEventListener("click", (e) => {
         const id = e.target.getAttribute("data-id");
@@ -32,14 +37,7 @@ document.querySelectorAll(".btnModificar").forEach(boton => {
     });
 });
 
-// Cerrar modal Modificar
 if (btnCerrarModificarAula) {
     btnCerrarModificarAula.addEventListener("click", () => dialogModificarAula.close());
 }
-
-dialogAgregarAula?.addEventListener("cancel", () => formAgregarAula.reset());
 dialogModificarAula?.addEventListener("cancel", () => formModificarAula.reset());
-
-btnAgregarAula.addEventListener("click", abrirAgregarAula);
-btnCerrarAgregarAula.addEventListener("click", cerrarAgregarAula);
-dialogAgregarAula.addEventListener("cancel", () => formAgregarAula.reset());

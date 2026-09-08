@@ -1,16 +1,14 @@
 <?php
-session_start();
 
-// 1. Cargar las aulas desde el controlador/modelo antes de renderizar
-require_once __DIR__ . "/../app/controlador/prepararObtenerAulas.php";
 
-// Generar Token CSRF si no existe
+require_once RUTA_CONTROLADOR . "/prepararGestorRecursos.php";
+
 if (empty($_SESSION["csrfToken"])) {
     $_SESSION["csrfToken"] = bin2hex(random_bytes(32));
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +16,6 @@ if (empty($_SESSION["csrfToken"])) {
     <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/gestorRecursosCSS.css">
-
 </head>
 <body>
     <header>
@@ -30,9 +27,8 @@ if (empty($_SESSION["csrfToken"])) {
                 <i class="bi bi-list"></i>
             </button>
 
-             <h1><a href="administrador.php"><img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo " class="logo"> S.G.R.S.I </a></h1>
+            <h1><a href="administrador.php"><img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo" class="logo"> S.G.R.S.I </a></h1>
             <ul class="listaNavegacion">
-               
                 <li data-roles="solicitante administrador soporte"><a href="registro_sala.php" class="botones">Registro Sala</a></li>
                 <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
                 <li data-roles="soporte"><a href="listado_tickets.php" class="botones">Tickets</a></li>
@@ -50,18 +46,21 @@ if (empty($_SESSION["csrfToken"])) {
     </header>
     <main>
         <h1>Gestor de recursos</h1>
+
         <?php if (isset($_GET["error"])): ?>
             <p style="color:red;"><?= htmlspecialchars($_GET["error"]) ?></p>
         <?php endif; ?>
         <?php if (isset($_GET["resultado"])): ?>
             <p style="color:green;"><?= htmlspecialchars($_GET["resultado"]) ?></p>
         <?php endif; ?>
+
         <section class="seccionGestorRecursos">
             <div class="cabeceraTabla">
                 <h2>Gestor de Aulas</h2>
                 <button type="button" class="btnOperacion" id="btnAgregarAula">Agregar Aula</button>
             </div>
-            <?php if (count($aulas) === 0): ?>
+
+            <?php if (empty($aulas)): ?>
                 <p>No hay aulas registradas.</p>    
             <?php else: ?>    
             <table>
@@ -75,24 +74,31 @@ if (empty($_SESSION["csrfToken"])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($aulas as $aula): ?>
+                    
+                   <?php foreach ($aulas as $aula): ?>
+                        <?php 
+                            $id = $aula['ID'] ?? $aula['id'] ?? $aula['Id'] ?? '';
+                            $numero = $aula['Numero'] ?? $aula['numero'] ?? '';
+                            $tipo = $aula['Tipo'] ?? $aula['tipo'] ?? '';
+                            $cantidadPcs = $aula['CantidadPcs'] ?? $aula['cantidadpcs'] ?? 0;
+                        ?>
                         <tr>
-                            <td><?= htmlspecialchars($aula['ID']) ?></td>
-                            <td><a href="detalle_aula.php?aulaId=<?= urlencode($aula['ID']) ?>"> <?= htmlspecialchars($aula['Tipo']) ?> </a></td>
-                            <td><?= htmlspecialchars($aula['Numero']) ?> </td>
-                            <td><?= htmlspecialchars($aula['CantidadPcs']) ?></td>
+                            <td><?= htmlspecialchars($id) ?></td>
+                            <td><a href="detalle_aula.php?aulaId=<?= urlencode($id) ?>"><?= htmlspecialchars($tipo) ?></a></td>
+                            <td><?= htmlspecialchars($numero) ?></td>
+                            <td><?= htmlspecialchars($cantidadPcs) ?></td>
                             <td>
                                 <div class="cajaOperaciones">
                                     <button type="button" 
                                             class="btnOperacion btnModificar" 
-                                            data-id="<?= htmlspecialchars($aula['ID']) ?>"
-                                            data-tipo="<?= htmlspecialchars($aula['Tipo']) ?>"
-                                            data-numero="<?= htmlspecialchars($aula['Numero']) ?>">
+                                            data-id="<?= htmlspecialchars($id) ?>"
+                                            data-tipo="<?= htmlspecialchars($tipo) ?>"
+                                            data-numero="<?= htmlspecialchars($numero) ?>">
                                         Modificar
                                     </button>
                                     
                                     <form action="../app/controlador/procesarBajaAula.php" method="post" class="formularioEliminarAula" onsubmit="return confirm('¿Está seguro de eliminar esta aula?');">
-                                        <input type="hidden" name="aulaId" value="<?= htmlspecialchars($aula['ID']) ?>">
+                                        <input type="hidden" name="aulaId" value="<?= htmlspecialchars($id) ?>">
                                         <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
                                         <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
                                     </form>
@@ -118,13 +124,13 @@ if (empty($_SESSION["csrfToken"])) {
 
                 <label for="numero">Número:</label>
                 <input type="text" name="numero" id="numero" pattern="[0-9]{2}" maxlength="2" inputmode="numeric" required>
-                <input type="hidden" name="csrfToken" value="<?=htmlspecialchars($_SESSION["csrfToken"])?>">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
 
                 <button type="submit">Agregar</button>
-                    
-                
             </form>
         </dialog>
+
+        <!-- Modal Modificar -->
         <dialog class="dialogModificarAula" id="dialogModificarAula">
             <button type="button" class="btnCerrarModal" id="btnCerrarModalModificar">&times;</button>
             <form action="../app/controlador/procesarModificarAula.php" method="post" id="formModificarAula">
@@ -145,8 +151,8 @@ if (empty($_SESSION["csrfToken"])) {
             </form>
         </dialog>
     </main>
+
     <script src="assets/js/navbar_responsive.js"></script>
     <script src="assets/js/gestor_recursos.js"></script>
-    
 </body>
 </html>

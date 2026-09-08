@@ -25,24 +25,23 @@ class AccesoDatosAula {
             return $aulaId;
         }
 
-     public function listarAulasConDetalle() {
-        $sql = "SELECT 
-                    AULA.ID,
-                    AULA.Numero,
-                    CASE 
-                        WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
-                        ELSE 'taller'
-                    END AS Tipo,
-                    (SELECT COUNT(*) FROM PC WHERE PC.AulaID = AULA.ID) AS CantidadPcs
-                FROM AULA
-                ORDER BY Tipo, AULA.Numero";
+   public function listarAulasConDetalle() {
+    $sql = "SELECT 
+                AULA.ID AS ID,
+                AULA.Numero AS Numero,
+                CASE 
+                    WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
+                    ELSE 'taller'
+                END AS Tipo,
+                (SELECT COUNT(*) FROM PC WHERE PC.AulaID = AULA.ID) AS CantidadPcs
+            FROM AULA
+            ORDER BY Tipo, AULA.Numero";
 
-        $consulta = $this->conexion->prepare($sql);
-        $consulta->execute();
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_ASSOC); 
-    }
-
+    return $consulta->fetchAll(PDO::FETCH_ASSOC); 
+}
      public function obtenerAulaPorId(int $aulaId) {
         $sql = "SELECT 
                     AULA.ID,
