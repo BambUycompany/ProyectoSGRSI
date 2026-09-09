@@ -1,0 +1,178 @@
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    min-height: calc(100vh - 5.625rem);
+    padding: 2rem;
+    gap: 1.5rem;
+}
+
+main > h1 {
+    color: #19337c;
+    text-align: center;
+}
+
+.seccionGestorRecursos {
+    background-color: #fff;
+    color: black;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 62.5rem;
+}
+
+.cabeceraTabla {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.seccionGestorRecursos h2 {
+    color: black;
+    margin: 0;
+}
+
+.seccionGestorRecursos table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.seccionGestorRecursos thead {
+    background-color: #19337c;
+    color: white;
+}
+
+.seccionGestorRecursos th,
+.seccionGestorRecursos td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 0.0625rem solid #e2e8f0;
+}
+
+.btnOperacion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: #19337c;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.btnOperacion:hover {
+    background-color: #1e3a8a;
+}
+
+.cajaOperaciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dialogAgregarAula,
+.dialogModificarAula {
+    margin: auto;
+    background-color: #fff;
+    color: black;
+    border: none;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 90%;
+    max-width: 31.25rem;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.35);
+}
+
+.dialogAgregarAula[open],
+.dialogModificarAula[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogAgregarAula::backdrop,
+.dialogModificarAula::backdrop {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.btnCerrarModal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.dialogAgregarAula form,
+.dialogModificarAula form {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogAgregarAula label,
+.dialogModificarAula label {
+    font-weight: bold;
+    color: black;
+    margin-bottom: 0.4rem;
+}
+
+.dialogAgregarAula input[type="text"],
+.dialogAgregarAula select,
+.dialogModificarAula input[type="text"],
+.dialogModificarAula select {
+    padding: 0.5rem 0.7rem;
+    border: 0.0625rem solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.dialogAgregarAula button[type="submit"],
+.dialogModificarAula button[type="submit"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 0.5rem;
+    border-radius: 0.3rem;
+    border: none;
+    background-color: #19337c;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.dialogAgregarAula button[type="submit"]:hover,
+.dialogModificarAula button[type="submit"]:hover {
+    background-color: #1e3a8a;
+}
+
+@media (max-width: 48rem) {
+    .seccionGestorRecursos {
+        padding: 1.2rem;
+    }
+
+    .cabeceraTabla {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .seccionGestorRecursos th,
+    .seccionGestorRecursos td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .cajaOperaciones {
+        flex-direction: column;
+    }
+}
