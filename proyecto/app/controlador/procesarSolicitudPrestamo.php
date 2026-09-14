@@ -2,6 +2,9 @@
 require_once __DIR__ . "/../../config/config.php";
 session_start();
 
+require_once RUTA_CONTROLADOR . "/control_acceso.php";
+requerirRol("solicitante");
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../../public/registro_prestamo.php?error=" . urlencode("Método no permitido."));
     exit;
@@ -38,10 +41,10 @@ $resultado = $altaDatosPrestamo->registrarPrestamo([
 ]);
 
 if (!$resultado) {
-    header("Location: ../../public/registro_prestamo.php?error=" . urlencode("Ese portátil ya no está disponible. Elegí otro."));
+    header("Location: ../../public/solicitar_prestamos.php?error=" . urlencode("Ese portátil ya no está disponible. Elegí otro."));
     exit;
 }
 
-header("Location: ../../public/listado_prestamos.php?resultado=" . urlencode("Préstamo registrado correctamente."));
+header("Location: ../../public/solicitar_prestamos.php?resultado=" . urlencode("Préstamo registrado correctamente."));
 exit;
 ?>

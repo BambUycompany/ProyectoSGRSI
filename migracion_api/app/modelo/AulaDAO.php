@@ -49,7 +49,6 @@ class AulaDAO {
         try {
             $this->conexion->beginTransaction();
 
-            // Actualizar número en la tabla base
             $sqlAula = "UPDATE AULA SET Numero = :numero WHERE ID = :aulaId";
             $consultaAula = $this->conexion->prepare($sqlAula);
             $consultaAula->execute([
@@ -57,7 +56,6 @@ class AulaDAO {
                 "aulaId" => $aulaId
             ]);
 
-            // Limpiar subtipos existentes
             $sqlDelLab = "DELETE FROM LABORATORIO WHERE AulaID = :aulaId";
             $consultaDelLab = $this->conexion->prepare($sqlDelLab);
             $consultaDelLab->execute(["aulaId" => $aulaId]);
@@ -66,7 +64,6 @@ class AulaDAO {
             $consultaDelTal = $this->conexion->prepare($sqlDelTal);
             $consultaDelTal->execute(["aulaId" => $aulaId]);
 
-            // Insertar en la tabla de subtipo correspondiente
             if (strtolower($tipo) === "laboratorio") {
                 $sqlIns = "INSERT INTO LABORATORIO (AulaID) VALUES (:aulaId)";
             } else {

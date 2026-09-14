@@ -57,7 +57,9 @@ if (empty($_SESSION["csrfToken"])) {
         <section class="seccionGestorRecursos">
             <div class="cabeceraTabla">
                 <h2>Gestor de Aulas</h2>
-                <button type="button" class="btnOperacion" id="btnAgregarAula">Agregar Aula</button>
+               <?php if ($_SESSION["rolActivo"] === "administrador"): ?>
+                    <button type="button" class="btnOperacion" id="btnAgregarAula">Agregar Aula</button>
+                <?php endif; ?>
             </div>
 
             <?php if (empty($aulas)): ?>
@@ -88,21 +90,23 @@ if (empty($_SESSION["csrfToken"])) {
                             <td><?= htmlspecialchars($numero) ?></td>
                             <td><?= htmlspecialchars($cantidadPcs) ?></td>
                             <td>
-                                <div class="cajaOperaciones">
-                                    <button type="button" 
-                                            class="btnOperacion btnModificar" 
-                                            data-id="<?= htmlspecialchars($id) ?>"
-                                            data-tipo="<?= htmlspecialchars($tipo) ?>"
-                                            data-numero="<?= htmlspecialchars($numero) ?>">
-                                        Modificar
-                                    </button>
-                                    
-                                    <form action="../app/controlador/procesarBajaAula.php" method="post" class="formularioEliminarAula" onsubmit="return confirm('¿Está seguro de eliminar esta aula?');">
-                                        <input type="hidden" name="aulaId" value="<?= htmlspecialchars($id) ?>">
-                                        <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
-                                        <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
-                                    </form>
-                                </div>
+                            <?php if ($_SESSION["rolActivo"] === "administrador"): ?>
+                                    <div class="cajaOperaciones">
+                                        <button type="button" 
+                                                class="btnOperacion btnModificar" 
+                                                data-id="<?= htmlspecialchars($id) ?>"
+                                                data-tipo="<?= htmlspecialchars($tipo) ?>"
+                                                data-numero="<?= htmlspecialchars($numero) ?>">
+                                            Modificar
+                                        </button>
+                                        
+                                        <form action="../app/controlador/procesarBajaAula.php" method="post" class="formularioEliminarAula" onsubmit="return confirm('¿Está seguro de eliminar esta aula?');">
+                                            <input type="hidden" name="aulaId" value="<?= htmlspecialchars($id) ?>">
+                                            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                                            <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
+                                        </form>
+                                    </div>
+                            <?php endif; ?>    
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -110,6 +114,92 @@ if (empty($_SESSION["csrfToken"])) {
             </table>
             <?php endif; ?>
         </section>
+
+            <section class="seccionGestorPortatiles">
+        <div class="cabeceraTabla">
+            <h2>Gestor de Portátiles</h2>
+            <?php if ($_SESSION["rolActivo"] === "administrador"): ?>
+                <button type="button" class="btnOperacion" id="btnAgregarPortatil">Agregar Portátil</button>
+            <?php endif; ?>
+        </div>
+
+        <?php if (empty($portatiles)): ?>
+            <p>No hay portátiles registrados.</p>
+        <?php else: ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Modelo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($portatiles as $portatil): ?>
+                        <tr>
+                            <td><?= (int) $portatil['ID'] ?></td>
+                            <td><?= htmlspecialchars($portatil['Modelo']) ?></td>
+                            <td><?= htmlspecialchars(ucfirst($portatil['Estado'])) ?></td>
+                            <td>
+                                <div class="cajaOperaciones">
+                                    <?php if ($_SESSION["rolActivo"] === "administrador"): ?>
+                                        <button type="button"
+                                                class="btnOperacion btnModificarPortatil"
+                                                data-id="<?= (int) $portatil['ID'] ?>"
+                                                data-modelo="<?= htmlspecialchars($portatil['Modelo']) ?>">
+                                            Modificar
+                                        </button>
+
+                                        <?php if ($portatil['Estado'] !== 'en_prestamo'): ?>
+                                            <form action="../app/controlador/procesarBajaPortatil.php" method="post" onsubmit="return confirm('¿Eliminar este portátil?');">
+                                                <input type="hidden" name="portatilId" value="<?= (int) $portatil['ID'] ?>">
+                                                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                                                <button type="submit" class="btnOperacion btnEliminar">Eliminar</button>
+                                            </form>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+                                    <?php if ($portatil['Estado'] === 'disponible'): ?>
+                                        <form action="../app/controlador/procesarDeshabilitarPortatil.php" method="post" onsubmit="return confirm('¿Deshabilitar este portátil?');">
+                                            <input type="hidden" name="portatilId" value="<?= (int) $portatil['ID'] ?>">
+                                            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                                            <button type="submit" class="btnOperacion">Deshabilitar</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </section>
+
+    <?php if ($_SESSION["rolActivo"] === "administrador"): ?>
+        <dialog class="dialogAgregarPortatil" id="dialogAgregarPortatil">
+            <button type="button" class="btnCerrarModal" id="btnCerrarAgregarPortatil">&times;</button>
+            <form action="../app/controlador/procesarAgregarPortatil.php" method="post" id="formAgregarPortatil">
+                <h2>Agregar Portátil</h2>
+                <label for="modeloPortatil">Modelo:</label>
+                <input type="text" id="modeloPortatil" name="modeloPortatil" maxlength="150" required>
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                <button type="submit">Agregar</button>
+            </form>
+        </dialog>
+
+        <dialog class="dialogModificarPortatil" id="dialogModificarPortatil">
+            <button type="button" class="btnCerrarModal" id="btnCerrarModificarPortatil">&times;</button>
+            <form action="../app/controlador/procesarModificarPortatil.php" method="post" id="formModificarPortatil">
+                <h2>Modificar Portátil</h2>
+                <input type="hidden" name="portatilId" id="modificarPortatilId">
+                <label for="modificarModeloPortatil">Modelo:</label>
+                <input type="text" id="modificarModeloPortatil" name="modeloPortatil" maxlength="150" required>
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </dialog>
+    <?php endif; ?>
 
         <dialog class="dialogAgregarAula" id="dialogAgregarAula">
             <button type="button" class="btnCerrarModal" id="btnCerrarModal">&times;</button>
@@ -130,7 +220,6 @@ if (empty($_SESSION["csrfToken"])) {
             </form>
         </dialog>
 
-        <!-- Modal Modificar -->
         <dialog class="dialogModificarAula" id="dialogModificarAula">
             <button type="button" class="btnCerrarModal" id="btnCerrarModalModificar">&times;</button>
             <form action="../app/controlador/procesarModificarAula.php" method="post" id="formModificarAula">

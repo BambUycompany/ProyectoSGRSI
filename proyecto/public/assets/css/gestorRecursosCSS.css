@@ -175,4 +175,115 @@ main > h1 {
     .cajaOperaciones {
         flex-direction: column;
     }
+
+    .seccionGestorPortatiles {
+    background-color: #fff;
+    color: black;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 62.5rem;
+}
+
+.seccionGestorPortatiles h2 {
+    color: black;
+    margin: 0;
+}
+
+.seccionGestorPortatiles table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.seccionGestorPortatiles thead {
+    background-color: #19337c;
+    color: white;
+}
+
+.seccionGestorPortatiles th,
+.seccionGestorPortatiles td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 0.0625rem solid #e2e8f0;
+}
+
+.dialogAgregarPortatil,
+.dialogModificarPortatil {
+    margin: auto;
+    background-color: #fff;
+    color: black;
+    border: none;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 90%;
+    max-width: 31.25rem;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.35);
+}
+
+.dialogAgregarPortatil[open],
+.dialogModificarPortatil[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogAgregarPortatil::backdrop,
+.dialogModificarPortatil::backdrop {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.dialogAgregarPortatil form,
+.dialogModificarPortatil form {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogAgregarPortatil label,
+.dialogModificarPortatil label {
+    font-weight: bold;
+    color: black;
+    margin-bottom: 0.4rem;
+}
+
+.dialogAgregarPortatil input[type="text"],
+.dialogModificarPortatil input[type="text"] {
+    padding: 0.5rem 0.7rem;
+    border: 0.0625rem solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.dialogAgregarPortatil button[type="submit"],
+.dialogModificarPortatil button[type="submit"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 0.5rem;
+    border-radius: 0.3rem;
+    border: none;
+    background-color: #19337c;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.dialogAgregarPortatil button[type="submit"]:hover,
+.dialogModificarPortatil button[type="submit"]:hover {
+    background-color: #1e3a8a;
+}
+
+@media (max-width: 48rem) {
+    .seccionGestorPortatiles {
+        padding: 1.2rem;
+    }
+
+    .seccionGestorPortatiles th,
+    .seccionGestorPortatiles td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+}
 }

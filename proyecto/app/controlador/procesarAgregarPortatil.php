@@ -1,7 +1,9 @@
 <?php
-
 require_once __DIR__ . "/../../config/config.php";
 session_start();
+
+require_once RUTA_CONTROLADOR . "/control_acceso.php";
+requerirRol("administrador");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../../public/gestor_recursos.php?error=" . urlencode("Método no permitido."));
@@ -28,3 +30,4 @@ header("Location: ../../public/gestor_recursos.php?resultado=" . urlencode("Port
 exit;
 ?>
 
+    

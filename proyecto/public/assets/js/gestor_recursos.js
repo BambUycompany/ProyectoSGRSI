@@ -40,4 +40,36 @@ document.querySelectorAll(".btnModificar").forEach(boton => {
 if (btnCerrarModificarAula) {
     btnCerrarModificarAula.addEventListener("click", () => dialogModificarAula.close());
 }
-dialogModificarAula?.addEventListener("cancel", () => formModificarAula.reset());
+dialogModificarAula?.addEventListener("cancel", () => formModificarAula.reset());   
+
+const btnAgregarPortatil = document.getElementById("btnAgregarPortatil");
+if (btnAgregarPortatil) {
+    const btnCerrarAgregarPortatil = document.getElementById("btnCerrarAgregarPortatil");
+    const dialogAgregarPortatil = document.getElementById("dialogAgregarPortatil");
+    const formAgregarPortatil = document.getElementById("formAgregarPortatil");
+
+    btnAgregarPortatil.addEventListener("click", () => {
+        formAgregarPortatil.reset();
+        dialogAgregarPortatil.showModal();
+    });
+
+    btnCerrarAgregarPortatil.addEventListener("click", () => dialogAgregarPortatil.close());
+}
+
+const botonesModificarPortatil = document.querySelectorAll(".btnModificarPortatil");
+if (botonesModificarPortatil.length > 0) {
+    const btnCerrarModificarPortatil = document.getElementById("btnCerrarModificarPortatil");
+    const dialogModificarPortatil = document.getElementById("dialogModificarPortatil");
+    const inputModificarPortatilId = document.getElementById("modificarPortatilId");
+    const inputModificarModeloPortatil = document.getElementById("modificarModeloPortatil");
+
+    for (const boton of botonesModificarPortatil) {
+        boton.addEventListener("click", () => {
+            inputModificarPortatilId.value = boton.dataset.id;
+            inputModificarModeloPortatil.value = boton.dataset.modelo;
+            dialogModificarPortatil.showModal();
+        });
+    }
+
+    btnCerrarModificarPortatil.addEventListener("click", () => dialogModificarPortatil.close());
+}

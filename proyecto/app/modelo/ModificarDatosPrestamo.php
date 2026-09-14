@@ -7,11 +7,11 @@ class ModificarDatosPrestamo {
     }
 
    
-    public function registrarDevolucion(int $prestamoId): bool {
+    public function finalizarPrestamo(int $prestamoId): bool {
         try {
             $this->conexion->beginTransaction();
 
-            $sqlBuscar = "SELECT PortatilID, Estado FROM PORTATIL WHERE PortatilID = :id FOR UPDATE";
+            $sqlBuscar = "SELECT PortatilID, Estado FROM PRESTAMO WHERE ID = :id FOR UPDATE";
             $consultaBuscar = $this->conexion->prepare($sqlBuscar);
             $consultaBuscar->execute(["id" => $prestamoId]);
             $prestamo = $consultaBuscar->fetch(PDO::FETCH_ASSOC);
@@ -21,7 +21,7 @@ class ModificarDatosPrestamo {
                 return false;
             }
 
-            $this->conexion->prepare("UPDATE PORTATIL SET Estado = 'devuelto' WHERE ID = :id")
+            $this->conexion->prepare("UPDATE PRESTAMO SET Estado = 'finalizado' WHERE ID = :id")
                 ->execute(["id" => $prestamoId]);
 
             $this->conexion->prepare("UPDATE PORTATIL SET Estado = 'disponible' WHERE ID = :portatilId")
@@ -37,6 +37,7 @@ class ModificarDatosPrestamo {
             return false;
         }
     }
+
 
     public function modificarDatosAlumno(int $prestamoId, string $ciAlumno, string $clase, string $correoAlumno, string $telefonoAlumno): bool {
         $sql = "UPDATE PRESTAMO SET CIAlumno = :ci, Clase = :clase, CorreoAlumno = :correo, TelefonoAlumno = :telefono WHERE ID = :id";

@@ -6,6 +6,7 @@
     <title>Solicitar Préstamo</title>
     <link rel="stylesheet" href="assets/css/global.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/prestamosCSS.css">
 </head>
 <body>
     <header>
@@ -20,6 +21,9 @@
                 <li class="menuUsuario">
                     <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                     <ul class="opcionesUsuario" id="opcionesUsuario">
+                        <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
+                            <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
+                        <?php endif; ?>
                         <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                     </ul>
                 </li>
@@ -28,42 +32,44 @@
     </header>
 
     <main>
-        <?php if (isset($_GET["error"])): ?>
-            <p style="color:red;"><?= htmlspecialchars($_GET["error"]) ?></p>
-        <?php endif; ?>
-
-        <section class="seccionRegistroPrestamo">
+        <section class="seccionPrestamos">
             <h2>Solicitar Préstamo de Portátil</h2>
+
+            <?php if (isset($_GET["error"])): ?>
+                <p style="color:#ffb3b3;"><?= htmlspecialchars($_GET["error"]) ?></p>
+            <?php endif; ?>
 
             <?php if (count($portatilesDisponibles) === 0): ?>
                 <p>No hay portátiles disponibles en este momento.</p>
             <?php else: ?>
-                <form action="../app/controlador/procesarRegistroPrestamo.php" method="POST">
-                    <label for="portatilId">Portátil:</label>
-                    <select id="portatilId" name="portatilId" required>
-                        <option value="">Seleccionar</option>
-                        <?php foreach ($portatilesDisponibles as $portatil): ?>
-                            <option value="<?= (int) $portatil['ID'] ?>"><?= htmlspecialchars($portatil['Modelo']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                <section class="formSala">
+                    <form action="../app/controlador/procesarSolicitudPrestamo.php" method="POST">
+                        <label for="portatilId">Portátil:</label>
+                        <select id="portatilId" name="portatilId" required>
+                            <option value="">Seleccionar</option>
+                            <?php foreach ($portatilesDisponibles as $portatil): ?>
+                                <option value="<?= (int) $portatil['ID'] ?>"><?= htmlspecialchars($portatil['Modelo']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
 
-                    <label for="ciAlumno">Cédula del alumno:</label>
-                    <input type="text" id="ciAlumno" name="ciAlumno" pattern="[0-9]{8}" maxlength="8" required>
+                        <label for="ciAlumno">Cédula del alumno:</label>
+                        <input type="text" id="ciAlumno" name="ciAlumno" pattern="[0-9]{8}" maxlength="8" inputmode="numeric" required>
 
-                    <label for="clase">Clase / Grupo:</label>
-                    <input type="text" id="clase" name="clase" maxlength="50" required>
+                        <label for="clase">Clase / Grupo:</label>
+                        <input type="text" id="clase" name="clase" maxlength="50" required>
 
-                    <label for="correoAlumno">Correo del alumno (opcional):</label>
-                    <input type="email" id="correoAlumno" name="correoAlumno" maxlength="150">
+                        <label for="correoAlumno">Correo del alumno (opcional):</label>
+                        <input type="email" id="correoAlumno" name="correoAlumno" maxlength="150">
 
-                    <label for="telefonoAlumno">Teléfono del alumno (opcional):</label>
-                    <input type="text" id="telefonoAlumno" name="telefonoAlumno" maxlength="20">
+                        <label for="telefonoAlumno">Teléfono del alumno (opcional):</label>
+                        <input type="text" id="telefonoAlumno" name="telefonoAlumno" maxlength="20">
 
-                    <label for="fechaDev">Fecha comprometida de devolución:</label>
-                    <input type="date" id="fechaDev" name="fechaDev" required>
+                        <label for="fechaDev">Fecha comprometida de devolución:</label>
+                        <input type="date" id="fechaDev" name="fechaDev" required>
 
-                    <button type="submit">Registrar Préstamo</button>
-                </form>
+                        <input type="submit" value="Registrar Préstamo">
+                    </form>
+                </section>
             <?php endif; ?>
         </section>
     </main>

@@ -2,6 +2,9 @@
 require_once __DIR__ . "/../../config/config.php";
 session_start();
 
+require_once RUTA_CONTROLADOR . "/control_acceso.php";
+requerirRol("solicitante");
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../../public/listado_prestamos.php?error=" . urlencode("Método no permitido."));
     exit;
@@ -21,12 +24,13 @@ $conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_EN
 $conexion = $conectorPDO->establecerConexion();
 
 $modificarDatosPrestamo = new ModificarDatosPrestamo($conexion);
-$resultado = $modificarDatosPrestamo->registrarDevolucion($prestamoId);
+$resultado = $modificarDatosPrestamo->finalizarPrestamo($prestamoId);
 
 if (!$resultado) {
-    header("Location: ../../public/listado_prestamos.php?error=" . urlencode("No se pudo registrar la devolución."));
+    header("Location: ../../public/listado_prestamos.php?error=" . urlencode("No se pudo finalizar el préstamo."));
     exit;
 }
 
-header("Location: ../../public/listado_prestamos.php?resultado=" . urlencode("Devolución registrada correctamente."));
+header("Location: ../../public/listado_prestamos.php?resultado=" . urlencode("Préstamo finalizado correctamente."));
 exit;
+?>

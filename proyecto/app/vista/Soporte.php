@@ -48,6 +48,7 @@
                 <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
                 <a href="listado_registros.php" class="botones">Listado de Registros</a>
                 <a href="listado_tickets.php" class="botones">Listado de tickets</a>
+                <a href="listado_prestamos.php" class="botones">Solicitudes de préstamo</a>
             </section>
             
         </section>

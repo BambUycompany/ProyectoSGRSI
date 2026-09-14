@@ -3,7 +3,7 @@ require_once __DIR__ . "/../../config/config.php";
 session_start();
 
 require_once RUTA_CONTROLADOR . "/control_acceso.php";
-requerirRol("administrador");
+requerirRol(["administrador", "soporte"]);
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../../public/gestor_recursos.php?error=" . urlencode("Método no permitido."));
@@ -18,19 +18,19 @@ if ($portatilId === 0) {
 }
 
 require_once RUTA_MODELO . "/ConectorPDO.php";
-require_once RUTA_MODELO . "/BajaDatosPortatil.php";
+require_once RUTA_MODELO . "/ModificarDatosPortatil.php";
 
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 
-$bajaDatosPortatil = new BajaDatosPortatil($conexion);
-$resultado = $bajaDatosPortatil->eliminarPortatil($portatilId);
+$modificarDatosPortatil = new ModificarDatosPortatil($conexion);
+$resultado = $modificarDatosPortatil->deshabilitarPortatil($portatilId);
 
 if (!$resultado) {
-    header("Location: ../../public/gestor_recursos.php?error=" . urlencode("No se pudo eliminar (está en préstamo o tiene historial)."));
+    header("Location: ../../public/gestor_recursos.php?error=" . urlencode("No se pudo deshabilitar (no está disponible)."));
     exit;
 }
 
-header("Location: ../../public/gestor_recursos.php?resultado=" . urlencode("Portátil eliminado correctamente."));
+header("Location: ../../public/gestor_recursos.php?resultado=" . urlencode("Portátil deshabilitado correctamente."));
 exit;
 ?>

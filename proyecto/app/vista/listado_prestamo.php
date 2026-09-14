@@ -16,10 +16,13 @@
             <ul class="listaNavegacion">
                 <li data-roles="solicitante administrador soporte"><a href="registro_planilla.php" class="botones">Registro Sala</a></li>
                 <li data-roles="solicitante"><a href="registro_prestamo.php" class="botones">Solicitar Préstamo</a></li>
-                <li data-roles="solicitante"><a href="listado_prestamos.php" class="botones">Mis Préstamos</a></li>
+                <li data-roles="solicitante"><a href="listado_prestamos.php" class="botones">Solicitudes de Préstamos</a></li>
                 <li class="menuUsuario">
                     <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                     <ul class="opcionesUsuario" id="opcionesUsuario">
+                        <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
+                            <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
+                        <?php endif; ?>
                         <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                     </ul>
                 </li>
@@ -36,10 +39,10 @@
         <?php endif; ?>
 
         <section class="seccionListadoPrestamos">
-            <h2>Mis Préstamos</h2>
+            <h2>Listado de Préstamos</h2>
 
             <?php if (count($prestamos) === 0): ?>
-                <p>Todavía no registraste ningún préstamo.</p>
+                <p>Ningun prestamo en curso.</p>
             <?php else: ?>
                 <table>
                     <thead>
@@ -64,7 +67,7 @@
                                 <td><?= htmlspecialchars(ucfirst($prestamo['Estado'])) ?></td>
                                 <td>
                                     <?php if ($prestamo['Estado'] === 'activo'): ?>
-                                        <form action="../app/controlador/procesarDevolverPrestamo.php" method="post" onsubmit="return confirm('¿Confirmar devolución de este portátil?');">
+                                        <form action="../app/controlador/procesarFinalizarPrestamo.php" method="post" onsubmit="return confirm('¿Confirmar devolución de este portátil?');">
                                             <input type="hidden" name="prestamoId" value="<?= (int) $prestamo['ID'] ?>">
                                             <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
                                             <button type="submit" class="btnOperacion">Marcar como devuelto</button>

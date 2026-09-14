@@ -48,3 +48,4 @@ btnCerrarModificarEquipo.addEventListener("click", cerrarModificarEquipo);
 for (const boton of botonesModificar) {
     boton.addEventListener("click", abrirModificarEquipo);
 }
+

@@ -1,6 +1,6 @@
 <?php
 
-class AltaDatosPortail{
+class AltaDatosPortatil{
 
         private PDO $conexion;
 

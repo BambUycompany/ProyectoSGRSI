@@ -1,3 +1,4 @@
+
 <?php
 require_once __DIR__ . "/../config/config.php";
 session_start();
@@ -9,6 +10,6 @@ if (empty($_SESSION["csrfToken"])) {
     $_SESSION["csrfToken"] = bin2hex(random_bytes(32));
 }
 
-require_once RUTA_CONTROLADOR . "/prepararListadoPrestamos.php";
-require_once RUTA_VISTA . "/listado_prestamos.php";
+require_once RUTA_CONTROLADOR . "/prepararListadoPrestamo.php";
+require_once RUTA_VISTA . "/listado_prestamo.php";
 ?>

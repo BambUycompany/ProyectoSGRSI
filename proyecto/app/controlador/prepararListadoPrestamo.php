@@ -6,5 +6,5 @@ $conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_EN
 $conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosPrestamo = new AccesoDatosPrestamo($conexion);
-$prestamos = $accesoDatosPrestamo->listarPrestamosDeSolicitante($_SESSION["cedula"]);
+$prestamos = $accesoDatosPrestamo->listarPrestamos($_SESSION["cedula"]);
 ?>
