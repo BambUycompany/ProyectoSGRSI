@@ -50,31 +50,45 @@ class AccesoDatosPlanilla {
         return $this->conexion->lastInsertId();
     }
 
-    /**
-     * Registra un nuevo ticket asociado a una planilla, con el estado inicial de "pendiente".
-     *
-     * @param array $datos Array asociativo con las claves: descripcion, fallo, numeroPc,
-     * aulaId, documentoRegistrante y planillaId.
-     *
-     * @return bool TRUE si la inserción se realiza correctamente, de lo contrario: FALSE .
-     */
-    public function registrarTicket(array $datos) {
-        $sql = "INSERT INTO TICKET 
-            (Descripcion, Fallo, Estado, FechaCreacion, PcNumPc, PcAulaID, SolicitanteCedula, PlanillaId)
-            VALUES (:descripcion, :fallo, 'pendiente', NOW(), :pcNumPc, :pcAulaID, :solicitanteCedula, :planillaId)";
+   public function existePcEnAula($numeroPc, $aulaId): bool {
+    $sql = "SELECT COUNT(*) FROM pc WHERE NumPc = :numeroPc AND AulaID = :aulaId";
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute([
+        "numeroPc" => $numeroPc,
+        "aulaId" => $aulaId
+    ]);
 
-        $consulta = $this->conexion->prepare($sql);
+    return ((int) $consulta->fetchColumn()) > 0;
+}
 
-        return $consulta->execute([
-            "descripcion" => $datos["descripcion"],
-            "fallo" => $datos["fallo"],
-            "pcNumPc" => $datos["numeroPc"],
-            "pcAulaID" => $datos["aulaId"],
-            "solicitanteCedula" => $datos["documentoRegistrante"],
-            "planillaId" => $datos["planillaId"],
-        ]);
+
+public function registrarTicket(array $datos) {
+    $sql = "INSERT INTO TICKET 
+        (Descripcion, Fallo, Estado, FechaCreacion, PcNumPc, PcAulaID, SolicitanteCedula, PlanillaId)
+        VALUES (:descripcion, :fallo, 'pendiente', NOW(), :pcNumPc, :pcAulaID, :solicitanteCedula, :planillaId)";
+
+    $consulta = $this->conexion->prepare($sql);
+    try {
+        if (!empty($datos["numeroPc"]) && !empty($datos["aulaId"])) {
+            return $consulta->execute([
+                "descripcion" => $datos["descripcion"],
+                "fallo" => $datos["fallo"],
+                "pcNumPc" => $datos["numeroPc"],
+                "pcAulaID" => $datos["aulaId"],
+                "solicitanteCedula" => $datos["documentoRegistrante"],
+                "planillaId" => $datos["planillaId"],
+            ]);
+        } else {
+            throw new Exception("PC o aula no especificados");
+        }
+    } catch (PDOException $e) {
+        error_log("Error de BD al registrar ticket: " . $e->getMessage());
+        return false;
+    } catch (Exception $e) {
+        error_log("Error al registrar ticket: " . $e->getMessage());
+        return false;
     }
-
+}
  /**
      * Lista todos los tickets asociados a una planilla, ordenados por fecha de creación.
      *
@@ -209,6 +223,7 @@ class AccesoDatosPlanilla {
     return $fila === false ? null : $fila;
     }
 
+   
     
 
 }

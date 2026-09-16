@@ -40,6 +40,18 @@ if ($aulaId === null) {
     header("Location: ../../public/registro_planilla.php?error=" . urlencode("El aula seleccionada no existe."));
     exit;
 }
+
+foreach ($tickets as $ticket) {
+    $numPc = trim($ticket["numeroPc"] ?? "");
+    
+    
+    if ($numPc !== "") {
+        if (!$accesoDatosPlanilla->existePcEnAula($numPc, $aulaId)) {
+            header("Location: ../../public/registro_planilla.php?error=" . urlencode("Pc no encontrada en esta aula"));
+            exit;
+        }
+    }
+}
 $datosPlanilla = [
     "fecha" => $fecha,
     "horaEntrada" => $horaEntrada,

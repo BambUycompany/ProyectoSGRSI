@@ -78,7 +78,7 @@ if (empty($_SESSION["csrfToken"])) {
                 <tbody>
                     
                    <?php foreach ($aulas as $aula): ?>
-                        <?php 
+                        <?php //variaciones para que ande
                             $id = $aula['ID'] ?? $aula['id'] ?? $aula['Id'] ?? '';
                             $numero = $aula['Numero'] ?? $aula['numero'] ?? '';
                             $tipo = $aula['Tipo'] ?? $aula['tipo'] ?? '';
@@ -165,6 +165,12 @@ if (empty($_SESSION["csrfToken"])) {
                                             <input type="hidden" name="portatilId" value="<?= (int) $portatil['ID'] ?>">
                                             <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
                                             <button type="submit" class="btnOperacion">Deshabilitar</button>
+                                        </form>
+                                    <?php elseif ($portatil['Estado'] === 'deshabilitado'): ?>
+                                        <form action="../app/controlador/procesarHabilitarPortatil.php" method="post" onsubmit="return confirm('¿Habilitar este portátil nuevamente?');">
+                                            <input type="hidden" name="portatilId" value="<?= (int) $portatil['ID'] ?>">
+                                            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"] ?? '') ?>">
+                                            <button type="submit" class="btnOperacion">Habilitar</button>
                                         </form>
                                     <?php endif; ?>
                                 </div>

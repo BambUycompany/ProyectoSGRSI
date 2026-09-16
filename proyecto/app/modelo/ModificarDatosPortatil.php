@@ -18,7 +18,14 @@ class ModificarDatosPortatil {
     $consulta = $this->conexion->prepare($sql);
     $consulta->execute(["id" => $portatilId]);
     return $consulta->rowCount() > 0;
-}
+    }
+
+    public function habilitarPortatil(int $portatilId): bool {
+        $sql = "UPDATE PORTATIL SET Estado = 'disponible' WHERE ID = :id AND Estado = 'deshabilitado'";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["id" => $portatilId]);
+        return $consulta->rowCount() > 0;
+    }
 }
 
 ?>

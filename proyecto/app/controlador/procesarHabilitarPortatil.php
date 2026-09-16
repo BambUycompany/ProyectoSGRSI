@@ -24,13 +24,13 @@ $conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_EN
 $conexion = $conectorPDO->establecerConexion();
 
 $modificarDatosPortatil = new ModificarDatosPortatil($conexion);
-$resultado = $modificarDatosPortatil->deshabilitarPortatil($portatilId);
+$resultado = $modificarDatosPortatil->habilitarPortatil($portatilId);
 
 if (!$resultado) {
-    header("Location: ../../public/gestor_recursos.php?error=" . urlencode("No se pudo deshabilitar (no está disponible)."));
+    header("Location: ../../public/gestor_recursos.php?error=" . urlencode("No se pudo habilitar (no está disponible)."));
     exit;
 }
 
-header("Location: ../../public/gestor_recursos.php?resultado=" . urlencode("Portátil deshabilitado correctamente."));
+header("Location: ../../public/gestor_recursos.php?resultado=" . urlencode("Portátil habilitado correctamente."));
 exit;
 ?>
