@@ -6,8 +6,6 @@ require_once RUTA_MODELO . "/AccesoDatosTickets.php";
 
 $numPc = trim($_GET["pc"] ?? "");
 $aulaId = (int) ($_GET["aulaId"] ?? 0);
-$aulaTipo = trim($_GET["AulaTipo"] ?? "");
-$aulaNumero = trim($_GET["AulaNumero"] ?? "");
 
 if ($numPc === "" || $aulaId === 0) {
     header("Location: ../../public/listado_tickets.php");

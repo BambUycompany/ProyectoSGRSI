@@ -28,7 +28,7 @@ class AccesoDatosTickets {
     }
 
     public function listarTicketsPorPcYAula(string $numPc, int $aulaId,) {
-        $sql = "SELECT TICKET.ID, TICKET.Descripcion, TICKET.Fallo, TICKET.Estado, TICKET.FechaCreacion,
+        $sql = "SELECT TICKET.ID, TICKET.Descripcion, TICKET.Fallo, TICKET.Estado, TICKET.Prioridad, TICKET.FechaCreacion,
                         TICKET.PcNumPc, TICKET.PcAulaID,
                         AULA.ID AS AulaID,
                         AULA.Numero AS AulaNumero,
