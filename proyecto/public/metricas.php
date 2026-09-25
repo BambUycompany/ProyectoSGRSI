@@ -8,5 +8,6 @@ if (!isset($_SESSION["cedula"])) {
 }
 require_once RUTA_CONTROLADOR . "/control_acceso.php";
 requerirRol("administrador");
+require_once RUTA_CONTROLADOR . "/prepararMetricas.php";
 require_once RUTA_VISTA . "/metricas.php";
 ?>

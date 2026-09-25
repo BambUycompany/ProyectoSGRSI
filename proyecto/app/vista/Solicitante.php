@@ -46,6 +46,8 @@
                 <a href="registro_planilla.php" class="botones">Registro Planilla</a>
                 <a href="solicitar_prestamos.php" class="botones">Solicitar Préstamo</a>
                 <a href="visualizar_registros.php" class="botones">Visualizar Registros</a>
+                <a href="mailto:@ezequielobedrodriguez@gmail.com" class="botones">Solicitud de servicio</a>
+                <legend> <i>Para gestionar una solicitud de servicio se pide al personal enviar un mail con el asunto <strong>"SOLICITUD DE SERVICIO - AULA X"</strong></i></legend>
             </section>
         </section>
     </main>

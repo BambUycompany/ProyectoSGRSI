@@ -36,6 +36,12 @@
    
 }
 
+.grillaMetricas{
+    display: block;
+    align-items: end;
+    justify-content: center;
+}
+
 .botones:hover {
     transform: scale(1.02); 
     background-color: #1e3a8a;

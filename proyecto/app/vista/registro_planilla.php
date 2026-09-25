@@ -112,11 +112,14 @@
         <select id="fallo" required>
             <option value="">Seleccionar</option>
             <option value="falta_mouse">Falta mouse</option>
+            <option value="mouse_no_funciona">Mouse no funciona</option>
             <option value="falta_teclado">Falta teclado</option>
+            <option value="teclado_no_funciona">Teclado no funciona</option>
             <option value="no_prende">No prende</option>
             <option value="sin_almacenamiento">No tiene almacenamiento</option>
+            <option value="bajo_rendimiento">Bajo rendimiento</option>
             <option value="otro">Otro</option>
-        </select><br><br>
+        </select>
 
         <label for="descripcion">Descripción de la falla:</label><br>
         <textarea id="descripcion" rows="4" cols="50" required></textarea><br><br>
