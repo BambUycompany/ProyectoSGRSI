@@ -22,7 +22,7 @@ switch ($periodo) {
         break;
     default:
         $periodo = "todo";
-        break;
+b         break;
 }
 
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);

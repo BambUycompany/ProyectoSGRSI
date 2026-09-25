@@ -22,6 +22,10 @@ if ($planilla === null) {
     header("Location: ../../public/listado_registros.php?error=" . urlencode("El registro solicitado no existe."));
     exit;
 }
+if ($_SESSION["rolActivo"] === "solicitante" && $planilla["CedulaRegistrante"] !== $_SESSION["cedula"]) {
+    header("Location: ../../public/mis_registros.php?error=" . urlencode("No tenés permiso para ver ese registro."));
+    exit;
+}
 
 $tickets = $accesoDatosPlanilla->listarTicketsDePlanilla($planillaId);
 ?>

@@ -47,8 +47,50 @@
                 <a href="solicitar_prestamos.php" class="botones">Solicitar Préstamo</a>
                 <a href="visualizar_registros.php" class="botones">Visualizar Registros</a>
                 <a href="mailto:@ezequielobedrodriguez@gmail.com" class="botones">Solicitud de servicio</a>
-                <legend> <i>Para gestionar una solicitud de servicio se pide al personal enviar un mail con el asunto <strong>"SOLICITUD DE SERVICIO - AULA X"</strong></i></legend>
+                <legend> <i>Para gestionar una solicitud de servicio se pide al personal enviar un mail con el asunto <strong>"SOLICITUD DE SERVICIO - AULA X"</strong></i></legend><br><br>
             </section>
+
+             <?php if (isset($_GET["error"])): ?>
+            <p style="color:red;"><?= htmlspecialchars($_GET["error"]) ?></p>
+        <?php endif; ?>
+
+        <section class="seccionListadoRegistro">
+            <h2>Mis Registros</h2>
+
+            <section class="filtroPeriodo">
+                <a href="Solicitante.php?periodo=dia" class="botones <?= $periodo === 'dia' ? 'activo' : '' ?>">Hoy</a>
+                <a href="Solicitante.php?periodo=semana" class="botones <?= $periodo === 'semana' ? 'activo' : '' ?>">Esta semana</a>
+                <a href="Solicitante.php?periodo=mes" class="botones <?= $periodo === 'mes' ? 'activo' : '' ?>">Este mes</a>
+                <a href="Solicitante.php?periodo=todo" class="botones <?= $periodo === 'todo' ? 'activo' : '' ?>">Todo</a>
+            </section>
+
+            <?php if (count($misPlanillas) === 0): ?>
+                <p>No tenés registros en este período.</p>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Sala</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($misPlanillas as $planilla): ?>
+                            <tr>
+                                <td>
+                                    <a href="detalle_registros.php?id=<?= (int) $planilla['ID'] ?>">
+                                        <?= htmlspecialchars($planilla['Fecha']) ?>
+                                    </a>
+                                </td>
+                                <td><?= htmlspecialchars($planilla['HoraEntrada']) ?></td>
+                                <td><?= htmlspecialchars(ucfirst($planilla['AulaTipo'])) ?> <?= htmlspecialchars($planilla['AulaNumero']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </section>
         </section>
     </main>
 

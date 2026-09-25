@@ -7,6 +7,8 @@ session_start();
 
 require_once RUTA_CONTROLADOR . "/control_acceso.php";
 requerirRol("solicitante");
+require_once RUTA_CONTROLADOR . "/prepararMisRegistros.php";
+
 
 require_once RUTA_VISTA . "/Solicitante.php";
 

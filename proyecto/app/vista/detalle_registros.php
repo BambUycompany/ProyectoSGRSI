@@ -28,8 +28,7 @@
     </header>
 
     <main>
-        <a href="listado_registros.php">&larr; Volver</a> 
-
+        <a href="<?= $_SESSION["rolActivo"] === "solicitante" ? "mis_registros.php" : "listado_registro.php" ?>">&larr; Volver al listado</a>
         <section class="seccionDetalleRegistro">
             <h2>Detalle del Registro</h2>
 

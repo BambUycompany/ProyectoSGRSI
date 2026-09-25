@@ -191,6 +191,37 @@ public function registrarTicket(array $datos) {
     return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function listarPlanillasDeUsuario(string $cedula, ?string $fechaInicio = null, ?string $fechaFin = null) {
+    $filtroFecha = "";
+    $parametros = ["cedula" => $cedula];
+
+    if ($fechaInicio !== null && $fechaFin !== null) {
+        $filtroFecha = " AND PLANILLA.Fecha BETWEEN :fechaInicio AND :fechaFin ";
+        $parametros["fechaInicio"] = $fechaInicio;
+        $parametros["fechaFin"] = $fechaFin;
+    }
+
+    $sql = "SELECT 
+                PLANILLA.ID,
+                PLANILLA.Fecha,
+                PLANILLA.HoraEntrada,
+                PLANILLA.HoraSalida,
+                PLANILLA.NombreSolicitante,
+                AULA.Numero AS AulaNumero,
+                CASE 
+                    WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
+                    ELSE 'taller'
+                END AS AulaTipo
+            FROM PLANILLA
+            JOIN AULA ON AULA.ID = PLANILLA.AulaID
+            WHERE PLANILLA.CedulaRegistrante = :cedula" . $filtroFecha . "
+            ORDER BY PLANILLA.Fecha DESC, PLANILLA.HoraEntrada DESC";
+
+    $consulta = $this->conexion->prepare($sql);
+    $consulta->execute($parametros);
+    return $consulta->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     /**
      * Obtiene los datos de una planilla específica junto con los datos del aula utilizada.
@@ -206,6 +237,7 @@ public function registrarTicket(array $datos) {
                 PLANILLA.HoraEntrada,
                 PLANILLA.HoraSalida,
                 PLANILLA.NombreSolicitante,
+                PLANILLA.CedulaRegistrante,
                 AULA.Numero AS AulaNumero,
                 CASE 
                     WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
@@ -219,9 +251,8 @@ public function registrarTicket(array $datos) {
     $consulta->execute(["planillaId" => $planillaId]);
 
     $fila = $consulta->fetch(PDO::FETCH_ASSOC);
-
     return $fila === false ? null : $fila;
-    }
+}
 
    
     
