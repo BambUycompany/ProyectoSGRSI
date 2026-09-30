@@ -11,7 +11,12 @@
 </head>
 <body>
     <main>
-       <legend class="tituloLogin">Sistema de Gestión de Registros de Salas de Informática</legend> 
+      
+    <figure class="contenedor-logos">
+        <img src="../public/assets/img/logoITI.jpg" alt="logo iti">
+        <img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo SGRSI">
+        <figcaption>Sistema de Gestion de Recursos y Soporte Informatico</figcaption>
+    </figure>
 
     <?php
     $mensajesError = [

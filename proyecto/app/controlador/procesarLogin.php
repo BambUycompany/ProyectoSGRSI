@@ -57,6 +57,8 @@ session_start();
 session_regenerate_id(true);
 
 $_SESSION["cedula"] = $usuario->getCedula();
+$_SESSION["nombre"] = $usuario->getNombre();
+$_SESSION["apellido"] = $usuario->getApellido();
 $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["soporte"] = $usuario->esSoporte();
 $_SESSION["solicitante"] = $usuario->esSolicitante();

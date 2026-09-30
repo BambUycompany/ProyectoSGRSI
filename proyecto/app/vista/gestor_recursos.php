@@ -18,32 +18,33 @@ if (empty($_SESSION["csrfToken"])) {
     <link rel="stylesheet" href="assets/css/gestorRecursosCSS.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <button class="btnMenu" id="btnMenu" type="button">
-                <i class="bi bi-list"></i>
-            </button>
-            <button class="btnCerrarMenu" id="btnCerrarMenu" type="button">
-                <i class="bi bi-list"></i>
-            </button>
+    <header class="barraNav">
+    <nav>
+        <button class="btnMenu" id="btnMenu" type="button"><i class="bi bi-list"></i></button>
+        <button class="btnCerrarMenu" id="btnCerrarMenu" type="button"><i class="bi bi-list"></i></button>
 
-            <h1><a href="administrador.php"><img src="../public/assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo" class="logo"> S.G.R.S.I </a></h1>
-            <ul class="listaNavegacion">
-                <li data-roles="solicitante administrador soporte"><a href="registro_sala.php" class="botones">Registro Sala</a></li>
-                <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
-                <li data-roles="soporte"><a href="listado_tickets.php" class="botones">Tickets</a></li>
-                <li class="menuUsuario">
-                    <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
-                    <ul class="opcionesUsuario" id="opcionesUsuario">
-                        <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
-                            <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
-                        <?php endif; ?>
-                        <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </header>
+        <h1><a href="<?= homeSegunRol() ?>"><img src="assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo" class="logo"> S.G.R.S.I</a></h1>
+        <ul class="listaNavegacion">
+            <li data-roles="administrador solicitante soporte"><a href="registro_planilla.php" class="botones">Registro Sala</a></li>
+            <li data-roles="administrador"><a href="registro_empleados.php" class="botones">Empleados</a></li>
+            <li data-roles="administrador soporte"><a href="gestor_recursos.php" class="botones">Gestor de Recursos</a></li>
+            <li data-roles="soporte"><a href="listado_registro.php" class="botones">Listado Registro</a></li>
+            <li data-roles="soporte"><a href="listado_tickets.php" class="botones">Tickets</a></li>
+            <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
+            <li data-roles="solicitante"><a href="registro_prestamo.php" class="botones">Solicitar Préstamo</a></li>
+            <li data-roles="solicitante"><a href="listado_prestamos.php" class="botones">Mis Préstamos</a></li>
+            <li class="menuUsuario">
+                <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
+                <ul class="opcionesUsuario" id="opcionesUsuario">
+                    <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
+                        <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
+                    <?php endif; ?>
+                    <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
     <main>
         <h1>Gestor de recursos</h1>
 

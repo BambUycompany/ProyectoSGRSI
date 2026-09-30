@@ -30,6 +30,8 @@
         $sql = "
            SELECT
                 u.cedula,
+                u.nombre,
+                u.apellido,
                 u.claveHash,
                 u.activo,
 
@@ -77,6 +79,8 @@
 
         return new Usuario(
             $usuario["cedula"],
+            $usuario["nombre"],
+            $usuario["apellido"],
             $usuario["claveHash"],
             (bool) $usuario["activo"],
             (bool) $usuario["administrador"],

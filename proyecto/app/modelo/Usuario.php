@@ -8,6 +8,8 @@
  */
 class Usuario {
     private string $cedula;
+    private string $nombre;
+    private string $apellido;
     private string $claveHash;
     private bool $activo;
     private bool $administrador;
@@ -24,8 +26,10 @@ class Usuario {
      * @param bool $soporte Indica si el usuario tiene el rol de soporte.
      * @param bool $solicitante Indica si el usuario tiene el rol de solicitante.
      */
-    public function __construct(string $cedula, string $claveHash, bool $activo, bool $administrador, bool $soporte, bool $solicitante) {
+    public function __construct(string $cedula, string $nombre, string $apellido, string $claveHash, bool $activo, bool $administrador, bool $soporte, bool $solicitante) {
         $this->cedula = $cedula;
+        $this->nombre = $nombre;
+        $this->apellido = $apellido;
         $this->claveHash = $claveHash;
         $this->activo = $activo;
         $this->administrador = $administrador;
@@ -39,6 +43,9 @@ class Usuario {
     public function getCedula(): string { 
         return $this->cedula;
     }
+
+    public function getNombre(): string { return $this->nombre; }
+    public function getApellido(): string { return $this->apellido; }
 
      /**
      * @return string El hash de la contraseña del usuario.

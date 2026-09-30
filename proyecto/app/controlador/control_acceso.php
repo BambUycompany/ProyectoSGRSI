@@ -25,4 +25,13 @@ function requerirRol(string|array $roles): void {
     exit;
 
 }
+
+function homeSegunRol(): string {
+    return match($_SESSION["rolActivo"] ?? "") {
+        "administrador" => "administrador.php",
+        "soporte" => "soporte.php",
+        "solicitante" => "solicitante.php",
+        default => "login.php",
+    };
+}
 ?> 

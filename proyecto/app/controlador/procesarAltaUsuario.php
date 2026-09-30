@@ -32,8 +32,8 @@ if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)) {
     exit;
 }
 
-if (strlen($clave) < 12) {
-    $mensaje = "La contraseña debe contener al menos 12 caracteres.";
+if (strlen($clave) < 8) {
+    $mensaje = "La contraseña debe contener al menos 8 caracteres.";
 
     header("Location: ../../public/registro_empleados.php?error=" . urlencode($mensaje));
     exit;
