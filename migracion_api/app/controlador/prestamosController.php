@@ -36,8 +36,16 @@ class PrestamosController {
     private function gestionarPrestamo(string $metodo, array $datos): void {
         switch ($metodo) {
             case "GET":
-                $prestamos = $this->dao->listarPrestamos($_SESSION["cedula"]);
-                RespuestaJson::exito(["prestamos" => $prestamos]);
+                $id = (int)($_GET["prestamoId"] ?? 0);
+                if ($id > 0) {
+                    $prestamo = $this->dao->obtenerPorId($id);
+                    $prestamo 
+                        ? RespuestaJson::exito(["prestamo" => $prestamo])
+                        : RespuestaJson::error("El préstamo solicitado no existe.", 404);
+                } else {
+                    $prestamos = $this->dao->listarPrestamos($_SESSION["cedula"]);
+                    RespuestaJson::exito(["prestamos" => $prestamos]);
+                }
                 break;
 
             case "POST":
@@ -64,7 +72,23 @@ class PrestamosController {
 
                 $this->dao->registrarPrestamo($datosPrestamo)
                     ? RespuestaJson::exito(["mensaje" => "Préstamo registrado correctamente."], 201)
-                    : RespuestaJson::error("Ese portátil ya no está disponible o hubo un error. Elegí otro.", 409);
+                    : RespuestaJson::error("Ese portátil ya no está disponible o hubo un error al registrar.", 409);
+                break;
+
+            case "PUT":
+                $prestamoId = (int)($datos["prestamoId"] ?? 0);
+                $ciAlumno = trim($datos["ciAlumno"] ?? "");
+                $clase = trim($datos["clase"] ?? "");
+                $correoAlumno = trim($datos["correoAlumno"] ?? "");
+                $telefonoAlumno = trim($datos["telefonoAlumno"] ?? "");
+
+                if ($prestamoId === 0 || empty($ciAlumno) || empty($clase)) {
+                    RespuestaJson::error("Faltan datos obligatorios para modificar el préstamo.", 400);
+                }
+
+                $this->dao->modificarDatosAlumno($prestamoId, $ciAlumno, $clase, $correoAlumno, $telefonoAlumno)
+                    ? RespuestaJson::exito(["mensaje" => "Datos del alumno modificados correctamente."])
+                    : RespuestaJson::error("No se pudieron modificar los datos.", 500);
                 break;
 
             case "PATCH":
@@ -76,7 +100,19 @@ class PrestamosController {
 
                 $this->dao->finalizarPrestamo($prestamoId)
                     ? RespuestaJson::exito(["mensaje" => "Préstamo finalizado correctamente."])
-                    : RespuestaJson::error("No se pudo finalizar el préstamo.", 500);
+                    : RespuestaJson::error("No se pudo finalizar el préstamo (ya está finalizado o no existe).", 409);
+                break;
+
+            case "DELETE":
+                $prestamoId = (int)($_GET["prestamoId"] ?? $datos["prestamoId"] ?? 0);
+                
+                if ($prestamoId === 0) {
+                    RespuestaJson::error("Préstamo no válido.", 400);
+                }
+
+                $this->dao->eliminarPrestamo($prestamoId)
+                    ? RespuestaJson::exito(["mensaje" => "Préstamo eliminado exitosamente."])
+                    : RespuestaJson::error("No se pudo eliminar el préstamo. Asegúrese de que el estado sea 'devuelto'.", 409);
                 break;
 
             default:
@@ -88,7 +124,6 @@ class PrestamosController {
         if ($metodo !== "GET") {
             RespuestaJson::error("Método no permitido", 405);
         }
-        
         $portatiles = $this->dao->listarPortatilesDisponibles();
         RespuestaJson::exito(["portatiles" => $portatiles]);
     }
