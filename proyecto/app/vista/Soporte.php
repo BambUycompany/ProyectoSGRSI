@@ -20,10 +20,10 @@
             <li data-roles="administrador solicitante soporte"><a href="registro_planilla.php" class="botones">Registro Sala</a></li>
             <li data-roles="administrador"><a href="registro_empleados.php" class="botones">Empleados</a></li>
             <li data-roles="administrador soporte"><a href="gestor_recursos.php" class="botones">Gestor de Recursos</a></li>
-            <li data-roles="soporte"><a href="listado_registro.php" class="botones">Listado Registro</a></li>
+            <li data-roles="soporte"><a href="listado_registros.php" class="botones">Listado Registro</a></li>
             <li data-roles="soporte"><a href="listado_tickets.php" class="botones">Tickets</a></li>
             <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
-            <li data-roles="solicitante"><a href="registro_prestamo.php" class="botones">Solicitar Préstamo</a></li>
+            <li data-roles="solicitante"><a href="solicitar_prestamos.php" class="botones">Solicitar Préstamo</a></li>
             <li data-roles="solicitante"><a href="listado_prestamos.php" class="botones">Mis Préstamos</a></li>
             <li class="menuUsuario">
                 <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
@@ -34,17 +34,53 @@
                     <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                 </ul>
             </li>
+
+
+            <li data-roles="solicitante" class="menuNotificaciones">
+                <button type="button" id="btnCampanaNotif" class="botones position-relative">
+                    <i class="bi bi-bell-fill"></i>
+                    <?php if (!empty($notificacionesFinalizadas)): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <?= count($notificacionesFinalizadas) ?>
+                        </span>
+                    <?php endif; ?>
+                </button>
+            </li>
         </ul>
     </nav>
 </header>
+<dialog id="dialogNotificaciones">
+        <div class="headerNotif">
+            <h3>Notificaciones</h3>
+            <button id="btnCerrarDialog" class="btnCerrarDialog" type="button">&times;</button>
+        </div>
+        
+        <div class="contenidoNotificaciones">
+            <?php if (empty($notificacionesFinalizadas)): ?>
+                <p>No tienes notificaciones de tickets resueltos.</p>
+            <?php else: ?>
+                <ul class="listaNotificaciones">
+                    <?php foreach ($notificacionesFinalizadas as $notif): ?>
+                        <li class="itemNotificacion">
+                            <div class="infoNotif">
+                                <strong>Ticket PC #<?= htmlspecialchars($notif['PcNumPc']) ?></strong><br>
+                                <small>Falla: <?= htmlspecialchars($notif['Fallo']) ?> - <em>Resuelto</em></small>
+                            </div>
+                            <a href="detalle_registros.php?id=<?= (int) $notif['PlanillaID'] ?>" class="botones">Ver detalle</a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </dialog>
 
     <main>
 
         <section id="soporte">
-            <h2>Vista soporte técnico</h2>
+        <h2>Bienvenido Tecnico, <?= htmlspecialchars($_SESSION["nombre"] . " " . $_SESSION["apellido"]) ?></h2>             
             <section class="seccionInteractiva">
                 <a href="registro_planilla.php" class="botones">Registro Planilla</a>
-                <a href="prestamos.php" class="botones">Solicitar Préstamo</a>
+                <a href="solicitar_prestamos.php" class="botones">Solicitar Préstamo</a>
                 <a href="listado_registros.php" class="botones">Listado de Registros</a>
                 <a href="listado_tickets.php" class="botones">Listado de tickets</a>
                 <a href="listado_prestamos.php" class="botones">Solicitudes de préstamo</a>
@@ -54,7 +90,7 @@
     </main>
     
 
-    <script src="../js/navbar_responsive.js"></script>
+    <script src="../public/assets/js/navbar_responsive.js"></script>
 
 </body>
 </html>

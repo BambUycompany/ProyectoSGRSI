@@ -100,7 +100,7 @@
         </section>
     </main>
 
-    <!-- Dialog Prioridad -->
+
     <dialog id="dlgPrioridad">
         <form method="POST" action="../app/controlador/procesarModificarDetalleTicket.php">
             <h3>Cambiar Prioridad</h3>
@@ -123,7 +123,7 @@
         </form>
     </dialog>
 
-    <!-- Dialog Estado -->
+  
     <dialog id="dlgEstado">
         <form method="POST" action="../app/controlador/procesarModificarDetalleTicket.php">
             <h3>Cambiar Estado</h3>
@@ -146,7 +146,6 @@
         </form>
     </dialog>
 
-    <!-- Dialog Finalizar Ticket -->
     <dialog id="dlgFinalizar">
         <form method="POST" action="../app/controlador/procesarModificarDetalleTicket.php">
             <h3>Finalizar Ticket</h3>
@@ -156,7 +155,7 @@
             <input type="hidden" name="aulaId" value="<?= htmlspecialchars($aulaId) ?>">
             
             <label for="txtDiagnostico">Diagnóstico / Observaciones:</label><br>
-            <textarea name="diagnostico" id="txtDiagnostico" rows="4" required placeholder="Escriba el diagnóstico del problema..."></textarea>
+            <textarea name="diagnostico" id="txtDiagnostico" rows="4" required placeholder="Escriba el diagnóstico del problema"></textarea>
 
             <menu>
                 <button type="button" class="btnCancelarModal">Cancelar</button>

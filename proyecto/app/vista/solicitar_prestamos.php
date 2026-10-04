@@ -64,15 +64,16 @@
                         <label for="clase">Clase / Grupo:</label>
                         <input type="text" id="clase" name="clase" maxlength="50" required>
 
-                        <label for="correoAlumno">Correo del alumno (opcional):</label>
-                        <input type="email" id="correoAlumno" name="correoAlumno" maxlength="150">
+                        <label for="correoAlumno">Correo del alumno:</label>
+                        <input type="email" id="correoAlumno" required name="correoAlumno" maxlength="150">
 
-                        <label for="telefonoAlumno">Teléfono del alumno (opcional):</label>
-                        <input type="text" id="telefonoAlumno" name="telefonoAlumno" maxlength="20">
+                        <label for="telefonoAlumno">Teléfono del alumno :</label>
+                        <input type="text" id="telefonoAlumno" required name="telefonoAlumno" maxlength="20">
 
-                        <label for="fechaDev">Fecha comprometida de devolución:</label>
-                        <input type="date" id="fechaDev" name="fechaDev" required>
+                        
+                        <input type="hidden" id="fechaDev" name="fechaDev" value="<?= date('Y-m-d') ?>">
 
+                        
                         <input type="submit" value="Registrar Préstamo">
                     </form>
                 </section>

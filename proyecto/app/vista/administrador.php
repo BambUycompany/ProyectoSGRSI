@@ -40,8 +40,7 @@
 
     <main>
         <section id="administrador">    
-            <h2>Vista administrador</h2>
-            <section class="seccionInteractiva">
+<h2>Bienvenido Administrador, <?= htmlspecialchars($_SESSION["nombre"] . " " . $_SESSION["apellido"]) ?></h2>             <section class="seccionInteractiva">
                 <a href="metricas.php" class="botones">Métricas</a>
             </section>
             <div style="margin-top:1rem;">

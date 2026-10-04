@@ -34,9 +34,21 @@
                     <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
                 </ul>
             </li>
+
+             <li data-roles="solicitante" class="menuNotificaciones">
+                <button type="button" id="btnCampanaNotif" class="botones position-relative">
+                    <i class="bi bi-bell-fill"></i>
+                    <?php if (!empty($notificacionesFinalizadas)): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <?= count($notificacionesFinalizadas) ?>
+                        </span>
+                    <?php endif; ?>
+                </button>
+            </li>
         </ul>
     </nav>
 </header>
+    
 
     <main>
         <section id="solicitante"> 
@@ -96,6 +108,8 @@
        
 
     <script src="../public/assets/js/navbar_responsive.js"></script>
+    <script src="../public/assets/js/notificaciones.js"></script>
+
 
 </body>
 </html>

@@ -23,6 +23,15 @@
             <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
             <li data-roles="solicitante"><a href="registro_prestamo.php" class="botones">Solicitar Préstamo</a></li>
             <li data-roles="solicitante"><a href="listado_prestamos.php" class="botones">Mis Préstamos</a></li>
+
+            <li data-roles="solicitante" class="menuNotificaciones">
+                    <button type="button" id="btnCampanaNotif" class="botones">
+                        <i class="bi bi-bell-fill"></i>
+                        <?php if (!empty($notificacionesFinalizadas)): ?>
+                            <span class="badgeNotif"><?= count($notificacionesFinalizadas) ?></span>
+                        <?php endif; ?>
+                    </button>
+                </li>
             <li class="menuUsuario">
                 <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
                 <ul class="opcionesUsuario" id="opcionesUsuario">
@@ -36,8 +45,31 @@
     </nav>
 </header>
 
+<dialog id="dialogNotificaciones">
+        <div class="headerNotif">
+            <h3>Notificaciones</h3>
+            <button id="btnCerrarDialog" class="btnCerrarDialog" type="button">&times;</button>
+        </div>
+        <div class="contenidoNotificaciones">
+            <?php if (empty($notificacionesFinalizadas)): ?>
+                <p>No tienes notificaciones de tickets resueltos.</p>
+            <?php else: ?>
+                <ul class="listaNotificaciones">
+                    <?php foreach ($notificacionesFinalizadas as $notif): ?>
+                        <li class="itemNotificacion">
+                            <div class="infoNotif">
+                                <strong>Ticket PC #<?= htmlspecialchars($notif['PcNumPc']) ?></strong><br>
+                                <small>Falla: <?= htmlspecialchars($notif['Fallo']) ?> - <em>Resuelto</em></small>
+                            </div>
+                            <a href="detalle_registros.php?id=<?= (int) $notif['PlanillaID'] ?>" class="botones">Ver detalle</a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </dialog>
     <main>
-        <a href="<?= $_SESSION["rolActivo"] === "solicitante" ? "mis_registros.php" : "listado_registro.php" ?>">&larr; Volver al listado</a>
+        <a href="<?= $_SESSION["rolActivo"] === "solicitante" ? "Solicitante.php" : "listado_registros.php" ?>">&larr; Volver</a>
         <section class="seccionDetalleRegistro">
             <h2>Detalle del Registro</h2>
 
@@ -67,7 +99,22 @@
                                 <td><?= htmlspecialchars($ticket['PcNumPc']) ?></td>
                                 <td><?= htmlspecialchars($ticket['Fallo']) ?></td>
                                 <td><?= htmlspecialchars($ticket['Descripcion']) ?></td>
-                                <td><?= htmlspecialchars($ticket['Estado']) ?></td>
+                                <td>
+                                    <span class="estadoBadge <?= strtolower($ticket['Estado']) === 'finalizado' ? 'finalizado' : 'pendiente' ?>">
+                                        <?= htmlspecialchars($ticket['Estado']) ?>
+                                    </span>
+                                </td>
+                                <td><?= htmlspecialchars(date('H:i', strtotime($ticket['FechaCreacion']))) ?></td>
+                                <td>
+                                    <?php if (strtolower($ticket['Estado']) === 'finalizado'): ?>
+                                        <button type="button" class="botones btnDiagnostico" 
+                                                data-diagnostico="<?= htmlspecialchars($ticket['Diagnostico'] ?? 'Solución aplicada y verificada por soporte técnico.') ?>">
+                                            Ver Diagnóstico
+                                        </button>
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= htmlspecialchars(date('H:i', strtotime($ticket['FechaCreacion']))) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -77,6 +124,15 @@
         </section>
     </main>
 
+    <dialog id="dialogDiagnostico">
+        <h3>Diagnóstico Técnico</h3>
+        <p id="textoDiagnostico" class="textoDiagnostico"></p>
+        <div class="contenedorBotonDialog">
+            <button id="btnCerrarDiagnostico" type="button" class="botones">Cerrar</button>
+        </div>
+    </dialog>
+
     <script src="assets/js/navbar_responsive.js"></script>
+    <script src="../public/assets/js/notificaciones.js"></script>
 </body>
 </html>

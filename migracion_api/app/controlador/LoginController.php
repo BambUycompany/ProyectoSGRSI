@@ -1,6 +1,6 @@
 <?php
 require_once RUTA_MODELO . "/ConectorPDO.php";
-require_once RUTA_MODELO . "/UsuarioDAO.php";
+require_once RUTA_MODELO . "/LoginDAO.php";
 require_once RUTA_VISTA . "/RespuestaJsonUsuario.php";
 
 class LoginController {
