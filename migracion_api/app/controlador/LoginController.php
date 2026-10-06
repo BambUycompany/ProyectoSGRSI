@@ -1,7 +1,7 @@
 <?php
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/LoginDAO.php";
-require_once RUTA_VISTA . "/RespuestaJsonUsuario.php";
+require_once RUTA_VISTA . "/RespuestaJson.php";
 
 class LoginController {
 
@@ -17,9 +17,9 @@ class LoginController {
         $datos = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 
         $cedula = trim($datos["cedula"] ?? "");
-        $password = $datos["password"] ?? "";
+        $password = $datos["clave"] ?? "";
 
-        if (empty($cedula) || empty($password)) {
+        if (empty($cedula) || empty($clave)) {
             RespuestaJsonUsuario::error("Credenciales incompletas", 400);
         }
 
@@ -28,7 +28,7 @@ class LoginController {
 
         $usuario = $dao->buscarUsuario($cedula);
 
-        if ($usuario === null || !password_verify($password, $usuario["claveHash"])) {
+        if ($usuario === null || !password_verify($clave, $usuario["claveHash"])) {
             RespuestaJsonUsuario::error("Cédula o contraseña incorrecta", 401);
         }
 
@@ -76,10 +76,8 @@ class LoginController {
         session_start();
         session_unset();
         session_destroy();
-        header("Location: ../public/login.php");
-        exit;
         require_once __DIR__ . "/../config/config.php";
-        RespuestaJsonUsuario::exito(["mensaje" => "Sesión cerrada correctamente"]);
+        RespuestaJson::exito(["mensaje" => "Sesión cerrada correctamente"]);
     }
 
     private function conectar(): PDO {

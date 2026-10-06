@@ -10,6 +10,8 @@ class UsuarioDAO {
         $sql = "
             SELECT
                 u.cedula,
+                u.nombre,
+                u.apellido,
                 u.claveHash,
                 u.activo,
 
@@ -36,6 +38,8 @@ class UsuarioDAO {
         return [
             "cedula" => $usuario["cedula"],
             "claveHash" => $usuario["claveHash"],
+            "nombre" => $usuario["nombre"],
+            "apellido" => $usuario["apellido"],
             "activo" => (bool)$usuario["activo"],
             "administrador" => (bool)$usuario["administrador"],
             "soporte" => (bool)$usuario["soporte"],

@@ -1,131 +1,155 @@
 <?php
-// PrestamosController.php
-
 require_once RUTA_MODELO . "/ConectorPDO.php";
-require_once RUTA_MODELO . "/PrestamosDAO.php";
-require_once RUTA_VISTA . "/RespuestaJson.php";
+require_once RUTA_MODELO . "/prestamosDAO.php";
+require_once RUTA_VISTA . "/Respuestajson.php";
 
-class PrestamosController {
-    private PrestamosDAO $dao;
-
-    public function __construct() {
-        $conector = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
-        $conexion = $conector->establecerConexion();
-        
-        if ($conexion === null) {
-            RespuestaJson::error("Error de conexión a la base de datos", 500);
-        }
-        $this->dao = new PrestamosDAO($conexion);
-    }
-
-    public function gestionar(string $metodo, string $recurso): void {
-        session_start();
-        $datos = json_decode(file_get_contents("php://input"), true) ?? $_POST;
-        
-        if (empty($_SESSION["cedula"])) {
-            RespuestaJson::error("No autorizado. Sesión no iniciada.", 401);
+class prestamosController
+{
+    public function gestionar(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
 
-        match ($recurso) {
-            "prestamo" => $this->gestionarPrestamo($metodo, $datos),
-            "portatiles_disponibles" => $this->listarDisponibles($metodo),
-            default => RespuestaJson::error("Recurso no encontrado", 404)
+        if (!isset($_SESSION["cedula"])) {
+            RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
+            return;
+        }
+
+        $metodo = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+
+        match ($metodo) {
+            'GET' => $id ? $this->obtenerPrestamo($id) : $this->listarDisponibles(),
+            'POST' => $this->crearPrestamo(),
+            'PUT', 'PATCH' => $this->finalizarPrestamo($id),
+            'DELETE' => $this->eliminarPrestamo($id),
+            default => RespuestaJson::error("Método no permitido", 405),
         };
     }
 
-    private function gestionarPrestamo(string $metodo, array $datos): void {
-        switch ($metodo) {
-            case "GET":
-                $id = (int)($_GET["prestamoId"] ?? 0);
-                if ($id > 0) {
-                    $prestamo = $this->dao->obtenerPorId($id);
-                    $prestamo 
-                        ? RespuestaJson::exito(["prestamo" => $prestamo])
-                        : RespuestaJson::error("El préstamo solicitado no existe.", 404);
-                } else {
-                    $prestamos = $this->dao->listarPrestamos($_SESSION["cedula"]);
-                    RespuestaJson::exito(["prestamos" => $prestamos]);
-                }
-                break;
+    private function obtenerPrestamo(int $id): void
+    {
+        $conexion = $this->conectar();
+        $dao = new PrestamoDAO($conexion);
+        $prestamo = $dao->obtenerPorId($id);
 
-            case "POST":
-                $portatilId = (int)($datos["portatilId"] ?? 0);
-                $fechaDev = trim($datos["fechaDev"] ?? "");
-                $ciAlumno = trim($datos["ciAlumno"] ?? "");
-                $clase = trim($datos["clase"] ?? "");
-                $correoAlumno = trim($datos["correoAlumno"] ?? "") ?: null;
-                $telefonoAlumno = trim($datos["telefonoAlumno"] ?? "") ?: null;
+        if (!$prestamo) {
+            RespuestaJson::error("Préstamo no encontrado", 404);
+            return;
+        }
 
-                if ($portatilId === 0 || empty($fechaDev) || empty($ciAlumno) || empty($clase)) {
-                    RespuestaJson::error("Faltan campos obligatorios.", 400);
-                }
+        if (!$this->esPersonalDeSoporte() && $prestamo['CedulaEstudiante'] !== $_SESSION['cedula']) {
+            RespuestaJson::error("Acceso denegado: no tenés permiso para ver este préstamo", 403);
+            return;
+        }
 
-                $datosPrestamo = [
-                    "portatilId" => $portatilId,
-                    "fechaDev" => $fechaDev,
-                    "ciAlumno" => $ciAlumno,
-                    "clase" => $clase,
-                    "correoAlumno" => $correoAlumno,
-                    "telefonoAlumno" => $telefonoAlumno,
-                    "cedula" => $_SESSION["cedula"]
-                ];
+        echo json_encode(["estado" => "exito", "datos" => $prestamo]);
+    }
 
-                $this->dao->registrarPrestamo($datosPrestamo)
-                    ? RespuestaJson::exito(["mensaje" => "Préstamo registrado correctamente."], 201)
-                    : RespuestaJson::error("Ese portátil ya no está disponible o hubo un error al registrar.", 409);
-                break;
+    private function crearPrestamo(): void
+    {
+        $datos = json_decode(file_get_contents("php://input"), true) ?? [];
+        
+        $datos['cedula'] = $datos['cedula'] ?? $_SESSION['cedula'];
 
-            case "PUT":
-                $prestamoId = (int)($datos["prestamoId"] ?? 0);
-                $ciAlumno = trim($datos["ciAlumno"] ?? "");
-                $clase = trim($datos["clase"] ?? "");
-                $correoAlumno = trim($datos["correoAlumno"] ?? "");
-                $telefonoAlumno = trim($datos["telefonoAlumno"] ?? "");
+        if (empty($datos['fecha']) || empty($datos['horaInicio']) || empty($datos['portatilId'])) {
+            RespuestaJson::error("Faltan campos obligatorios para registrar el préstamo", 400);
+            return;
+        }
 
-                if ($prestamoId === 0 || empty($ciAlumno) || empty($clase)) {
-                    RespuestaJson::error("Faltan datos obligatorios para modificar el préstamo.", 400);
-                }
+        $conexion = $this->conectar();
+        $dao = new PrestamoDAO($conexion);
 
-                $this->dao->modificarDatosAlumno($prestamoId, $ciAlumno, $clase, $correoAlumno, $telefonoAlumno)
-                    ? RespuestaJson::exito(["mensaje" => "Datos del alumno modificados correctamente."])
-                    : RespuestaJson::error("No se pudieron modificar los datos.", 500);
-                break;
-
-            case "PATCH":
-                $prestamoId = (int)($datos["prestamoId"] ?? 0);
-
-                if ($prestamoId === 0) {
-                    RespuestaJson::error("Préstamo no válido.", 400);
-                }
-
-                $this->dao->finalizarPrestamo($prestamoId)
-                    ? RespuestaJson::exito(["mensaje" => "Préstamo finalizado correctamente."])
-                    : RespuestaJson::error("No se pudo finalizar el préstamo (ya está finalizado o no existe).", 409);
-                break;
-
-            case "DELETE":
-                $prestamoId = (int)($_GET["prestamoId"] ?? $datos["prestamoId"] ?? 0);
-                
-                if ($prestamoId === 0) {
-                    RespuestaJson::error("Préstamo no válido.", 400);
-                }
-
-                $this->dao->eliminarPrestamo($prestamoId)
-                    ? RespuestaJson::exito(["mensaje" => "Préstamo eliminado exitosamente."])
-                    : RespuestaJson::error("No se pudo eliminar el préstamo. Asegúrese de que el estado sea 'devuelto'.", 409);
-                break;
-
-            default:
-                RespuestaJson::error("Método no permitido", 405);
+        if ($dao->registrarPrestamo($datos)) {
+            echo json_encode(["estado" => "exito", "mensaje" => "Préstamo registrado correctamente."]);
+        } else {
+            RespuestaJson::error("Error al registrar el préstamo", 500);
         }
     }
 
-    private function listarDisponibles(string $metodo): void {
-        if ($metodo !== "GET") {
-            RespuestaJson::error("Método no permitido", 405);
+    private function finalizarPrestamo(?int $id): void
+    {
+        if (!$id) {
+            RespuestaJson::error("Se requiere el ID del préstamo", 400);
+            return;
         }
-        $portatiles = $this->dao->listarPortatilesDisponibles();
-        RespuestaJson::exito(["portatiles" => $portatiles]);
+
+        $datos = json_decode(file_get_contents("php://input"), true) ?? [];
+        $horaFin = $datos['horaFin'] ?? date("H:i:s");
+
+        $conexion = $this->conectar();
+        $dao = new PrestamoDAO($conexion);
+
+        $prestamo = $dao->obtenerPorId($id);
+        if (!$prestamo) {
+            RespuestaJson::error("Préstamo no encontrado", 404);
+            return;
+        }
+
+        if (!$this->esPersonalDeSoporte() && $prestamo['CedulaEstudiante'] !== $_SESSION['cedula']) {
+            RespuestaJson::error("Acceso denegado: no podés finalizar un préstamo ajeno", 403);
+            return;
+        }
+
+        if ($dao->finalizarPrestamo($id, $horaFin)) {
+            echo json_encode(["estado" => "exito", "mensaje" => "Préstamo finalizado correctamente."]);
+        } else {
+            RespuestaJson::error("No se pudo finalizar el préstamo o ya se encontraba finalizado", 400);
+        }
+    }
+
+    private function eliminarPrestamo(?int $id): void
+    {
+        if (!$id) {
+            RespuestaJson::error("Se requiere el ID del préstamo a eliminar", 400);
+            return;
+        }
+
+        $conexion = $this->conectar();
+        $dao = new PrestamoDAO($conexion);
+
+        $prestamo = $dao->obtenerPorId($id);
+        if (!$prestamo) {
+            RespuestaJson::error("Préstamo no encontrado", 404);
+            return;
+        }
+
+        $cedulaFiltro = $this->esPersonalDeSoporte() ? null : $_SESSION['cedula'];
+
+        if (!$this->esPersonalDeSoporte() && $prestamo['CedulaEstudiante'] !== $_SESSION['cedula']) {
+            RespuestaJson::error("Acceso denegado: no podés eliminar un préstamo ajeno", 403);
+            return;
+        }
+
+        if ($dao->eliminarPrestamo($id, $cedulaFiltro)) {
+            echo json_encode(["estado" => "exito", "mensaje" => "Registro de préstamo eliminado."]);
+        } else {
+            RespuestaJson::error("No se pudo eliminar el préstamo (solo se pueden eliminar préstamos finalizados).", 400);
+        }
+    }
+
+    private function listarDisponibles(): void
+    {
+        $conexion = $this->conectar();
+        $dao = new PrestamoDAO($conexion);
+        echo json_encode(["estado" => "exito", "datos" => $dao->listarPortatilesDisponibles()]);
+    }
+
+    private function esPersonalDeSoporte(): bool
+    {
+        return ($_SESSION['soporte'] ?? false) || ($_SESSION['administrador'] ?? false);
+    }
+
+    private function conectar(): PDO
+    {
+        $conector = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
+        $conexion = $conector->establecerConexion();
+        if ($conexion === null) {
+            RespuestaJson::error("Error de conexión con la base de datos", 500);
+            exit;
+        }
+        return $conexion;
     }
 }
 ?>

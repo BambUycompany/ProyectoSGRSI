@@ -68,6 +68,10 @@ class TicketDAO {
             "solicitanteCedula" => $datos["documentoRegistrante"],
             "planillaId" => $datos["planillaId"],
         ]);
+
+        $this->conexion->commit();
+        return true;
+
         }catch(PDOException $error){
             if($this->conexion->inTransaction()){
                 $this->conexion->rollBack();
@@ -75,6 +79,26 @@ class TicketDAO {
             }
             return false;
 
+        }
+    }
+
+    public function actualizarTicket(int $ticketId, string $campo, string $valor): bool
+    {
+        // Validar campos permitidos por seguridad (evita inyección SQL en nombres de columnas)
+        $camposPermitidos = ['prioridad', 'estado', 'diagnostico'];
+        if (!in_array($campo, $camposPermitidos)) {
+            return false;
+        }
+
+        try {
+            $sql = "UPDATE TICKET SET $campo = :valor WHERE ID = :id";
+            $stmt = $this->conexion->prepare($sql);
+            return $stmt->execute([
+                ':valor' => $valor,
+                ':id' => $ticketId
+            ]);
+        } catch (PDOException $e) {
+            return false;
         }
     }
 

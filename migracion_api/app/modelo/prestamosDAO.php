@@ -1,42 +1,86 @@
 <?php
-// PrestamosDAO.php
 
-class PrestamosDAO {
+class PrestamoDAO
+{
     private PDO $conexion;
 
-    public function __construct(PDO $conexion) {
+    public function __construct(PDO $conexion)
+    {
         $this->conexion = $conexion;
     }
 
-    public function listarPrestamos(string $cedula): array {
-        $sql = "SELECT PRESTAMO.ID, PRESTAMO.FechaPrestamo, PRESTAMO.FechaDev, PRESTAMO.Estado,
-                       PRESTAMO.CIAlumno, PRESTAMO.Clase, PRESTAMO.CorreoAlumno, PRESTAMO.TelefonoAlumno,
-                       PORTATIL.Modelo AS PortatilModelo
-                FROM PRESTAMO
-                JOIN PORTATIL ON PORTATIL.ID = PRESTAMO.PortatilID
-                WHERE PRESTAMO.SolicitanteCedula = :cedula
-                ORDER BY PRESTAMO.Estado, PRESTAMO.FechaPrestamo DESC";
+  
 
+    public function crearPortatil(string $modelo): bool
+    {
+        $sql = "INSERT INTO PORTATIL (Modelo, Estado) VALUES (:modelo, 'disponible')";
         $consulta = $this->conexion->prepare($sql);
-        $consulta->execute(["cedula" => $cedula]);
-        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        return $consulta->execute(["modelo" => $modelo]);
     }
 
-    public function obtenerPorId(int $prestamoId): ?array {
-        $sql = "SELECT * FROM PRESTAMO WHERE ID = :id";
+    public function modificarPortatil(int $portatilId, string $modelo): bool
+    {
+        $sql = "UPDATE PORTATIL SET Modelo = :modelo WHERE ID = :id";
         $consulta = $this->conexion->prepare($sql);
-        $consulta->execute(["id" => $prestamoId]);
+        return $consulta->execute(["modelo" => $modelo, "id" => $portatilId]);
+    }
+
+    public function deshabilitarPortatil(int $portatilId): bool
+    {
+        $sql = "UPDATE PORTATIL SET Estado = 'deshabilitado' WHERE ID = :id AND Estado = 'disponible'";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["id" => $portatilId]);
+        return $consulta->rowCount() > 0;
+    }
+
+    public function habilitarPortatil(int $portatilId): bool
+    {
+        $sql = "UPDATE PORTATIL SET Estado = 'disponible' WHERE ID = :id AND Estado = 'deshabilitado'";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["id" => $portatilId]);
+        return $consulta->rowCount() > 0;
+    }
+
+    public function eliminarPortatil(int $portatilId): bool
+    {
+        try {
+            $sql = "DELETE FROM PORTATIL WHERE ID = :id AND Estado = 'disponible'";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->execute(["id" => $portatilId]);
+            return $consulta->rowCount() > 0;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function listarTodasPortatiles(): array
+    {
+        $sql = "SELECT ID, Modelo, Estado FROM PORTATIL ORDER BY Modelo";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function listarPortatilesDisponibles(): array
+    {
+        $sql = "SELECT ID, Modelo FROM PORTATIL WHERE Estado = 'disponible' ORDER BY Modelo";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerPortatilPorId(int $portatilId): ?array
+    {
+        $sql = "SELECT ID, Modelo, Estado FROM PORTATIL WHERE ID = :id";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["id" => $portatilId]);
         $fila = $consulta->fetch(PDO::FETCH_ASSOC);
-        return $fila ?: null;
+        return $fila === false ? null : $fila;
     }
 
-    public function listarPortatilesDisponibles(): array {
-        $sql = "SELECT * FROM PORTATIL WHERE Estado IN ('disponible', 'devuelto')";
-        $consulta = $this->conexion->query($sql);
-        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    }
-
-    public function registrarPrestamo(array $datos): bool {
+   
+    public function registrarPrestamo(array $datos): bool
+    {
         try {
             $this->conexion->beginTransaction();
 
@@ -45,7 +89,7 @@ class PrestamosDAO {
             $consultaVerificar->execute(["portatilId" => $datos["portatilId"]]);
             $portatil = $consultaVerificar->fetch(PDO::FETCH_ASSOC);
 
-            if ($portatil === false || !in_array($portatil["Estado"], ["disponible", "devuelto"], true)) {
+            if ($portatil === false || $portatil["Estado"] !== "disponible") {
                 $this->conexion->rollBack();
                 return false;
             }
@@ -65,7 +109,7 @@ class PrestamosDAO {
                 "portatilId" => $datos["portatilId"],
             ]);
 
-            $sqlActualizarPortatil = "UPDATE PORTATIL SET Estado = 'prestado' WHERE ID = :portatilId";
+            $sqlActualizarPortatil = "UPDATE PORTATIL SET Estado = 'en_prestamo' WHERE ID = :portatilId";
             $this->conexion->prepare($sqlActualizarPortatil)->execute(["portatilId" => $datos["portatilId"]]);
 
             $this->conexion->commit();
@@ -79,7 +123,8 @@ class PrestamosDAO {
         }
     }
 
-    public function finalizarPrestamo(int $prestamoId): bool {
+    public function finalizarPrestamo(int $prestamoId): bool
+    {
         try {
             $this->conexion->beginTransaction();
 
@@ -110,7 +155,8 @@ class PrestamosDAO {
         }
     }
 
-    public function modificarDatosAlumno(int $prestamoId, string $ciAlumno, string $clase, string $correoAlumno, string $telefonoAlumno): bool {
+    public function modificarDatosAlumno(int $prestamoId, string $ciAlumno, string $clase, string $correoAlumno, string $telefonoAlumno): bool
+    {
         $sql = "UPDATE PRESTAMO SET CIAlumno = :ci, Clase = :clase, CorreoAlumno = :correo, TelefonoAlumno = :telefono WHERE ID = :id";
         $consulta = $this->conexion->prepare($sql);
         return $consulta->execute([
@@ -122,11 +168,36 @@ class PrestamosDAO {
         ]);
     }
 
-    public function eliminarPrestamo(int $prestamoId): bool {
-        $sql = "DELETE FROM PRESTAMO WHERE ID = :id AND Estado = 'devuelto'";
+    public function eliminarPrestamo(int $prestamoId): bool
+    {
+        $sql = "DELETE FROM PRESTAMO WHERE ID = :id AND Estado = 'finalizado'";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["id" => $prestamoId]);
         return $consulta->rowCount() > 0;
+    }
+
+    public function listarPrestamos(string $cedula): array
+    {
+        $sql = "SELECT PRESTAMO.ID, PRESTAMO.FechaPrestamo, PRESTAMO.FechaDev, PRESTAMO.Estado,
+                       PRESTAMO.CIAlumno, PRESTAMO.Clase, PRESTAMO.CorreoAlumno, PRESTAMO.TelefonoAlumno,
+                       PORTATIL.Modelo AS PortatilModelo
+                FROM PRESTAMO
+                JOIN PORTATIL ON PORTATIL.ID = PRESTAMO.PortatilID
+                WHERE PRESTAMO.SolicitanteCedula = :cedula
+                ORDER BY PRESTAMO.Estado, PRESTAMO.FechaPrestamo DESC";
+
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["cedula" => $cedula]);
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerPrestamoPorId(int $prestamoId): ?array
+    {
+        $sql = "SELECT * FROM PRESTAMO WHERE ID = :id";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["id" => $prestamoId]);
+        $fila = $consulta->fetch(PDO::FETCH_ASSOC);
+        return $fila === false ? null : $fila;
     }
 }
 ?>

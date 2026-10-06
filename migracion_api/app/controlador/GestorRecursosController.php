@@ -38,6 +38,7 @@ class RecursosController {
                     $aula = $this->dao->obtenerAulaPorId($id);
                     if ($aula === null) {
                         RespuestaJson::error("El aula solicitada no existe.", 404);
+                        return exit();
                     }
                     $equipos = $this->dao->listarEquiposDeAula($id);
                     RespuestaJson::exito(["aula" => $aula, "equipos" => $equipos]);

@@ -1,8 +1,8 @@
 <?php
-require_once RUTA_MODELO . "/ConectorPDO";
+require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/PlanillaDAO.php";
 require_once RUTA_MODELO . "/TicketDAO.php";
-require_once RUTA_VISTA . "/RespuestajsonPlanilla.php";
+require_once RUTA_VISTA . "/Respuestajson.php";
 
 class planillaController
 {
@@ -14,6 +14,8 @@ class planillaController
         if (!(($_SESSION["soporte"] ?? false || $_SESSION["solicitante"] ?? false))) {
             RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
         }
+        
+        $metodo = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
         match ($metodo) {
             "GET" => $this->listarRegistroPlanilla(),
@@ -32,27 +34,29 @@ class planillaController
         $tipo = trim($datos["tipo"] ?? "");
         $numero = trim($datos["numero"] ?? "");
         $fecha = trim($datos["fecha"] ?? "");
-        $horaEntrada = trim($_POST["horaEntrada"] ?? "");
-        $horaSalida = trim($_POST["horaSalida"] ?? "");
+        $horaEntrada = trim($datos["horaEntrada"] ?? "");
+        $horaSalida = trim($datos["horaSalida"] ?? "");
         $nombreSolicitante = trim($datos["nombreSolicitante"] ?? "");
         $asignatura = trim($datos["Asignatura"] ?? "") ?: null;
         $grupo = trim($datos["grupo"] ?? "") ?: null;
         $turno = trim($datos["turno"] ?? "") ?: null;
         $tickets = $datos["tickets"] ?? []; 
-        $documentoRegistrante = $datos["cedula"];
-
+        $documentoRegistrante = $_SESSION["cedula"];
+        
         if ($tipo === "" || $numero === "" || $fecha === "" || $horaEntrada === "" || $horaSalida === "" || $nombreSolicitante === "") {
-            header("Location: ../../public/registro_planilla.php?error=" . urlencode("Faltan campos obligatorios."));
-            exit;
-        }
+                    RespuestaJson::error("Faltan campos obligatorios.", 400);
+                    return;
+                }
 
         $accesoDatosPlanilla = new AccesoDatosPlanilla($conexion);
+        $conexion = $this->conectar();
+        $planillaDAO = new PlanillaDAO($conexion);
+        $ticketDAO = new TicketDAO($conexion);
+        $aulaId = $planillaDAO->buscarAulaId($tipo, $numero);
 
-        $aulaId = $dao->buscarAulaId($tipo, $numero);
-
-        if ($aulaId === null) {
-            header("Location: ../../public/registro_planilla.php?error=" . urlencode("El aula seleccionada no existe."));
-            exit;
+       if ($aulaId === null) {
+            RespuestaJson::error("El aula seleccionada no existe.", 404);
+            return;
         }
         $datosPlanilla = [
             "fecha" => $fecha,
@@ -78,10 +82,10 @@ class planillaController
                 "planillaId" => $planillaId,
             ];
 
-            $accesoDatosPlanilla->registrarTicket($datosTicket);
+            $ticketDAO->registrarTicket($datosTicket);
         }
 
-        header("Location: ../../public/registro_planilla.php?resultado=" . urlencode("Registro guardado correctamente."));
+        echo json_encode(["estado" => "exito", "mensaje" => "Registro guardado correctamente."]);
         exit;
 
 
@@ -89,6 +93,8 @@ class planillaController
     }
 
     public function listarRegistroPlanilla() {
+        $conexion = $this->conectar();
+
          $sql = "SELECT 
                 PLANILLA.ID,
                 PLANILLA.Fecha,
@@ -115,7 +121,9 @@ class planillaController
             $token = $_SERVER["HTTP_X_CSRF_TOKEN"] ?? "";
             if (!isset($_SESSION["csrfToken"]) || !hash_equals($_SESSION["csrfToken"], $token)) {
                 RespuestaJson::error("Solicitud rechazada", 403);
+                exit;
             }
+            
         }
 
         private function conectar(): PDO
@@ -124,6 +132,7 @@ class planillaController
             $conexion = $conector->establecerConexion();
             if ($conexion === null) {
                 RespuestaJson::error("Error de conexión con la base de datos", 500);
+                exit;
             }
             return $conexion;
         }
