@@ -1,26 +1,32 @@
 <?php
+require_once __DIR__ . "/../../config/config.php";
 require_once RUTA_MODELO . "/ConectorPDO.php";
-require_once RUTA_MODELO . "/LoginDAO.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
+require_once RUTA_MODELO. "/UsuarioDAO.php";
+
 
 class LoginController {
 
     public function gestionar(string $metodo): void {
         match ($metodo) {
-            "POST" => $this->autenticar(),
-            "DELETE" => $this->cerrarSesion(),
-            default => RespuestaJsonUsuario::error("Método no permitido", 405)
+            "POST" => $this->autenticar($metodo),
+            "DELETE" => $this->cerrarSesion($metodo),
+            default => RespuestaJson::error("Método no permitido", 405)
         };
     }
 
-    public function autenticar(): void {
+    public function autenticar(string $metodo): void {
+        if ($metodo !== "POST") {
+            RespuestaJson::error("Método no permitido", 405);
+        }
+
         $datos = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 
         $cedula = trim($datos["cedula"] ?? "");
-        $password = $datos["clave"] ?? "";
+        $clave = $datos["clave"] ?? "";
 
         if (empty($cedula) || empty($clave)) {
-            RespuestaJsonUsuario::error("Credenciales incompletas", 400);
+            RespuestaJson::error("Credenciales incompletas", 400);
         }
 
         $conexion = $this->conectar();
@@ -29,11 +35,11 @@ class LoginController {
         $usuario = $dao->buscarUsuario($cedula);
 
         if ($usuario === null || !password_verify($clave, $usuario["claveHash"])) {
-            RespuestaJsonUsuario::error("Cédula o contraseña incorrecta", 401);
+            RespuestaJson::error("Cédula o contraseña incorrecta", 401);
         }
 
         if (!$usuario["activo"]) {
-            RespuestaJsonUsuario::error("Usuario inactivo", 403);
+            RespuestaJson::error("Usuario inactivo", 403);
         }
 
         $roles = [];
@@ -42,9 +48,11 @@ class LoginController {
         if ($usuario["solicitante"])   $roles[] = "solicitante";
 
         if (empty($roles)) {
-            RespuestaJsonUsuario::error("El usuario no tiene ningún rol asignado", 403);
+            RespuestaJson::error("El usuario no tiene ningún rol asignado", 403);
         }
-
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_regenerate_id(true);
 
         if (empty($_SESSION["csrfToken"])) {
@@ -52,6 +60,8 @@ class LoginController {
         }
 
         $_SESSION["cedula"] = $usuario["cedula"];
+        $_SESSION["nombre"] = $usuario["nombre"];
+        $_SESSION["apellido"] = $usuario["apellido"];
         $_SESSION["administrador"] = $usuario["administrador"];
         $_SESSION["soporte"] = $usuario["soporte"];
         $_SESSION["solicitante"] = $usuario["solicitante"];
@@ -62,21 +72,27 @@ class LoginController {
             $_SESSION["rolActivo"] = $rolActivo;
         }
 
-        RespuestaJsonUsuario::exito([
+        RespuestaJson::exito([
             "mensaje" => "Autenticación exitosa",
             "cedula" => $usuario["cedula"],
+            "nombre" => $usuario["nombre"],
+            "apellido" => $usuario["apellido"],
             "roles" => $roles,
             "rolActivo" => $rolActivo,
             "csrfToken" => $_SESSION["csrfToken"]
         ]);
     }
 
-    public function cerrarSesion(): void {
-        $_SESSION = [];
-        session_start();
+    public function cerrarSesion(string $metodo): void {
+        if ($metodo !== "DELETE" && $metodo !== "POST") {
+            RespuestaJson::error("Método no permitido", 405);
+        }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_unset();
         session_destroy();
-        require_once __DIR__ . "/../config/config.php";
+
         RespuestaJson::exito(["mensaje" => "Sesión cerrada correctamente"]);
     }
 
@@ -84,8 +100,9 @@ class LoginController {
         $conector = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
         $conexion = $conector->establecerConexion();
         if ($conexion === null) {
-            RespuestaJsonUsuario::error("Error de conexión a la base de datos", 500);
+            RespuestaJson::error("Error de conexión a la base de datos", 500);
         }
         return $conexion;
     }
 }
+?>

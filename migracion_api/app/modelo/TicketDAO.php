@@ -84,7 +84,6 @@ class TicketDAO {
 
     public function actualizarTicket(int $ticketId, string $campo, string $valor): bool
     {
-        // Validar campos permitidos por seguridad (evita inyección SQL en nombres de columnas)
         $camposPermitidos = ['prioridad', 'estado', 'diagnostico'];
         if (!in_array($campo, $camposPermitidos)) {
             return false;

@@ -1,4 +1,4 @@
-const API_TICKETS = "../api/tickets.php";
+const API_TICKETS = "../index.php?ruta=tickets";
 
 const cuerpoTablaTicketsAgrupados = document.getElementById("cuerpoTablaTicketsAgrupados");
 
@@ -29,11 +29,7 @@ async function obtenerTicketsPorPcYAula(numPc, aulaId) {
     return await leerRespuestaAPI(respuesta);
 }
 
-/**
- * Pendiente de que el backend exponga el endpoint real de actualización
- * (prioridad, estado, diagnóstico, finalizar). Dejo la función lista
- * para cuando ese PATCH exista en TicketController.
- */
+
 async function actualizarTicket(ticketId, cambios) {
     const respuesta = await fetch(API_TICKETS, {
         method: "PATCH",

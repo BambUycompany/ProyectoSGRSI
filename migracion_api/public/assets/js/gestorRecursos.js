@@ -1,4 +1,4 @@
-const API_RECURSOS = "../api/recursos.php";
+const API_RECURSOS = "../index.php?ruta=recursos";
 
 // ===== Elementos: Aulas =====
 const btnAgregarAula = document.getElementById("btnAgregarAula");
@@ -36,11 +36,6 @@ const entradaModeloPortatil = document.getElementById("modeloPortatil");
 let portatilEnEdicion = false;
 let portatilIdEnEdicion = null;
 
-/**
- * Misma función de lectura de respuesta que usuarios.js / login.js:
- * la API siempre envuelve los datos de éxito bajo "datos", y el texto
- * de error bajo "mensaje".
- */
 async function leerRespuestaAPI(respuesta) {
     const texto = await respuesta.text();
 
@@ -69,7 +64,6 @@ function cabecerasMutacion() {
     };
 }
 
-/* ===================== AULAS ===================== */
 
 async function obtenerAulas() {
     const respuesta = await fetch(`${API_RECURSOS}?recurso=aula`);
@@ -210,7 +204,6 @@ async function gestionarAula(eventoFormulario) {
     }
 }
 
-/* ===================== EQUIPOS ===================== */
 
 async function abrirDetalleAula(aulaId) {
     aulaIdActual = aulaId;
@@ -346,7 +339,6 @@ async function gestionarEquipo(eventoFormulario) {
     }
 }
 
-/* ===================== PORTÁTILES ===================== */
 
 async function obtenerPortatiles() {
     const respuesta = await fetch(`${API_RECURSOS}?recurso=portatil`);
@@ -506,7 +498,6 @@ async function gestionarPortatil(eventoFormulario) {
     }
 }
 
-/* ===================== EVENTOS ===================== */
 
 btnAgregarAula.addEventListener("click", abrirAltaAula);
 btnCerrarAgregarAula.addEventListener("click", cerrarAula);

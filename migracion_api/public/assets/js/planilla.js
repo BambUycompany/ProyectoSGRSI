@@ -1,4 +1,4 @@
-const API_PLANILLA = "../api/planilla.php";
+const API_PLANILLA = "../index.php?ruta=planilla";
 
 const formularioRegistro = document.getElementById("formularioRegistroPlanilla");
 const cuerpoTablaRegistros = document.getElementById("cuerpoTablaRegistros");

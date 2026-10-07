@@ -1,6 +1,6 @@
 <?php
 require_once RUTA_MODELO . "/ConectorPDO.php";
-require_once RUTA_MODELO . "/RecursosDAO.php";
+require_once RUTA_MODELO . "/GestorRecursosDAO.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
 
 class RecursosController {
@@ -38,7 +38,6 @@ class RecursosController {
                     $aula = $this->dao->obtenerAulaPorId($id);
                     if ($aula === null) {
                         RespuestaJson::error("El aula solicitada no existe.", 404);
-                        return exit();
                     }
                     $equipos = $this->dao->listarEquiposDeAula($id);
                     RespuestaJson::exito(["aula" => $aula, "equipos" => $equipos]);

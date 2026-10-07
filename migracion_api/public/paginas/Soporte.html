@@ -56,21 +56,18 @@
         </div>
         
         <div class="contenidoNotificaciones">
-            <?php if (empty($notificacionesFinalizadas)): ?>
-                <p>No tienes notificaciones de tickets resueltos.</p>
-            <?php else: ?>
+            
                 <ul class="listaNotificaciones">
-                    <?php foreach ($notificacionesFinalizadas as $notif): ?>
+                
                         <li class="itemNotificacion">
                             <div class="infoNotif">
-                                <strong>Ticket PC #<?= htmlspecialchars($notif['PcNumPc']) ?></strong><br>
-                                <small>Falla: <?= htmlspecialchars($notif['Fallo']) ?> - <em>Resuelto</em></small>
+                                <strong></strong><br>
+                                <small><em>Resuelto</em></small>
                             </div>
                             <a href="detalle_registros.php?id=<?= (int) $notif['PlanillaID'] ?>" class="botones">Ver detalle</a>
                         </li>
-                    <?php endforeach; ?>
+                   
                 </ul>
-            <?php endif; ?>
         </div>
     </dialog>
 

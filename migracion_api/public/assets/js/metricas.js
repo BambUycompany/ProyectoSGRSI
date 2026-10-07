@@ -1,4 +1,4 @@
-const API_METRICAS = "../api/metricas.php";
+const API_METRICAS = "../index.php?ruta=metricas";
 
 async function leerRespuestaAPI(respuesta) {
     const texto = await respuesta.text();

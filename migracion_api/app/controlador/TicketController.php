@@ -1,7 +1,6 @@
 <?php
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/TicketDAO.php";
-require_once RUTA_MODELO . "/ModificarDatosTickets.php";
 require_once RUTA_VISTA . "/Respuestajson.php";
 
 class TicketController
@@ -10,10 +9,12 @@ class TicketController
     {
         if (!isset($_SESSION["cedula"])) {
             RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
+            return;
         }
 
         if (!($_SESSION["soporte"] ?? false)) {
             RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
+            return;
         }
 
         $metodo = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -46,7 +47,6 @@ class TicketController
             return;
         }
 
-        // Cédula del registrante obtenida desde la sesión si no viene especificada
         $datos['documentoRegistrante'] = $datos['documentoRegistrante'] ?? $_SESSION['cedula'] ?? '';
 
         $conexion = $this->conectar();
@@ -72,8 +72,8 @@ class TicketController
             return;
         }
 
-        $modificador = new ModificarDatosTickets($this->conectar());
-        $exito = $modificador->cambiarEstadoTicket($id, $nuevoEstado)[cite: 2];
+        $dao = new TicketDAO($this->conectar());
+        $exito = $dao->cambiarEstadoTicket($id, $nuevoEstado);
 
         if ($exito) {
             echo json_encode(["estado" => "exito", "mensaje" => "Estado del ticket actualizado."]);
@@ -93,8 +93,8 @@ class TicketController
             return;
         }
 
-        $modificador = new ModificarDatosTickets($this->conectar());
-        $exito = $modificador->cambiarPrioridadTicket($id, $nuevaPrioridad)[cite: 2];
+        $dao = new TicketDAO($this->conectar());
+        $exito = $dao->cambiarPrioridadTicket($id, $nuevaPrioridad);
 
         if ($exito) {
             echo json_encode(["estado" => "exito", "mensaje" => "Prioridad del ticket actualizada."]);
@@ -115,8 +115,8 @@ class TicketController
             return;
         }
 
-        $modificador = new ModificarDatosTickets($this->conectar());
-        $exito = $modificador->finalizarTicket($id, $diagnostico, $soporteCedula)[cite: 2];
+        $dao = new TicketDAO($this->conectar());
+        $exito = $dao->finalizarTicket($id, $diagnostico, $soporteCedula);
 
         if ($exito) {
             echo json_encode(["estado" => "exito", "mensaje" => "Ticket finalizado correctamente."]);
@@ -153,4 +153,3 @@ class TicketController
 
     
 
-}
