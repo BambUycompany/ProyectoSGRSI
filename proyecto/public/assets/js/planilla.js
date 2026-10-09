@@ -180,3 +180,20 @@ if (formularioRegistro) {
 if (cuerpoTablaRegistros) {
     actualizarTablaRegistros();
 }
+
+const camposDocente = document.getElementById("camposDocente");
+const rolActivoRegistro = sessionStorage.getItem("rolActivo");
+
+if (camposDocente) {
+    const mostrarCampos = rolActivoRegistro === "solicitante";
+
+    camposDocente.hidden = !mostrarCampos;
+
+    for (const campo of camposDocente.querySelectorAll("input, select, textarea")) {
+        campo.disabled = !mostrarCampos;
+
+        if (!mostrarCampos) {
+            campo.required = false;
+        }
+    }
+}

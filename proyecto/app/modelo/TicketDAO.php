@@ -216,8 +216,9 @@ class TicketDAO {
 
         $ticket = $this->obtenerTicketPorId($id);
 
-        return $ticket !== null &&
-               $ticket["Estado"] === $nuevoEstado;
+       return $ticket !== null &&
+       $ticket["Estado"] !== "finalizado" &&
+       $ticket["Estado"] === $nuevoEstado;
     }
 
     public function cambiarPrioridadTicket(

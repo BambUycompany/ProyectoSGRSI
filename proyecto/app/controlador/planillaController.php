@@ -94,10 +94,32 @@ class planillaController {
         $cedula = $_SESSION["cedula"];
 
         
+        
+        $vista = trim($_GET["vista"] ?? "");
+
+        if ($vista !== "" && $vista !== "propios") {
+            RespuestaJson::error(
+                "Vista de registros inválida.",
+                400
+            );
+        }
+        if (
+            $vista === "propios" &&
+            empty($_SESSION["solicitante"])
+        ) {
+            RespuestaJson::error(
+                "No tenés permiso para consultar registros propios de este solicitante solicitante.",
+                403
+            );
+        }
+
         $soloPropios =
-            !empty($_SESSION["solicitante"]) &&
-            empty($_SESSION["administrador"]) &&
-            empty($_SESSION["soporte"]);
+            $vista === "propios" ||
+            (
+                !empty($_SESSION["solicitante"]) &&
+                empty($_SESSION["administrador"]) &&
+                empty($_SESSION["soporte"])
+            );
 
         if (isset($_GET["id"])) {
 

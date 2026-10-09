@@ -1,0 +1,58 @@
+
+.mensajeTickets {
+    padding: 12px 16px;
+    margin: 12px 0 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.mensajeTickets[hidden],
+#mensajeSinTickets[hidden] {
+    display: none;
+}
+
+.mensajeTickets.error {
+    background-color: #fff1f0;
+    border-color: #f0a9a5;
+    color: #a61d24;
+}
+
+.mensajeTickets.exito {
+    background-color: #eaf7ee;
+    border-color: #9acbaa;
+    color: #226b3a;
+}
+
+.seccionDetalleTickets table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.seccionDetalleTickets th,
+.seccionDetalleTickets td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.cajaOperaciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cajaOperaciones .btnOperacion {
+    cursor: pointer;
+}
+
+#dlgFinalizar textarea {
+    width: 100%;
+    min-width: 280px;
+    resize: vertical;
+}
+
+.textoDiagnostico {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
