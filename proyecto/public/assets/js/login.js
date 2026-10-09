@@ -1,40 +1,118 @@
-/*const SEMILLA_EMPLEADOS = [
-    { cedula: "1111", nombre: "Ana", apellido: "Admin", email: "admin@cetp.edu", rol: "administrador" },
-    { cedula: "2222", nombre: "Sergio", apellido: "Soporte", email: "soporte@cetp.edu", rol: "soporte" },
-    { cedula: "3333", nombre: "Sofia", apellido: "Solicitante", email: "solicitante@cetp.edu", rol: "solicitante" }
-];*/
 
-const formLogin = document.getElementById("formLogin");
-const inputCedulaLogin = document.getElementById("cedula");
+const API_LOGIN = "../index.php?ruta=login";
 
-function cargarEmpleadosGuardadosLocal() {
-    const empleadosGuardados = localStorage.getItem("empleados");
-    if (empleadosGuardados === null) return [];
-    return JSON.parse(empleadosGuardados);
+const formularioLogin = document.getElementById("formularioLogin");
+const entradaCedula = document.getElementById("cedula");
+const entradaClave = document.getElementById("clave");
+const mensajeError = document.getElementById("mensajeError");
+
+const PAGINAS_POR_ROL = {
+    administrador: "./administrador.html",
+    soporte: "./soporte.html",
+    solicitante: "./solicitante.html"
+};
+
+async function leerRespuestaAPI(respuesta) {
+    const texto = await respuesta.text();
+
+    let json;
+
+    try {
+        json = JSON.parse(texto);
+    } catch {
+        throw new Error(
+            `HTTP ${respuesta.status}: La API no devolvió JSON válido.`
+        );
+    }
+
+    if (!respuesta.ok) {
+        throw new Error(
+            `HTTP ${respuesta.status}: ${json.mensaje ?? "Error al iniciar sesión."}`
+        );
+    }
+
+    return json.datos;
 }
 
-function sembrarEmpleadosDePrueba() {
-    if (localStorage.getItem("empleados") === null) {
-        localStorage.setItem("empleados", JSON.stringify(SEMILLA_EMPLEADOS));
+async function loguear(cedula, clave) {
+
+    const respuesta = await fetch(API_LOGIN, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ cedula, clave })
+    });
+
+    return await leerRespuestaAPI(respuesta);
+}
+
+async function gestionarLogin(eventoFormulario) {
+
+    eventoFormulario.preventDefault();
+    mensajeError.textContent = "";
+
+    try {
+
+        const sesion = await loguear(
+            entradaCedula.value.trim(),
+            entradaClave.value
+        );
+        if (
+            !sesion.csrfToken ||
+            !sesion.cedula ||
+            !Array.isArray(sesion.roles) ||
+            sesion.roles.length === 0
+        ) {
+            throw new Error(
+                "La API devolvió datos de sesión incompletos."
+            );
+        }
+
+        sessionStorage.clear();
+
+        sessionStorage.setItem("csrfToken", sesion.csrfToken);
+        sessionStorage.setItem("cedula", sesion.cedula);
+        sessionStorage.setItem("nombre", sesion.nombre);
+        sessionStorage.setItem("apellido", sesion.apellido);
+        sessionStorage.setItem(
+            "roles",
+            JSON.stringify(sesion.roles)
+        );
+        if (sesion.roles.length > 1) {
+
+            sessionStorage.removeItem("rolActivo");
+
+            window.location.replace(
+                "./seleccion_dashboard.html"
+            );
+
+            return;
+        }
+
+        const rolActivo = sesion.roles[0];
+
+        const pagina = PAGINAS_POR_ROL[rolActivo];
+
+        if (!pagina) {
+            throw new Error(
+                "No existe un dashboard para el rol asignado."
+            );
+        }
+
+        sessionStorage.setItem("rolActivo", rolActivo);
+
+        window.location.replace(pagina);
+
+    } catch (error) {
+
+        mensajeError.textContent = error.message;
     }
 }
 
-function iniciarSesion(evento) {
-    evento.preventDefault();
-
-    const cedula = inputCedulaLogin.value.trim();
-    const empleados = cargarEmpleadosGuardadosLocal();
-    const usuario = empleados.find(emp => emp.cedula === cedula);
-
-    if (usuario === undefined) {
-        alert("Cédula no encontrada. Verifica que el usuario esté registrado.");
-        return;
-    }
-
-    sessionStorage.setItem("rolActual", usuario.rol);
-    sessionStorage.setItem("usuarioActual", usuario.nombre + " " + usuario.apellido);
-    window.location.href = "index.html";
+if (formularioLogin) {
+    formularioLogin.addEventListener(
+        "submit",
+        gestionarLogin
+    );
 }
-
-sembrarEmpleadosDePrueba();
-formLogin.addEventListener("submit", iniciarSesion);

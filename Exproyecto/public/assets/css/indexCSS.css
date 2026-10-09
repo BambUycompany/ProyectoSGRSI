@@ -1,0 +1,113 @@
+.botones {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; 
+    background-color: #19337c;
+    color: white; 
+    border-radius: 1rem;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+    
+}
+
+.botones:hover {
+    transform: scale(1.02); 
+    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: #1e3a8a;
+}
+
+nav a.botones:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: #1e3a8a;
+    color: white;
+}
+
+.botones:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(25, 51, 124, 0.25);
+}
+.seccionInteractiva {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: flex-start;
+
+    margin-top: 2rem;
+}
+
+.seccionListadoRegistro {
+    background-color: #fff;
+    color: black;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 62.5rem;
+    margin: 1.5rem auto 0 auto;
+}
+
+.seccionListadoRegistro h2 {
+    color: black;
+    margin: 0 0 1rem 0;
+}
+
+.filtroPeriodo {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filtroPeriodo .botones {
+    background-color: #19337c;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.filtroPeriodo .botones.activo {
+    background-color: #1e3a8a;
+    box-shadow: inset 0 0 0 0.125rem white;
+}
+
+.seccionListadoRegistro table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.seccionListadoRegistro thead {
+    background-color: #19337c;
+    color: white;
+}
+
+.seccionListadoRegistro th,
+.seccionListadoRegistro td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 0.0625rem solid #e2e8f0;
+}
+
+.seccionListadoRegistro tbody tr:hover {
+    background-color: #f4f6fb;
+}
+
+@media (max-width: 48rem) {
+    .seccionListadoRegistro {
+        padding: 1.2rem;
+    }
+    .seccionListadoRegistro th,
+    .seccionListadoRegistro td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+}
+
