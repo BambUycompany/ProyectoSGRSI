@@ -16,7 +16,6 @@ async function leerRespuestaAPI(respuesta) {
     const texto = await respuesta.text();
 
     let json;
-
     try {
         json = JSON.parse(texto);
     } catch {
@@ -115,4 +114,11 @@ if (formularioLogin) {
         "submit",
         gestionarLogin
     );
+}
+
+const errorAcceso = sessionStorage.getItem("errorAcceso");
+
+if (errorAcceso && mensajeError) {
+    mensajeError.textContent = errorAcceso;
+    sessionStorage.removeItem("errorAcceso");
 }

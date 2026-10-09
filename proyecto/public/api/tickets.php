@@ -6,3 +6,4 @@ session_start();
 
 $controlador = new TicketController();
 $controlador->gestionar($_SERVER["REQUEST_METHOD"]);
+

@@ -127,7 +127,6 @@ async function gestionarRegistroPlanilla(eventoFormulario) {
         );
 
         const datosPlanilla = {
-
             tipo: datosFormulario.get("tipo"),
             numero: datosFormulario.get("numero"),
             fecha: datosFormulario.get("fecha"),
@@ -145,7 +144,6 @@ async function gestionarRegistroPlanilla(eventoFormulario) {
             turno:
                 datosFormulario.get("turno") ?? "",
 
-            // Los tickets se obtienen del arreglo compartido.
             tickets: obtenerTicketsDelFormulario()
         };
 

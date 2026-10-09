@@ -24,7 +24,7 @@ class AccesoDatosAula {
 
             return $aulaId;
         }
-
+  
    public function listarAulasConDetalle() {
     $sql = "SELECT 
                 AULA.ID AS ID,

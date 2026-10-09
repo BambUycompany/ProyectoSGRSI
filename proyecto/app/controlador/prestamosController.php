@@ -1,4 +1,5 @@
 
+
 <?php
 
 require_once RUTA_MODELO . "/ConectorPDO.php";
@@ -158,7 +159,7 @@ class PrestamosController {
         bool $esSoporte
     ): void {
 
-     
+    
         $vista = $_GET["vista"] ?? "propios";
 
         if (!in_array($vista, ["propios", "todos"], true)) {
@@ -242,7 +243,7 @@ class PrestamosController {
             );
         }
 
-        
+
         $datosPrestamo = [
             "portatilId" => (int)$portatilId,
             "ciAlumno" => $ciAlumno,

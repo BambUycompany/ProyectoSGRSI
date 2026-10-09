@@ -1,154 +1,425 @@
+
 <?php
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/TicketDAO.php";
-require_once RUTA_VISTA . "/Respuestajson.php";
+require_once RUTA_VISTA . "/RespuestaJson.php";
 
-class TicketController
-{
-    public function gestionar(): void
-    {
-        if (!isset($_SESSION["cedula"])) {
-            RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
-            return;
-        }
+class TicketController {
 
-        if (!($_SESSION["soporte"] ?? false)) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
-            return;
-        }
+    private TicketDAO $dao;
 
-        $metodo = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-        $accion = $_GET['accion'] ?? '';
+    public function __construct() {
 
-        if ($metodo === 'GET') {
-            match ($accion) {
-                'listarPorPCAULA' => $this->listarPorPCAULA(),
-                default => RespuestaJson::error("Acción GET no permitida", 405),
-            };
-        } elseif ($metodo === 'POST' || $metodo === 'PUT') {
-            match ($accion) {
-                'registrar' => $this->registrarTicket(),
-                'cambiarEstado' => $this->cambiarEstado(),
-                'cambiarPrioridad' => $this->cambiarPrioridad(),
-                'finalizar' => $this->finalizar(),
-                default => RespuestaJson::error("Acción no permitida", 405),
-            };
-        } else {
-            RespuestaJson::error("Método no permitido", 405);
-        }
-    }
+        $conector = new ConectorPDO(
+            $_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"],
+            $_ENV["DB_USUARIO"],
+            $_ENV["DB_CLAVE"],
+            $_ENV["DB_NOMBRE"]
+        );
 
-    private function registrarTicket(): void
-    {
-        $datos = json_decode(file_get_contents("php://input"), true) ?? [];
-
-        if (empty($datos) || !isset($datos['numeroPc'], $datos['fallo'], $datos['aulaId'])) {
-            RespuestaJson::error("Faltan datos obligatorios para registrar el ticket.", 400);
-            return;
-        }
-
-        $datos['documentoRegistrante'] = $datos['documentoRegistrante'] ?? $_SESSION['cedula'] ?? '';
-
-        $conexion = $this->conectar();
-        $dao = new TicketDAO($conexion);
-
-        $resultado = $dao->registrarTicket($datos);
-
-        if ($resultado) {
-            echo json_encode(["estado" => "exito", "mensaje" => "Ticket registrado correctamente."]);
-        } else {
-            RespuestaJson::error("Error al registrar el ticket en la base de datos", 500);
-        }
-    }
-
-    private function cambiarEstado(): void
-    {
-        $datos = json_decode(file_get_contents("php://input"), true) ?? [];
-        $id = (int)($datos['id'] ?? 0);
-        $nuevoEstado = trim($datos['nuevoEstado'] ?? '');
-
-        if ($id <= 0 || $nuevoEstado === '') {
-            RespuestaJson::error("Faltan datos obligatorios (id, nuevoEstado)", 400);
-            return;
-        }
-
-        $dao = new TicketDAO($this->conectar());
-        $exito = $dao->cambiarEstadoTicket($id, $nuevoEstado);
-
-        if ($exito) {
-            echo json_encode(["estado" => "exito", "mensaje" => "Estado del ticket actualizado."]);
-        } else {
-            RespuestaJson::error("Error al cambiar el estado o estado no permitido.", 400);
-        }
-    }
-
-    private function cambiarPrioridad(): void
-    {
-        $datos = json_decode(file_get_contents("php://input"), true) ?? [];
-        $id = (int)($datos['id'] ?? 0);
-        $nuevaPrioridad = trim($datos['nuevaPrioridad'] ?? '');
-
-        if ($id <= 0 || $nuevaPrioridad === '') {
-            RespuestaJson::error("Faltan datos obligatorios (id, nuevaPrioridad)", 400);
-            return;
-        }
-
-        $dao = new TicketDAO($this->conectar());
-        $exito = $dao->cambiarPrioridadTicket($id, $nuevaPrioridad);
-
-        if ($exito) {
-            echo json_encode(["estado" => "exito", "mensaje" => "Prioridad del ticket actualizada."]);
-        } else {
-            RespuestaJson::error("Error al cambiar la prioridad o prioridad no permitida.", 400);
-        }
-    }
-
-    private function finalizar(): void
-    {
-        $datos = json_decode(file_get_contents("php://input"), true) ?? [];
-        $id = (int)($datos['id'] ?? 0);
-        $diagnostico = trim($datos['diagnostico'] ?? '');
-        $soporteCedula = $_SESSION["cedula"] ?? trim($datos['soporteCedula'] ?? '');
-
-        if ($id <= 0 || $diagnostico === '' || $soporteCedula === '') {
-            RespuestaJson::error("Faltan datos obligatorios (id, diagnostico, soporteCedula)", 400);
-            return;
-        }
-
-        $dao = new TicketDAO($this->conectar());
-        $exito = $dao->finalizarTicket($id, $diagnostico, $soporteCedula);
-
-        if ($exito) {
-            echo json_encode(["estado" => "exito", "mensaje" => "Ticket finalizado correctamente."]);
-        } else {
-            RespuestaJson::error("Error al finalizar el ticket.", 500);
-        }
-    }
-
-    public function listarPorPCAULA(): void
-    {
-        $conexion = $this->conectar();
-        $dao = new TicketDAO($conexion);
-        $aulaId = $_GET['aulaId'] ?? null;
-        $pc = $_GET['pc'] ?? null;
-
-        echo json_encode($dao->listarPorPCAULA($aulaId, $pc));
-    }
-
-    private function conectar(): PDO
-    {
-        $conector = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
         $conexion = $conector->establecerConexion();
+
         if ($conexion === null) {
-            RespuestaJson::error("Error de conexión con la base de datos", 500);
-            exit;
+            RespuestaJson::error(
+                "No se pudo conectar a la base de datos.",
+                500
+            );
         }
-        return $conexion;
+
+        $this->dao = new TicketDAO($conexion);
+    }
+
+    public function gestionar(): void {
+
+        if (empty($_SESSION["cedula"])) {
+            RespuestaJson::error(
+                "Tu sesión no está iniciada o ha vencido.",
+                401
+            );
+        }
+
+        if (empty($_SESSION["soporte"])) {
+            RespuestaJson::error(
+                "No tenés permiso para gestionar tickets.",
+                403
+            );
+        }
+
+        $metodo = $_SERVER["REQUEST_METHOD"] ?? "GET";
+        $accion = $_GET["accion"] ?? "";
+
+        try {
+
+            switch ($metodo) {
+
+                case "GET":
+                    $this->gestionarConsulta($accion);
+                    break;
+
+                case "PUT":
+                    $this->verificarCsrf();
+
+                    $datos = $this->obtenerDatos();
+
+                    $this->gestionarModificacion(
+                        $accion,
+                        $datos
+                    );
+                    break;
+
+                default:
+                    RespuestaJson::error(
+                        "Método no permitido.",
+                        405
+                    );
+            }
+
+        } catch (Throwable $error) {
+
+            error_log(
+                "Error en TicketController: " .
+                $error->getMessage()
+            );
+
+            RespuestaJson::error(
+                "Ocurrió un error al procesar la solicitud.",
+                500
+            );
+        }
+    }
+
+    private function verificarCsrf(): void {
+
+        $tokenRecibido = $_SERVER["HTTP_X_CSRF_TOKEN"] ?? "";
+        $tokenSesion = $_SESSION["csrfToken"] ?? "";
+
+        if (
+            !is_string($tokenRecibido) ||
+            !is_string($tokenSesion) ||
+            $tokenSesion === "" ||
+            !hash_equals($tokenSesion, $tokenRecibido)
+        ) {
+            RespuestaJson::error(
+                "Token de seguridad inválido.",
+                403
+            );
+        }
+    }
+
+    private function obtenerDatos(): array {
+
+        $contenido = file_get_contents("php://input");
+
+        $datos = json_decode(
+            $contenido ?: "",
+            true
+        );
+
+        if (
+            !is_array($datos) ||
+            array_is_list($datos)
+        ) {
+            RespuestaJson::error(
+                "Los datos enviados no son válidos.",
+                400
+            );
+        }
+
+        return $datos;
+    }
+
+    private function gestionarConsulta(
+        string $accion
+    ): void {
+
+        switch ($accion) {
+
+            case "listarAgrupados":
+                $this->listarAgrupados();
+                break;
+
+            case "listarPorPCAULA":
+                $this->listarPorPCAULA();
+                break;
+
+            default:
+                RespuestaJson::error(
+                    "Acción de consulta no permitida.",
+                    405
+                );
+        }
+    }
+
+    private function gestionarModificacion(
+        string $accion,
+        array $datos
+    ): void {
+
+        switch ($accion) {
+
+            case "cambiarEstado":
+                $this->cambiarEstado($datos);
+                break;
+
+            case "cambiarPrioridad":
+                $this->cambiarPrioridad($datos);
+                break;
+
+            case "finalizar":
+                $this->finalizar($datos);
+                break;
+
+            default:
+                RespuestaJson::error(
+                    "Acción de modificación no permitida.",
+                    405
+                );
+        }
+    }
+
+    private function validarIdTicket(
+        array $datos
+    ): int {
+
+        $id = filter_var(
+            $datos["id"] ?? null,
+            FILTER_VALIDATE_INT,
+            [
+                "options" => [
+                    "min_range" => 1
+                ]
+            ]
+        );
+
+        if ($id === false || $id === null) {
+            RespuestaJson::error(
+                "El identificador del ticket no es válido.",
+                400
+            );
+        }
+
+        return (int) $id;
+    }
+
+    private function obtenerTicketExistente(
+        int $id
+    ): array {
+
+        $ticket = $this->dao->obtenerTicketPorId($id);
+
+        if ($ticket === null) {
+            RespuestaJson::error(
+                "El ticket solicitado no existe.",
+                404
+            );
+        }
+
+        return $ticket;
+    }
+
+    private function verificarTicketEditable(
+        array $ticket
+    ): void {
+
+        if (
+            strtolower(trim($ticket["Estado"])) === "finalizado"
+        ) {
+            RespuestaJson::error(
+                "El ticket ya está finalizado y no puede modificarse.",
+                409
+            );
+        }
+    }
+
+    private function listarAgrupados(): void {
+
+        $tickets = $this->dao->listarTicketsAgrupados();
+
+        RespuestaJson::exito([
+            "tickets" => $tickets
+        ]);
+    }
+
+    private function listarPorPCAULA(): void {
+
+        $numeroPc = trim($_GET["pc"] ?? "");
+
+        $aulaId = filter_var(
+            $_GET["aulaId"] ?? null,
+            FILTER_VALIDATE_INT,
+            [
+                "options" => [
+                    "min_range" => 1
+                ]
+            ]
+        );
+
+        if (
+            $numeroPc === "" ||
+            $aulaId === false ||
+            $aulaId === null
+        ) {
+            RespuestaJson::error(
+                "Debe indicar una PC y un aula válidas.",
+                400
+            );
+        }
+
+        $tickets = $this->dao->listarTicketsPorPcYAula(
+            $numeroPc,
+            (int) $aulaId
+        );
+
+        RespuestaJson::exito([
+            "pc" => $numeroPc,
+            "aulaId" => (int) $aulaId,
+            "tickets" => $tickets
+        ]);
+    }
+
+    private function cambiarEstado(
+        array $datos
+    ): void {
+
+        $id = $this->validarIdTicket($datos);
+
+        $nuevoEstado = strtolower(
+            trim($datos["nuevoEstado"] ?? "")
+        );
+
+        $estadosPermitidos = [
+            "pendiente",
+            "en proceso"
+        ];
+
+        if (
+            !in_array(
+                $nuevoEstado,
+                $estadosPermitidos,
+                true
+            )
+        ) {
+            RespuestaJson::error(
+                "El estado seleccionado no es válido.",
+                400
+            );
+        }
+
+        $ticket = $this->obtenerTicketExistente($id);
+
+        $this->verificarTicketEditable($ticket);
+
+        $resultado = $this->dao->cambiarEstadoTicket(
+            $id,
+            $nuevoEstado
+        );
+
+        if (!$resultado) {
+            RespuestaJson::error(
+                "No se pudo cambiar el estado del ticket.",
+                409
+            );
+        }
+
+        RespuestaJson::exito([
+            "mensaje" => "Estado del ticket actualizado correctamente."
+        ]);
+    }
+
+    private function cambiarPrioridad(
+        array $datos
+    ): void {
+
+        $id = $this->validarIdTicket($datos);
+
+        $nuevaPrioridad = strtolower(
+            trim($datos["nuevaPrioridad"] ?? "")
+        );
+
+        $prioridadesPermitidas = [
+            "baja",
+            "media",
+            "alta"
+        ];
+
+        if (
+            !in_array(
+                $nuevaPrioridad,
+                $prioridadesPermitidas,
+                true
+            )
+        ) {
+            RespuestaJson::error(
+                "La prioridad seleccionada no es válida.",
+                400
+            );
+        }
+
+        $ticket = $this->obtenerTicketExistente($id);
+
+        $this->verificarTicketEditable($ticket);
+
+        $resultado = $this->dao->cambiarPrioridadTicket(
+            $id,
+            $nuevaPrioridad
+        );
+
+        if (!$resultado) {
+            RespuestaJson::error(
+                "No se pudo actualizar la prioridad del ticket.",
+                409
+            );
+        }
+
+        RespuestaJson::exito([
+            "mensaje" => "Prioridad del ticket actualizada correctamente."
+        ]);
+    }
+
+    private function finalizar(
+        array $datos
+    ): void {
+
+        $id = $this->validarIdTicket($datos);
+
+        $diagnostico = trim(
+            $datos["diagnostico"] ?? ""
+        );
+
+        if ($diagnostico === "") {
+            RespuestaJson::error(
+                "Debe escribir un diagnóstico para finalizar el ticket.",
+                400
+            );
+        }
+
+        $ticket = $this->obtenerTicketExistente($id);
+
+        $this->verificarTicketEditable($ticket);
+
+        $soporteCedula = $_SESSION["cedula"];
+
+        $resultado = $this->dao->finalizarTicket(
+            $id,
+            $diagnostico,
+            $soporteCedula
+        );
+
+        if (!$resultado) {
+            RespuestaJson::error(
+                "No se pudo finalizar el ticket.",
+                409
+            );
+        }
+
+        RespuestaJson::exito([
+            "mensaje" => "Ticket finalizado correctamente.",
+            "id" => $id,
+            "estado" => "finalizado"
+        ]);
     }
 }
-?>
-
-
 
 
     
