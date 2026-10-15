@@ -203,9 +203,7 @@
             );
         }
 
-        if (sessionStorage.getItem("rolActivo") === "soporte") {
-         celdaAcciones.appendChild(enlace);
-        }
+        celdaAcciones.appendChild(cajaOperaciones);
         fila.appendChild(celdaAcciones);
 
         cuerpoTabla.appendChild(fila);

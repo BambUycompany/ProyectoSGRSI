@@ -1,129 +1,305 @@
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Métricas</title>
+
+    <title>Métricas del Sistema - SGRSI</title>
+
     <link rel="stylesheet" href="../assets/css/global.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/metricasCSS.css">
+    <link rel="stylesheet" href="../assets/css/metricasCSS.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
 </head>
-<body>
+
+<body data-roles-permitidos="administrador">
+
     <header class="barraNav">
-    <nav>
-        <button class="btnMenu" id="btnMenu" type="button"><i class="bi bi-list"></i></button>
-        <button class="btnCerrarMenu" id="btnCerrarMenu" type="button"><i class="bi bi-list"></i></button>
+        <nav>
+            <button class="btnMenu" id="btnMenu" type="button">
+                <i class="bi bi-list"></i>
+            </button>
 
-        <h1><a href="<?= homeSegunRol() ?>"><img src="assets/img/imagen_2026-05-28_201450907-removebg-preview.png" alt="Logo" class="logo"> S.G.R.S.I</a></h1>
-        <ul class="listaNavegacion">
-            <li data-roles="administrador solicitante soporte"><a href="registro_planilla.php" class="botones">Registro Sala</a></li>
-            <li data-roles="administrador"><a href="registro_empleados.php" class="botones">Empleados</a></li>
-            <li data-roles="administrador soporte"><a href="gestor_recursos.php" class="botones">Gestor de Recursos</a></li>
-            <li data-roles="soporte"><a href="listado_registro.php" class="botones">Listado Registro</a></li>
-            <li data-roles="soporte"><a href="listado_tickets.php" class="botones">Tickets</a></li>
-            <li data-roles="administrador soporte"><a href="metricas.php" class="botones">Métricas</a></li>
-            <li data-roles="solicitante"><a href="registro_prestamo.php" class="botones">Solicitar Préstamo</a></li>
-            <li data-roles="solicitante"><a href="listado_prestamos.php" class="botones">Mis Préstamos</a></li>
-            <li class="menuUsuario">
-                <button type="button" id="btnIconoUsuario" class="botones"><i class="bi bi-person-fill"></i></button>
-                <ul class="opcionesUsuario" id="opcionesUsuario">
-                    <?php if (isset($_SESSION["roles"]) && count($_SESSION["roles"]) > 1): ?>
-                        <li><button type="button" id="btnCambiarRol">Cambiar de rol</button></li>
-                    <?php endif; ?>
-                    <li><button type="button" id="btnCerrarSesion">Cerrar sesión</button></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-</header>
+            <button class="btnCerrarMenu" id="btnCerrarMenu" type="button">
+                <i class="bi bi-list"></i>
+            </button>
 
-    <main>
+            <h1>
+                <a href="./administrador.html" id="enlaceInicio">
+                    <img
+                        src="../assets/img/imagen_2026-05-28_201450907-removebg-preview.png"
+                        alt="Logo"
+                        class="logo"
+                    >
+                    S.G.R.S.I
+                </a>
+            </h1>
+
+            <ul class="listaNavegacion">
+                <li data-roles="administrador solicitante soporte">
+                    <a href="./registro_planilla.html" class="botones">
+                        Registro Sala
+                    </a>
+                </li>
+
+                <li data-roles="administrador">
+                    <a href="./registro_empleados.html" class="botones">
+                        Empleados
+                    </a>
+                </li>
+
+                <li data-roles="administrador">
+                    <a href="./gestor_recursos.html" class="botones">
+                        Gestor de Recursos
+                    </a>
+                </li>
+
+                <li data-roles="administrador">
+                    <a href="./metricas.html" class="botones">
+                        Métricas
+                    </a>
+                </li>
+
+                <li class="menuUsuario">
+                    <button
+                        type="button"
+                        id="btnIconoUsuario"
+                        class="botones"
+                    >
+                        <i class="bi bi-person-fill"></i>
+                    </button>
+
+                    <ul class="opcionesUsuario" id="opcionesUsuario">
+                        <li id="itemCambiarRol" style="display: none;">
+                            <button type="button" id="btnCambiarRol">
+                                Cambiar de rol
+                            </button>
+                        </li>
+
+                        <li>
+                            <button type="button" id="btnCerrarSesion">
+                                Cerrar sesión
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="contenedorMetricas">
+
         <h2>Métricas del Sistema</h2>
 
-        <section class="filtroPeriodo">
-            <a href="metricas.php?periodo=dia" class="botones <?= $periodo === 'dia' ? 'activo' : '' ?>">Hoy</a>
-            <a href="metricas.php?periodo=semana" class="botones <?= $periodo === 'semana' ? 'activo' : '' ?>">Esta semana</a>
-            <a href="metricas.php?periodo=mes" class="botones <?= $periodo === 'mes' ? 'activo' : '' ?>">Este mes</a>
-            <a href="metricas.php?periodo=todo" class="botones <?= $periodo === 'todo' ? 'activo' : '' ?>">Todo</a>
+        <div
+            id="mensajeMetricas"
+            class="mensajeMetricas"
+            role="alert"
+            aria-live="polite"
+            hidden
+        ></div>
+
+        <section class="filtroPeriodo" aria-label="Filtrar métricas por período">
+
+            <button type="button" class="botones" data-periodo="dia">
+                Hoy
+            </button>
+
+            <button type="button" class="botones" data-periodo="semana">
+                Esta semana
+            </button>
+
+            <button type="button" class="botones" data-periodo="mes">
+                Este mes
+            </button>
+
+            <button type="button" class="botones activo" data-periodo="todo">
+                Todo
+            </button>
+
         </section>
 
-        <section class="grillaMetricas">
-            <div class="seccionMetrica">
-                <span class="valorMetrica"><?= $totalRegistros ?></span>
-                <span class="etiquetaMetrica">Registros emitidos</span>
+        <section aria-labelledby="tituloResumen">
+
+            <h3 id="tituloResumen">Resumen general</h3>
+
+            <div class="grillaMetricas">
+
+                <div class="seccionMetrica">
+                    <span class="valorMetrica" id="valorTotalRegistros">—</span>
+                    <span class="etiquetaMetrica">Registros emitidos</span>
+                </div>
+
+                <div class="seccionMetrica">
+                    <span class="valorMetrica" id="valorTotalTickets">—</span>
+                    <span class="etiquetaMetrica">Tickets emitidos</span>
+                </div>
+
+                <div class="seccionMetrica">
+                    <span class="valorMetrica" id="valorTotalFinalizados">—</span>
+                    <span class="etiquetaMetrica">Tickets finalizados</span>
+                </div>
+
+                <div class="seccionMetrica">
+                    <span class="valorMetrica" id="valorTotalPendientes">—</span>
+                    <span class="etiquetaMetrica">Tickets pendientes</span>
+                </div>
+
+                <div class="seccionMetrica">
+                    <span class="valorMetrica" id="valorTotalEnProceso">—</span>
+                    <span class="etiquetaMetrica">Tickets en proceso</span>
+                </div>
+
+                <div class="seccionMetrica">
+                    <span class="valorMetrica" id="valorPortatilesPrestadas">—</span>
+                    <span class="etiquetaMetrica">Portátiles prestadas actualmente</span>
+                </div>
+
             </div>
-            <div class="seccionMetrica">
-                <span class="valorMetrica"><?= $totalTickets ?></span>
-                <span class="etiquetaMetrica">Tickets emitidos</span>
+
+          
+        </section>
+
+        <section aria-labelledby="tituloMantenimiento">
+
+            <h3 id="tituloMantenimiento">Mantenimiento preventivo</h3>
+
+            <div class="grillaRankings">
+
+                <article class="panelMetricas">
+                    <h4>Top 5 de PC con más reportes</h4>
+
+                    <p class="descripcionPanel">
+                        Equipos que podrían requerir una revisión técnica.
+                    </p>
+
+                    <div class="tablaResponsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>PC</th>
+                                    <th>Aula</th>
+                                    <th>Reportes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTopPcs">
+                                <tr>
+                                    <td colspan="3">Cargando datos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="panelMetricas">
+                    <h4>Top 5 de aulas con más incidencias</h4>
+
+                    <p class="descripcionPanel">
+                        Aulas donde se concentran los reportes de fallas.
+                    </p>
+
+                    <div class="tablaResponsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Aula</th>
+                                    <th>Reportes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTopAulas">
+                                <tr>
+                                    <td colspan="2">Cargando datos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
             </div>
-            <div class="seccionMetrica">
-                <span class="valorMetrica"><?= $totalFinalizados ?></span>
-                <span class="etiquetaMetrica">Tickets finalizados</span>
+
+        </section>
+
+        <section aria-labelledby="tituloFallas">
+
+            <h3 id="tituloFallas">Análisis de fallas</h3>
+
+            <article class="panelMetricas">
+
+                <h4>Tipos de fallas más frecuentes</h4>
+
+                <p class="descripcionPanel">
+                    Comparación de la cantidad de tickets por tipo de falla.
+                </p>
+
+                <div class="contenedorGrafico">
+                    <canvas
+                        id="graficoFallas"
+                        role="img"
+                        aria-label="Gráfico de barras con los tipos de fallas más frecuentes"
+                    ></canvas>
+                </div>
+
+                <p id="mensajeSinFallas" hidden>
+                    No hay fallas registradas para el período seleccionado.
+                </p>
+
+            </article>
+
+        </section>
+
+        <section aria-labelledby="tituloOtrosIndicadores">
+
+            <h3 id="tituloOtrosIndicadores">Otros indicadores</h3>
+
+            <div class="grillaIndicadores">
+
+                <article class="panelMetricas">
+                    <h4>Reportes de bajo rendimiento</h4>
+                    <p class="numeroDestacado" id="valorBajoRendimiento">—</p>
+                </article>
+
+                <article class="panelMetricas">
+                    <h4>Periféricos faltantes</h4>
+
+                    <p class="descripcionPanel">
+                        PC con más reportes de mouse o teclado faltante.
+                    </p>
+
+                    <p id="pcMasVandalizada">Cargando datos...</p>
+
+                    <h5>Equipos con tres o más reportes</h5>
+                    <ul id="listaPcsSospechosas">
+                        <li>Cargando datos...</li>
+                    </ul>
+                </article>
+
+                <article class="panelMetricas">
+                    <h4>Modelo de mouse más reportado</h4>
+                    <p id="modeloMouseMasDanado">Cargando datos...</p>
+                </article>
+
+                <article class="panelMetricas">
+                    <h4>Modelo de teclado más reportado</h4>
+                    <p id="modeloTecladoMasDanado">Cargando datos...</p>
+                </article>
+
             </div>
-            <div class="seccionMetrica">
-                <span class="valorMetrica"><?= $totalBajoRendimiento ?></span>
-                <span class="etiquetaMetrica">Reportes de bajo rendimiento</span>
-            </div>
-            
+
         </section>
 
-        <section class="seccionMetrica">
-            <h3>PC más reportada</h3>
-            <?php if ($pcMasReportada === null): ?>
-                <p>Todavía no hay tickets reportados.</p>
-            <?php else: ?>
-                <p><strong><?= htmlspecialchars($pcMasReportada['PcNumPc']) ?></strong> del <?= htmlspecialchars(ucfirst($pcMasReportada['AulaTipo'])) ?> <?= htmlspecialchars($pcMasReportada['AulaNumero']) ?> — <?= (int) $pcMasReportada['CantidadReportes'] ?> reportes</p>
-            <?php endif; ?>
-        </section>
-
-        <section class="seccionMetrica">
-            <h3>Aula con más incidencias</h3>
-            <?php if ($aulaConMasIncidencias === null): ?>
-                <p>Todavía no hay tickets reportados.</p>
-            <?php else: ?>
-                <p><strong><?= htmlspecialchars(ucfirst($aulaConMasIncidencias['Tipo'])) ?> <?= htmlspecialchars($aulaConMasIncidencias['Numero']) ?></strong> — <?= (int) $aulaConMasIncidencias['CantidadTickets'] ?> tickets en total</p>
-            <?php endif; ?>
-        </section>
-
-        <section class="seccionMetrica">
-            <h3>Posible vandalismos</h3>
-            <?php if ($pcMasVandalizada === null): ?>
-                <p>Sin reportes de este tipo todavía.</p>
-            <?php else: ?>
-                <p>PC más afectada: <strong><?= htmlspecialchars($pcMasVandalizada['PcNumPc']) ?></strong> del <?= htmlspecialchars(ucfirst($pcMasVandalizada['AulaTipo'])) ?> <?= htmlspecialchars($pcMasVandalizada['AulaNumero']) ?> — <?= (int) $pcMasVandalizada['CantidadVandalismo'] ?> reportes</p>
-            <?php endif; ?>
-
-            <?php if (count($pcsSospechosas) > 0): ?>
-                <p>Otras PCs con 3 o más reportes de este tipo:</p>
-                <ul>
-                    <?php foreach ($pcsSospechosas as $pc): ?>
-                        <li><?= htmlspecialchars($pc['PcNumPc']) ?> — <?= htmlspecialchars(ucfirst($pc['AulaTipo'])) ?> <?= htmlspecialchars($pc['AulaNumero']) ?> (<?= (int) $pc['CantidadVandalismo'] ?> reportes)</li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </section>
-
-        <section class="seccionMetrica">
-    <h3>Modelo de dispositivo más dañado</h3>
-    <p>
-        Mouse: 
-        <?php if ($modeloMouseMasDanado === null): ?>
-            sin reportes
-        <?php else: ?>
-            <strong><?= htmlspecialchars($modeloMouseMasDanado['Modelo']) ?></strong> (<?= (int) $modeloMouseMasDanado['CantidadReportes'] ?> reportes)
-        <?php endif; ?>
-    </p>
-    <p>
-        Teclado: 
-        <?php if ($modeloTecladoMasDanado === null): ?>
-            sin reportes
-        <?php else: ?>
-            <strong><?= htmlspecialchars($modeloTecladoMasDanado['Modelo']) ?></strong> (<?= (int) $modeloTecladoMasDanado['CantidadReportes'] ?> reportes)
-        <?php endif; ?>
-    </p>
-</section>
     </main>
 
-    <script src="assets/js/navbar_responsive.js"></script>
+    <script src="../assets/js/verificarSesion.js"></script>
+    <script src="../assets/js/barraNavegacion.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>//libreria para los graficos
+
+    <script src="../assets/js/metricas.js"></script>
+
 </body>
 </html>

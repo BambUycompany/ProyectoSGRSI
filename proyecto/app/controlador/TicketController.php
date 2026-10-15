@@ -1,13 +1,15 @@
-
 <?php
 
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/TicketDAO.php";
+require_once RUTA_MODELO . "/NotificacionDAO.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
 
 class TicketController {
 
     private TicketDAO $dao;
+    private NotificacionDAO $notificacionDAO;
+    private PDO $conexion;
 
     public function __construct() {
 
@@ -27,7 +29,9 @@ class TicketController {
             );
         }
 
+        $this->conexion = $conexion;
         $this->dao = new TicketDAO($conexion);
+        $this->notificacionDAO = new NotificacionDAO($conexion);
     }
 
     public function gestionar(): void {
@@ -398,19 +402,44 @@ class TicketController {
 
         $this->verificarTicketEditable($ticket);
 
-        $soporteCedula = $_SESSION["cedula"];
+        $soporteCedula = (string) $_SESSION["cedula"];
 
-        $resultado = $this->dao->finalizarTicket(
-            $id,
-            $diagnostico,
-            $soporteCedula
-        );
+        // Ambas operaciones usan la misma conexión y transacción.
+        $this->conexion->beginTransaction();
 
-        if (!$resultado) {
-            RespuestaJson::error(
-                "No se pudo finalizar el ticket.",
-                409
+        try {
+            $resultado = $this->dao->finalizarTicket(
+                $id,
+                $diagnostico,
+                $soporteCedula
             );
+
+            if (!$resultado) {
+                $this->conexion->rollBack();
+
+                RespuestaJson::error(
+                    "No se pudo finalizar el ticket. Es posible que ya esté finalizado.",
+                    409
+                );
+            }
+
+            $notificacionRegistrada = $this->notificacionDAO
+                ->registrarNotificacion($id);
+
+            if (!$notificacionRegistrada) {
+                throw new RuntimeException(
+                    "No se pudo registrar la notificación del ticket {$id}."
+                );
+            }
+
+            $this->conexion->commit();
+
+        } catch (Throwable $error) {
+            if ($this->conexion->inTransaction()) {
+                $this->conexion->rollBack();
+            }
+
+            throw $error;
         }
 
         RespuestaJson::exito([
@@ -420,7 +449,3 @@ class TicketController {
         ]);
     }
 }
-
-
-    
-

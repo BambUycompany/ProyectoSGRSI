@@ -1,65 +1,74 @@
+
 main {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    margin: 0;
     min-height: calc(100vh - 5.625rem);
+    margin: 0;
     padding: 2rem;
+    box-sizing: border-box;
 }
 
+/* TABLA DE EMPLEADOS */
+
 .seccionTablaEmpleados {
-    background-color: #fff;
-    color: black;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 62.5rem;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #222;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.2);
 }
 
 .cabeceraTabla {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
 .seccionTablaEmpleados h2 {
-    color: black;
+    color: #222;
     margin: 0;
 }
 
 .seccionTablaEmpleados table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background-color: #fff;
 }
 
 .seccionTablaEmpleados thead {
     background-color: #19337c;
-    color: white;
+    color: #fff;
 }
 
 .seccionTablaEmpleados th,
 .seccionTablaEmpleados td {
     padding: 0.9rem 1rem;
     text-align: left;
-    border-bottom: 0.0625rem solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
 }
+
+/* BOTONES DE ACCIÓN */
 
 .btnOperacion {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
+    padding: 0.6rem 1.2rem;
     background-color: #19337c;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 0.3rem;
-    padding: 0.6rem 1.2rem;
-    font-weight: bold;
+    font: inherit;
     font-size: 0.95rem;
+    font-weight: bold;
+    text-decoration: none;
     cursor: pointer;
 }
 
@@ -69,18 +78,24 @@ main {
 
 .cajaOperaciones {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
 }
 
+/* MODAL AGREGAR EMPLEADO */
+
 .dialogAgregarEmpleado {
     margin: auto;
-    background-color: #fff;
-    color: black;
-    border: none;
-    padding: 2rem;
-    border-radius: 0.5rem;
     width: 90%;
     max-width: 31.25rem;
+    max-height: 85vh;
+    padding: 2rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #222;
+    border: none;
+    border-radius: 0.5rem;
     box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.35);
 }
 
@@ -93,46 +108,101 @@ main {
     background-color: rgba(0, 0, 0, 0.45);
 }
 
+.dialogAgregarEmpleado h2,
+.dialogAgregarEmpleado h3 {
+    margin: 0 0 1.25rem;
+    color: #19337c;
+}
+
 .btnCerrarModal {
+    align-self: flex-end;
     background: none;
+    color: #222;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    align-self: flex-end;
 }
 
 .dialogAgregarEmpleado form {
     display: flex;
     flex-direction: column;
+    gap: 0;
+    width: 100%;
 }
 
 .dialogAgregarEmpleado label {
+    display: block;
+    margin: 0 0 0.4rem;
+    color: #222;
     font-weight: bold;
-    color: black;
-    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
 }
 
 .dialogAgregarEmpleado input[type="text"],
 .dialogAgregarEmpleado input[type="password"],
-.dialogAgregarEmpleado select {
-    padding: 0.5rem 0.7rem;
-    border: 0.0625rem solid #ccc;
-    border-radius: 0.25rem;
-    box-sizing: border-box;
+.dialogAgregarEmpleado input[type="email"],
+.dialogAgregarEmpleado input[type="number"],
+.dialogAgregarEmpleado select,
+.dialogAgregarEmpleado textarea {
+    display: block;
     width: 100%;
-    margin-bottom: 1rem;
+    min-height: 2.5rem;
+    margin: 0 0 1rem;
+    padding: 0.5rem 0.7rem;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #222;
+    border: 1px solid #ccc;
+    border-radius: 0.3rem;
+    font: inherit;
+    font-size: 0.95rem;
 }
+
+.dialogAgregarEmpleado input:focus,
+.dialogAgregarEmpleado select:focus,
+.dialogAgregarEmpleado textarea:focus {
+    outline: 2px solid #19337c;
+    outline-offset: 1px;
+}
+
+/* ROLES */
+
+.grupoRoles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.25rem 0 1.25rem;
+}
+
+.grupoRoles label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.grupoRoles input[type="checkbox"] {
+    flex-shrink: 0;
+    width: auto;
+    margin: 0;
+    accent-color: #19337c;
+}
+
+/* BOTÓN PRINCIPAL */
 
 .dialogAgregarEmpleado button[type="submit"] {
     width: 100%;
-    padding: 0.7rem;
     margin-top: 0.5rem;
-    border-radius: 0.3rem;
-    border: none;
+    padding: 0.7rem;
     background-color: #19337c;
-    color: white;
-    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 0.3rem;
+    font: inherit;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
 }
 
@@ -140,33 +210,14 @@ main {
     background-color: #1e3a8a;
 }
 
-@media (max-width: 48rem) {
-    .seccionTablaEmpleados {
-        padding: 1.2rem;
-    }
+/* MENSAJES */
 
-    .cabeceraTabla {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .seccionTablaEmpleados th,
-    .seccionTablaEmpleados td {
-        padding: 0.6rem;
-        font-size: 0.9rem;
-    }
-
-    .cajaOperaciones {
-        flex-direction: column;
-    }
-
-    .mensajeEmpleados {
+.mensajeEmpleados {
     padding: 12px 16px;
     margin: 12px 0 20px;
+    border: 1px solid transparent;
     border-radius: 6px;
     font-size: 14px;
-    border: 1px solid transparent;
 }
 
 .mensajeEmpleados[hidden] {
@@ -185,22 +236,29 @@ main {
     color: #226b3a;
 }
 
-.grupoRoles {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 10px 0 18px;
+@media (max-width: 48rem) {
+    main {
+        padding: 1rem;
+    }
+
+    .seccionTablaEmpleados,
+    .dialogAgregarEmpleado {
+        padding: 1.2rem;
+    }
+
+    .seccionTablaEmpleados {
+        overflow-x: auto;
+    }
+
+    .cabeceraTabla {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .seccionTablaEmpleados th,
+    .seccionTablaEmpleados td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
 }
 
-.grupoRoles label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-
-.grupoRoles input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-}
-}

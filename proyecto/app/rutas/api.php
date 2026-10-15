@@ -53,6 +53,13 @@ switch ($ruta) {
         $controlador = new MetricasController();
         $controlador->gestionar($metodo, $recurso);
         break;
+    
+    case "notificaciones":
+        require_once RUTA_CONTROLADOR . "/NotificacionController.php";
+
+        $controlador = new NotificacionController();
+        $controlador->gestionar($metodo);
+        break;
 
     default:
         RespuestaJson::error("Ruta no encontrada.", 404);

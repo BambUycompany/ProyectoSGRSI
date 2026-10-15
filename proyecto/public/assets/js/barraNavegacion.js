@@ -137,11 +137,84 @@
         }
 
         listaNavegacion.replaceChildren();
-
         listaNavegacion.appendChild(fragmento);
 
         if (menuUsuario) {
             listaNavegacion.appendChild(menuUsuario);
+        }
+    }
+
+    function configurarNotificaciones() {
+        if (rolActivo !== "solicitante" || !listaNavegacion) {
+            return;
+        }
+
+        const item = document.createElement("li");
+        item.className = "itemNotificaciones";
+        item.dataset.roles = "solicitante";
+
+        const boton = document.createElement("button");
+        boton.id = "btnCampanaNotif";
+        boton.type = "button";
+        boton.className = "botones btnCampanaNotif";
+        boton.setAttribute("aria-label", "Notificaciones");
+        boton.setAttribute("aria-haspopup", "dialog");
+
+        const icono = document.createElement("i");
+        icono.className = "bi bi-bell";
+        icono.setAttribute("aria-hidden", "true");
+
+        const contador = document.createElement("span");
+        contador.id = "contadorNotificaciones";
+        contador.className = "contadorNotificaciones";
+        contador.hidden = true;
+
+        boton.append(icono, contador);
+        item.appendChild(boton);
+
+        const menuUsuario = listaNavegacion.querySelector(".menuUsuario");
+        listaNavegacion.insertBefore(item, menuUsuario || null);
+
+        const dialogo = document.createElement("dialog");
+        dialogo.id = "dialogNotificaciones";
+        dialogo.className = "dialogNotificaciones";
+
+        const cabecera = document.createElement("div");
+        cabecera.className = "cabeceraNotificaciones";
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = "Notificaciones";
+
+        const cerrar = document.createElement("button");
+        cerrar.id = "btnCerrarDialog";
+        cerrar.className = "btnCerrarDialogNotif";
+        cerrar.type = "button";
+        cerrar.textContent = "×";
+        cerrar.setAttribute("aria-label", "Cerrar notificaciones");
+
+        const lista = document.createElement("div");
+        lista.id = "listaNotificaciones";
+        lista.className = "listaNotificaciones";
+
+        cabecera.append(titulo, cerrar);
+        dialogo.append(cabecera, lista);
+        document.body.appendChild(dialogo);
+
+        if (!document.querySelector('link[data-css-notificaciones]')) {
+            const estilo = document.createElement("link");
+            estilo.rel = "stylesheet";
+            estilo.href = "../assets/css/notificacionesCSS.css";
+            estilo.dataset.cssNotificaciones = "true";
+            document.head.appendChild(estilo);
+        }
+
+        if (window.SGRSINotificaciones) {
+            window.SGRSINotificaciones.iniciar();
+        } else if (!document.querySelector('script[data-js-notificaciones]')) {
+            const script = document.createElement("script");
+            script.src = "../assets/js/notificaciones.js";
+            script.dataset.jsNotificaciones = "true";
+            document.body.appendChild(script);
         }
     }
 
@@ -181,7 +254,7 @@
         }
 
         if (btnCerrarMenu) {
-            btnCerrarMenu.classList.remove("visible");
+            btnCerrarMenu.classList.add("visible");
         }
 
         if (btnMenu) {
@@ -215,7 +288,6 @@
 
         btnIconoUsuario.addEventListener("click", function (evento) {
             evento.stopPropagation();
-
             opcionesUsuario.classList.toggle("visible");
         });
 
@@ -336,7 +408,6 @@
 
                 } catch (error) {
                     window.alert(error.message);
-
                     btnCerrarSesion.disabled = false;
                 }
             }
@@ -345,6 +416,7 @@
 
     configurarEnlaceInicio();
     configurarNavegacion();
+    configurarNotificaciones();
     configurarSaludo();
     configurarMenuResponsive();
     configurarMenuUsuario();

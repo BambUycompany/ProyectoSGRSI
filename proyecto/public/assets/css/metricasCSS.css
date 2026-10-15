@@ -1,56 +1,350 @@
-.seccionMetrica{
-    display: flex;
-    flex-direction: row;
-    background-color: #19337c;
-    font-size: 0.9rem;
-    color: white;
-    padding: 3rem;
-    border-radius: 10%;
-    width: 20%;
-    margin-right: 0.5rem;
-}
-.seccionMetricas{
-    display: flex;
-    flex-direction: row;
-    color: white;
-    width: 100%;
-    margin-right: 0.2rem;
+
+
+
+
+.contenedorMetricas {
+    --azul-sistema: #19337c;
+    --azul-hover: #1e3a8a;
+    --borde-suave: #e0e0e0;
+
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto 4rem;
+    padding: 0;
+    box-sizing: border-box;
+    color: #222;
+    font-family: inherit;
 }
 
-.seccionMetrica p{
-    color:yellow;
-    font-size: 2.5rem;
-    margin-right: 1rem;
+.contenedorMetricas h2 {
+    color: var(--azul-sistema);
+    font-size: 1.8rem;
+    margin: 0 0 1.5rem;
 }
-.botones {
+
+.contenedorMetricas h3 {
+    color: var(--azul-sistema);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 2.5rem 0 1.2rem;
+}
+
+.contenedorMetricas h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+}
+
+.contenedorMetricas h5 {
+    font-size: 0.95rem;
+    margin: 1.2rem 0 0.6rem;
+}
+
+
+
+.mensajeMetricas {
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.25rem;
+    border-radius: 0.4rem;
+    font-size: 0.95rem;
+}
+
+.mensajeMetricas[hidden],
+#mensajeSinFallas[hidden] {
+    display: none;
+}
+
+.mensajeMetricas.error {
+    color: #a61d24;
+    background-color: #fff1f0;
+    border: 1px solid #f0a9a5;
+}
+
+
+
+.contenedorMetricas .filtroPeriodo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0 0 2rem;
+}
+
+.contenedorMetricas .filtroPeriodo .botones {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none; 
-    background-color: #19337c;
-    color: white; 
+    padding: 0.7rem 1.4rem;
+    border: 1px solid var(--azul-sistema);
     border-radius: 1rem;
-    padding: 0.8rem 1.6rem;
+    background-color: var(--azul-sistema);
+    color: #fff;
+    font: inherit;
+    font-size: 0.95rem;
+    text-decoration: none;
     cursor: pointer;
-    font-size: 1rem;
-   
+    transition: background-color 0.2s ease;
 }
 
-.grillaMetricas{
-    display: block;
-    align-items: end;
+.contenedorMetricas .filtroPeriodo .botones:hover {
+    background-color: var(--azul-hover);
+}
+
+.contenedorMetricas .filtroPeriodo .botones.activo {
+    background-color: #fff;
+    color: var(--azul-sistema);
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px var(--azul-sistema);
+}
+
+
+
+.grillaMetricas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.contenedorMetricas .seccionMetrica {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 0.7rem;
+
+    min-height: 135px;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+
+    background-color: var(--azul-sistema);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+
+    text-align: center;
+    box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
 }
 
-.botones:hover {
-    transform: scale(1.02); 
-    background-color: #1e3a8a;
+.contenedorMetricas .valorMetrica {
+    color: #fff;
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.1;
 }
 
-.botones:focus {
-    outline: none;
+.contenedorMetricas .etiquetaMetrica {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.35;
 }
 
-.logo{
-    width: 3rem;
+
+.grillaRankings,
+.grillaIndicadores {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.contenedorMetricas .panelMetricas {
+    min-width: 0;
+    padding: 1.5rem;
+    box-sizing: border-box;
+
+    background-color: var(--azul-sistema);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+
+    box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
+}
+
+.contenedorMetricas .panelMetricas h4,
+.contenedorMetricas .panelMetricas h5,
+.contenedorMetricas .panelMetricas p,
+.contenedorMetricas .panelMetricas li {
+    color: #fff;
+}
+
+.contenedorMetricas .panelMetricas p {
+    line-height: 1.5;
+}
+
+.contenedorMetricas .numeroDestacado {
+    margin: 1rem 0 0;
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #fff;
+}
+
+
+.contenedorMetricas .tablaResponsive {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 0.35rem;
+}
+
+.contenedorMetricas .panelMetricas table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #222;
+}
+
+.contenedorMetricas .panelMetricas thead {
+    background-color: #10265e;
+    color: #fff;
+}
+
+.contenedorMetricas .panelMetricas th {
+    padding: 0.8rem;
+    background-color: #10265e;
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+}
+
+.contenedorMetricas .panelMetricas td {
+    padding: 0.8rem;
+    color: #222;
+    background-color: #fff;
+    text-align: left;
+    border-bottom: 1px solid var(--borde-suave);
+}
+
+.contenedorMetricas .panelMetricas tbody tr:nth-child(even) td {
+    background-color: #f5f7fb;
+}
+
+.contenedorMetricas .panelMetricas tbody tr:hover td {
+    background-color: #e8edf7;
+}
+
+.contenedorMetricas .panelMetricas tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+
+
+.contenedorMetricas section[aria-labelledby="tituloFallas"]
+.panelMetricas {
+    background-color: #fff;
+    color: var(--azul-sistema);
+    border: 1px solid var(--borde-suave);
+}
+
+.contenedorMetricas section[aria-labelledby="tituloFallas"]
+.panelMetricas h4 {
+    color: var(--azul-sistema);
+}
+
+.contenedorGrafico {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+}
+
+#graficoFallas {
+    max-width: 100%;
+}
+
+#graficoFallas[hidden] {
+    display: none;
+}
+
+#mensajeSinFallas {
+    padding: 1rem;
+    color: var(--azul-sistema);
+    text-align: center;
+}
+
+.contenedorMetricas section[aria-labelledby="tituloFallas"]
+#mensajeSinFallas {
+    color: var(--azul-sistema);
+}
+
+
+
+.contenedorMetricas .grillaIndicadores .panelMetricas {
+    min-height: 135px;
+}
+
+#listaPcsSospechosas {
+    margin: 0.7rem 0 0;
+    padding-left: 1.3rem;
+    line-height: 1.7;
+}
+
+#pcMasVandalizada,
+#modeloMouseMasDanado,
+#modeloTecladoMasDanado {
+    overflow-wrap: anywhere;
+}
+
+
+@media (max-width: 1000px) {
+    .grillaMetricas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grillaRankings {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+@media (max-width: 650px) {
+    .contenedorMetricas {
+        width: 94%;
+        margin: 1.5rem auto 3rem;
+    }
+
+    .contenedorMetricas h2 {
+        font-size: 1.5rem;
+    }
+
+    .contenedorMetricas h3 {
+        margin-top: 2rem;
+        font-size: 1.2rem;
+    }
+
+    .grillaMetricas {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .contenedorMetricas .seccionMetrica {
+        min-height: 110px;
+        padding: 1.2rem;
+    }
+
+    .contenedorMetricas .valorMetrica {
+        font-size: 2.2rem;
+    }
+
+    .grillaIndicadores {
+        grid-template-columns: 1fr;
+    }
+
+    .contenedorMetricas .panelMetricas {
+        padding: 1rem;
+    }
+
+    .contenedorGrafico {
+        height: 300px;
+    }
+
+    .contenedorMetricas .filtroPeriodo {
+        gap: 0.5rem;
+    }
+
+    .contenedorMetricas .filtroPeriodo .botones {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
 }
