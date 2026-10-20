@@ -10,7 +10,13 @@ const entradaNumeroAula = document.getElementById("numero");
 let aulaEnEdicion = false;
 let aulaIdEnEdicion = null;
 
-const seccionDetalleAula = document.getElementById("seccionDetalleAula");
+const dialogEquiposAula = document.getElementById("dialogEquiposAula");
+const btnCerrarEquiposAula = document.getElementById("btnCerrarEquiposAula");
+const tituloEquiposAula = document.getElementById("tituloEquiposAula");
+const grupoNumeroPc = document.getElementById("grupoNumeroPc");
+const grupoCantidadEquipos = document.getElementById("grupoCantidadEquipos");
+const entradaCantidadEquipos = document.getElementById("cantidadEquipos");
+const tituloFormularioEquipo = document.querySelector("#formularioGestionarEquipo h2");
 const cuerpoTablaEquipos = document.getElementById("cuerpoTablaEquipos");
 const btnAgregarEquipo = document.getElementById("btnAgregarEquipo");
 const btnCerrarAgregarEquipo = document.getElementById("btnCerrarAgregarEquipo");
@@ -63,14 +69,16 @@ function cabecerasMutacion() {
     };
 }
 
-
 async function obtenerAulas() {
     const respuesta = await fetch(`${API_RECURSOS}&recurso=aula`);
     return await leerRespuestaAPI(respuesta);
 }
 
 async function obtenerAulaConEquipos(aulaId) {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=aula&aulaId=${encodeURIComponent(aulaId)}`);
+    const respuesta = await fetch(
+        `${API_RECURSOS}&recurso=aula&aulaId=${encodeURIComponent(aulaId)}`
+    );
+
     return await leerRespuestaAPI(respuesta);
 }
 
@@ -80,6 +88,7 @@ async function altaAula(tipo, numero) {
         headers: cabecerasMutacion(),
         body: JSON.stringify({ recurso: "aula", tipo, numero })
     });
+
     return await leerRespuestaAPI(respuesta);
 }
 
@@ -89,6 +98,7 @@ async function modificarAula(aulaId, tipo, numero) {
         headers: cabecerasMutacion(),
         body: JSON.stringify({ aulaId, tipo, numero })
     });
+
     return await leerRespuestaAPI(respuesta);
 }
 
@@ -96,11 +106,16 @@ async function eliminarAula(aulaId) {
     if (!window.confirm("¿Está seguro de eliminar esta aula?")) {
         return;
     }
+
     try {
-        const respuesta = await fetch(`${API_RECURSOS}&recurso=aula&aulaId=${encodeURIComponent(aulaId)}`, {
-            method: "DELETE",
-            headers: cabecerasMutacion()
-        });
+        const respuesta = await fetch(
+            `${API_RECURSOS}&recurso=aula&aulaId=${encodeURIComponent(aulaId)}`,
+            {
+                method: "DELETE",
+                headers: cabecerasMutacion()
+            }
+        );
+
         await leerRespuestaAPI(respuesta);
         await actualizarTablaAulas();
     } catch (error) {
@@ -113,12 +128,15 @@ function agregarFilaAula(aula) {
 
     const campoTipo = document.createElement("td");
     const linkAula = document.createElement("a");
+
     linkAula.href = "#";
     linkAula.textContent = aula.Tipo ?? aula.tipo;
+
     linkAula.addEventListener("click", (evento) => {
         evento.preventDefault();
         abrirDetalleAula(aula.ID ?? aula.id);
     });
+
     campoTipo.appendChild(linkAula);
 
     const campoNumero = document.createElement("td");
@@ -153,9 +171,11 @@ function agregarFilaAula(aula) {
 
 async function actualizarTablaAulas() {
     cuerpoTablaAulas.replaceChildren();
+
     try {
         const resultado = await obtenerAulas();
         const aulas = resultado.aulas ?? resultado;
+
         for (const aula of aulas) {
             agregarFilaAula(aula);
         }
@@ -174,8 +194,10 @@ function abrirAltaAula() {
 function abrirModificarAula(aula) {
     aulaEnEdicion = true;
     aulaIdEnEdicion = aula.ID ?? aula.id;
+
     entradaTipoAula.value = (aula.Tipo ?? aula.tipo ?? "").toLowerCase();
     entradaNumeroAula.value = aula.Numero ?? aula.numero;
+
     dialogAgregarAula.showModal();
 }
 
@@ -186,6 +208,7 @@ function cerrarAula() {
 
 async function gestionarAula(eventoFormulario) {
     eventoFormulario.preventDefault();
+
     try {
         const tipo = entradaTipoAula.value;
         const numero = entradaNumeroAula.value.trim();
@@ -204,14 +227,31 @@ async function gestionarAula(eventoFormulario) {
 }
 
 
+
 async function abrirDetalleAula(aulaId) {
     aulaIdActual = aulaId;
+
     try {
         const resultado = await obtenerAulaConEquipos(aulaId);
-        seccionDetalleAula.style.display = "block";
+
+        if (tituloEquiposAula) {
+            const aula = resultado.aula ?? {};
+            const tipo = aula.Tipo ?? aula.tipo ?? "Aula";
+            const numero = aula.Numero ?? aula.numero ?? "";
+
+            tituloEquiposAula.textContent =
+                `Equipos — ${tipo} ${numero}`.trim();
+        }
+
         await actualizarTablaEquipos(resultado.equipos ?? []);
+
+        if (!dialogEquiposAula.open) {
+            dialogEquiposAula.showModal();
+        }
     } catch (error) {
-        window.alert("No se pudo abrir el detalle del aula: " + error.message);
+        window.alert(
+            "No se pudo abrir el detalle del aula: " + error.message
+        );
     }
 }
 
@@ -219,8 +259,12 @@ async function agregarEquipo(datosEquipo) {
     const respuesta = await fetch(`${API_RECURSOS}&recurso=equipo`, {
         method: "POST",
         headers: cabecerasMutacion(),
-        body: JSON.stringify({ recurso: "equipo", ...datosEquipo })
+        body: JSON.stringify({
+            recurso: "equipo",
+            ...datosEquipo
+        })
     });
+
     return await leerRespuestaAPI(respuesta);
 }
 
@@ -230,6 +274,7 @@ async function modificarEquipo(datosEquipo) {
         headers: cabecerasMutacion(),
         body: JSON.stringify(datosEquipo)
     });
+
     return await leerRespuestaAPI(respuesta);
 }
 
@@ -237,11 +282,16 @@ async function eliminarEquipo(numPc, aulaId) {
     if (!window.confirm(`¿Eliminar el equipo ${numPc}?`)) {
         return;
     }
+
     try {
         const respuesta = await fetch(
             `${API_RECURSOS}&recurso=equipo&numPc=${encodeURIComponent(numPc)}&aulaId=${encodeURIComponent(aulaId)}`,
-            { method: "DELETE", headers: cabecerasMutacion() }
+            {
+                method: "DELETE",
+                headers: cabecerasMutacion()
+            }
         );
+
         await leerRespuestaAPI(respuesta);
         await abrirDetalleAula(aulaId);
     } catch (error) {
@@ -258,7 +308,14 @@ function agregarFilaEquipo(equipo) {
     const mouse = equipo.Mouse ?? equipo.modeloMouse ?? equipo.modelo_mouse;
     const teclado = equipo.Teclado ?? equipo.modeloTeclado ?? equipo.modelo_teclado;
 
-    const campos = [numPc, modeloPc, monitor, mouse, teclado];
+    const campos = [
+        numPc,
+        modeloPc,
+        monitor,
+        mouse,
+        teclado
+    ];
+
     for (const valor of campos) {
         const celda = document.createElement("td");
         celda.textContent = valor ?? "-";
@@ -273,16 +330,23 @@ function agregarFilaEquipo(equipo) {
     btnModificar.type = "button";
     btnModificar.textContent = "Modificar";
     btnModificar.classList.add("btnOperacion");
-    btnModificar.addEventListener("click", () => abrirModificarEquipo(equipo));
+
+    btnModificar.addEventListener("click", () => {
+        abrirModificarEquipo(equipo);
+    });
 
     const btnEliminar = document.createElement("button");
     btnEliminar.type = "button";
     btnEliminar.textContent = "Eliminar";
     btnEliminar.classList.add("btnOperacion");
-    btnEliminar.addEventListener("click", () => {eliminarEquipo(numPc, aulaIdActual);});
+
+    btnEliminar.addEventListener("click", () => {
+        eliminarEquipo(numPc, aulaIdActual);
+    });
 
     caja.appendChild(btnModificar);
     caja.appendChild(btnEliminar);
+
     campoOperaciones.appendChild(caja);
     fila.appendChild(campoOperaciones);
 
@@ -291,30 +355,58 @@ function agregarFilaEquipo(equipo) {
 
 async function actualizarTablaEquipos(equipos) {
     cuerpoTablaEquipos.replaceChildren();
+
     for (const equipo of equipos) {
         agregarFilaEquipo(equipo);
     }
 }
 
-
 function abrirAltaEquipo() {
+    if (!aulaIdActual) {
+        window.alert("Seleccione un aula antes de agregar equipos.");
+        return;
+    }
 
     equipoEnEdicion = false;
     formularioEquipo.reset();
-    entradaNumPc.value = "Automático";
-    entradaNumPc.readOnly = true;
+
+    entradaNumPc.value = "";
+    grupoNumeroPc.hidden = true;
+
+    grupoCantidadEquipos.hidden = false;
+    entradaCantidadEquipos.required = true;
+    entradaCantidadEquipos.value = "1";
+
+    tituloFormularioEquipo.textContent = "Agregar equipos";
     dialogAgregarEquipo.showModal();
 }
 
-
 function abrirModificarEquipo(equipo) {
     equipoEnEdicion = true;
-   entradaNumPc.value = equipo.NumPc ?? equipo.numPc ?? equipo.num_pc ?? "";
+    formularioEquipo.reset();
+
+    entradaNumPc.value =
+        equipo.NumPc ?? equipo.numPc ?? equipo.num_pc ?? "";
+
     entradaNumPc.readOnly = true;
-    entradaModeloPc.value = equipo.Modelo ?? equipo.modeloPc ?? equipo.modelo_pc ?? "";
-    entradaMonitor.value = equipo.Monitor ?? equipo.monitor ?? "";
-    entradaModeloMouse.value = equipo.Mouse ?? equipo.modeloMouse ?? equipo.modelo_mouse ?? "";
-    entradaModeloTeclado.value = equipo.Teclado ?? equipo.modeloTeclado ?? equipo.modelo_teclado ?? "";
+    grupoNumeroPc.hidden = false;
+
+    grupoCantidadEquipos.hidden = true;
+    entradaCantidadEquipos.required = false;
+
+    entradaModeloPc.value =
+        equipo.Modelo ?? equipo.modeloPc ?? equipo.modelo_pc ?? "";
+
+    entradaMonitor.value =
+        equipo.Monitor ?? equipo.monitor ?? "";
+
+    entradaModeloMouse.value =
+        equipo.Mouse ?? equipo.modeloMouse ?? equipo.modelo_mouse ?? "";
+
+    entradaModeloTeclado.value =
+        equipo.Teclado ?? equipo.modeloTeclado ?? equipo.modelo_teclado ?? "";
+
+    tituloFormularioEquipo.textContent = "Modificar equipo";
     dialogAgregarEquipo.showModal();
 }
 
@@ -323,9 +415,7 @@ function cerrarEquipo() {
     dialogAgregarEquipo.close();
 }
 
-
 async function gestionarEquipo(eventoFormulario) {
-
     eventoFormulario.preventDefault();
 
     try {
@@ -347,12 +437,23 @@ async function gestionarEquipo(eventoFormulario) {
             window.alert("Complete todos los campos del equipo.");
             return;
         }
+
         if (!equipoEnEdicion) {
+            const cantidad = Number(entradaCantidadEquipos.value);
 
-            datosEquipo.cantidad = 1;
+            if (
+                !Number.isInteger(cantidad) ||
+                cantidad < 1 ||
+                cantidad > 100
+            ) {
+                window.alert(
+                    "Indique una cantidad entera entre 1 y 100."
+                );
+                return;
+            }
 
+            datosEquipo.cantidad = cantidad;
             await agregarEquipo(datosEquipo);
-
         } else {
             datosEquipo.numPc = entradaNumPc.value.trim();
 
@@ -363,13 +464,14 @@ async function gestionarEquipo(eventoFormulario) {
 
             await modificarEquipo(datosEquipo);
         }
+
         cerrarEquipo();
         await abrirDetalleAula(aulaIdActual);
-
     } catch (error) {
         window.alert(error.message);
     }
 }
+
 
 
 async function obtenerPortatiles() {
@@ -377,30 +479,29 @@ async function obtenerPortatiles() {
     return await leerRespuestaAPI(respuesta);
 }
 
-
 async function altaPortatil(modeloPortatil) {
     const respuesta = await fetch(
         `${API_RECURSOS}&recurso=portatil`,
         {
             method: "POST",
             headers: cabecerasMutacion(),
-
-            body: JSON.stringify({
-                modeloPortatil
-            })
+            body: JSON.stringify({ modeloPortatil })
         }
     );
 
     return await leerRespuestaAPI(respuesta);
 }
 
-
 async function modificarPortatil(portatilId, modeloPortatil) {
     const respuesta = await fetch(`${API_RECURSOS}&recurso=portatil`, {
         method: "PUT",
         headers: cabecerasMutacion(),
-        body: JSON.stringify({ portatilId, modeloPortatil })
+        body: JSON.stringify({
+            portatilId,
+            modeloPortatil
+        })
     });
+
     return await leerRespuestaAPI(respuesta);
 }
 
@@ -408,11 +509,16 @@ async function eliminarPortatil(portatilId) {
     if (!window.confirm("¿Eliminar este portátil?")) {
         return;
     }
+
     try {
-        const respuesta = await fetch(`${API_RECURSOS}&recurso=portatil&portatilId=${encodeURIComponent(portatilId)}`, {
-            method: "DELETE",
-            headers: cabecerasMutacion()
-        });
+        const respuesta = await fetch(
+            `${API_RECURSOS}&recurso=portatil&portatilId=${encodeURIComponent(portatilId)}`,
+            {
+                method: "DELETE",
+                headers: cabecerasMutacion()
+            }
+        );
+
         await leerRespuestaAPI(respuesta);
         await actualizarTablaPortatiles();
     } catch (error) {
@@ -425,8 +531,12 @@ async function cambiarEstadoPortatil(portatilId, accion) {
         const respuesta = await fetch(`${API_RECURSOS}&recurso=portatil`, {
             method: "PATCH",
             headers: cabecerasMutacion(),
-            body: JSON.stringify({ portatilId, accion })
+            body: JSON.stringify({
+                portatilId,
+                accion
+            })
         });
+
         await leerRespuestaAPI(respuesta);
         await actualizarTablaPortatiles();
     } catch (error) {
@@ -454,7 +564,11 @@ function agregarFilaPortatil(portatil) {
     btnModificar.type = "button";
     btnModificar.textContent = "Modificar";
     btnModificar.classList.add("btnOperacion");
-    btnModificar.addEventListener("click", () => abrirModificarPortatil(portatil));
+
+    btnModificar.addEventListener("click", () => {
+        abrirModificarPortatil(portatil);
+    });
+
     caja.appendChild(btnModificar);
 
     if (estado === "disponible") {
@@ -462,26 +576,37 @@ function agregarFilaPortatil(portatil) {
         btnEliminar.type = "button";
         btnEliminar.textContent = "Eliminar";
         btnEliminar.classList.add("btnOperacion");
-        btnEliminar.addEventListener("click", () => eliminarPortatil(id));
+
+        btnEliminar.addEventListener("click", () => {
+            eliminarPortatil(id);
+        });
+
         caja.appendChild(btnEliminar);
 
         const btnDeshabilitar = document.createElement("button");
         btnDeshabilitar.type = "button";
         btnDeshabilitar.textContent = "Deshabilitar";
         btnDeshabilitar.classList.add("btnOperacion");
-        btnDeshabilitar.addEventListener("click", () => cambiarEstadoPortatil(id, "deshabilitar"));
+
+        btnDeshabilitar.addEventListener("click", () => {
+            cambiarEstadoPortatil(id, "deshabilitar");
+        });
+
         caja.appendChild(btnDeshabilitar);
     } else if (estado === "deshabilitado") {
         const btnHabilitar = document.createElement("button");
         btnHabilitar.type = "button";
         btnHabilitar.textContent = "Habilitar";
         btnHabilitar.classList.add("btnOperacion");
-        btnHabilitar.addEventListener("click", () => cambiarEstadoPortatil(id, "habilitar"));
+
+        btnHabilitar.addEventListener("click", () => {
+            cambiarEstadoPortatil(id, "habilitar");
+        });
+
         caja.appendChild(btnHabilitar);
     }
 
     campoOperaciones.appendChild(caja);
-
     fila.appendChild(campoModelo);
     fila.appendChild(campoEstado);
     fila.appendChild(campoOperaciones);
@@ -491,20 +616,25 @@ function agregarFilaPortatil(portatil) {
 
 async function actualizarTablaPortatiles() {
     cuerpoTablaPortatiles.replaceChildren();
+
     try {
         const resultado = await obtenerPortatiles();
         const portatiles = resultado.portatiles ?? resultado;
+
         for (const portatil of portatiles) {
             agregarFilaPortatil(portatil);
         }
     } catch (error) {
-        window.alert("No se pudieron cargar los portátiles: " + error.message);
+        window.alert(
+            "No se pudieron cargar los portátiles: " + error.message
+        );
     }
 }
 
 function abrirAltaPortatil() {
     portatilEnEdicion = false;
     portatilIdEnEdicion = null;
+
     formularioPortatil.reset();
     dialogAgregarPortatil.showModal();
 }
@@ -512,7 +642,10 @@ function abrirAltaPortatil() {
 function abrirModificarPortatil(portatil) {
     portatilEnEdicion = true;
     portatilIdEnEdicion = portatil.id ?? portatil.ID;
-    entradaModeloPortatil.value = portatil.modelo ?? portatil.Modelo;
+
+    entradaModeloPortatil.value =
+        portatil.modelo ?? portatil.Modelo;
+
     dialogAgregarPortatil.showModal();
 }
 
@@ -523,13 +656,17 @@ function cerrarPortatil() {
 
 async function gestionarPortatil(eventoFormulario) {
     eventoFormulario.preventDefault();
+
     try {
         const modeloPortatil = entradaModeloPortatil.value.trim();
 
         if (!portatilEnEdicion) {
             await altaPortatil(modeloPortatil);
         } else {
-            await modificarPortatil(portatilIdEnEdicion, modeloPortatil);
+            await modificarPortatil(
+                portatilIdEnEdicion,
+                modeloPortatil
+            );
         }
 
         cerrarPortatil();
@@ -540,6 +677,7 @@ async function gestionarPortatil(eventoFormulario) {
 }
 
 
+
 if (btnAgregarAula) {
     btnAgregarAula.addEventListener("click", abrirAltaAula);
 }
@@ -547,38 +685,68 @@ if (btnAgregarAula) {
 if (btnCerrarAgregarAula) {
     btnCerrarAgregarAula.addEventListener("click", cerrarAula);
 }
+
 if (dialogAgregarAula) {
-    dialogAgregarAula.addEventListener("cancel", cerrarAula);
+    dialogAgregarAula.addEventListener("cancel", (evento) => {
+        evento.preventDefault();
+        cerrarAula();
+    });
 }
+
 if (formularioAula) {
     formularioAula.addEventListener("submit", gestionarAula);
 }
+
+if (btnCerrarEquiposAula) {
+    btnCerrarEquiposAula.addEventListener("click", () => {
+        dialogEquiposAula.close();
+    });
+}
+
+if (dialogEquiposAula) {
+    dialogEquiposAula.addEventListener("close", () => {
+        aulaIdActual = null;
+    });
+}
+
 if (btnAgregarEquipo) {
     btnAgregarEquipo.addEventListener("click", abrirAltaEquipo);
 }
+
 if (btnCerrarAgregarEquipo) {
     btnCerrarAgregarEquipo.addEventListener("click", cerrarEquipo);
 }
+
 if (dialogAgregarEquipo) {
-    dialogAgregarEquipo.addEventListener("cancel", cerrarEquipo);
+    dialogAgregarEquipo.addEventListener("cancel", (evento) => {
+        evento.preventDefault();
+        cerrarEquipo();
+    });
 }
+
 if (formularioEquipo) {
     formularioEquipo.addEventListener("submit", gestionarEquipo);
 }
+
 if (btnAgregarPortatil) {
     btnAgregarPortatil.addEventListener("click", abrirAltaPortatil);
 }
+
 if (btnCerrarAgregarPortatil) {
     btnCerrarAgregarPortatil.addEventListener("click", cerrarPortatil);
 }
 
 if (dialogAgregarPortatil) {
-    dialogAgregarPortatil.addEventListener("cancel", cerrarPortatil);
+    dialogAgregarPortatil.addEventListener("cancel", (evento) => {
+        evento.preventDefault();
+        cerrarPortatil();
+    });
 }
 
 if (formularioPortatil) {
     formularioPortatil.addEventListener("submit", gestionarPortatil);
 }
+
 if (cuerpoTablaAulas) {
     actualizarTablaAulas();
 }

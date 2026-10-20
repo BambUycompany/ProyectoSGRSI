@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -51,7 +50,6 @@
             <p id="saludoBienvenida" class="saludoBienvenida"></p>
         </div>
 
-        <!-- SECCIÓN: GESTOR DE AULAS -->
         <section class="seccionGestorRecursos">
             <div class="cabeceraTabla">
                 <h2>Gestor de Aulas</h2>
@@ -72,31 +70,6 @@
             </table>
         </section>
 
-        <!-- SECCIÓN: DETALLE DE AULA / EQUIPOS -->
-        <section class="seccionGestorRecursos" id="seccionDetalleAula" style="display: none;">
-            <div class="cabeceraTabla">
-                <h2>Equipos del Aula</h2>
-                <button type="button" class="btnOperacion" id="btnAgregarEquipo" data-roles="administrador">Agregar Equipo</button>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nº PC</th>
-                        <th>Modelo PC</th>
-                        <th>Monitor</th>
-                        <th>Mouse</th>
-                        <th>Teclado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpoTablaEquipos">
-                    <!-- Filas generadas dinámicamente por gestorRecursos.js -->
-                </tbody>
-            </table>
-        </section>
-
-        <!-- SECCIÓN: GESTOR DE PORTÁTILES -->
         <section class="seccionGestorPortatiles">
             <div class="cabeceraTabla">
                 <h2>Gestor de Portátiles</h2>
@@ -117,7 +90,6 @@
             </table>
         </section>
 
-        <!-- DIÁLOGOS AULAS -->
         <dialog class="dialogAgregarAula" id="dialogAgregarAula">
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarAula">&times;</button>
             <form id="formularioGestionarAula">
@@ -126,7 +98,7 @@
                 <select name="tipo" id="tipo" required>
                     <option value="">Seleccione un tipo</option>
                     <option value="laboratorio">Laboratorio</option>
-                    <option value="taller">Taller</option>        
+                    <option value="taller">Taller</option>
                 </select>
 
                 <label for="numero">Número:</label>
@@ -145,7 +117,7 @@
                 <label for="modificarTipo">Tipo:</label>
                 <select name="tipo" id="modificarTipo" required>
                     <option value="laboratorio">Laboratorio</option>
-                    <option value="taller">Taller</option>        
+                    <option value="taller">Taller</option>
                 </select>
 
                 <label for="modificarNumero">Número:</label>
@@ -155,13 +127,44 @@
             </form>
         </dialog>
 
-        <!-- DIÁLOGO EQUIPOS -->
+        <dialog class="dialogEquiposAula" id="dialogEquiposAula">
+            <div class="cabeceraTabla">
+                <h2 id="tituloEquiposAula">Equipos del Aula</h2>
+                <button type="button" class="btnCerrarModal" id="btnCerrarEquiposAula" aria-label="Cerrar listado de equipos">&times;</button>
+            </div>
+            <div class="cabeceraAccionesEquipos">
+                <button type="button" class="btnOperacion" id="btnAgregarEquipo" data-roles="administrador">Agregar equipos</button>
+            </div>
+            <div class="contenedorTablaEquipos">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº PC</th>
+                            <th>Modelo PC</th>
+                            <th>Monitor</th>
+                            <th>Mouse</th>
+                            <th>Teclado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaEquipos"></tbody>
+                </table>
+            </div>
+        </dialog>
+
         <dialog class="dialogAgregarEquipo" id="dialogAgregarEquipo">
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarEquipo">&times;</button>
             <form id="formularioGestionarEquipo">
                 <h2>Gestionar Equipo</h2>
-                <label for="numPc">Número PC:</label>
-                <input type="text" id="numPc" name="numPc" required>
+                <div id="grupoNumeroPc" hidden>
+                    <label for="numPc">Número PC:</label>
+                    <input type="text" id="numPc" name="numPc" readonly>
+                </div>
+
+                <div class="grupoCantidadEquipos" id="grupoCantidadEquipos">
+                    <label for="cantidadEquipos">Cantidad de equipos:</label>
+                    <input type="number" id="cantidadEquipos" name="cantidad" min="1" max="100" step="1" value="1" required>
+                </div>
 
                 <label for="modeloPc">Modelo PC:</label>
                 <input type="text" id="modeloPc" name="modeloPc">
@@ -179,7 +182,6 @@
             </form>
         </dialog>
 
-        <!-- DIÁLOGOS PORTÁTILES -->
         <dialog class="dialogAgregarPortatil" id="dialogAgregarPortatil">
             <button type="button" class="btnCerrarModal" id="btnCerrarAgregarPortatil">&times;</button>
             <form id="formularioGestionarPortatil">
@@ -203,8 +205,8 @@
             </form>
         </dialog>
     </main>
-    <script src="../assets/js/verificarSesion.js"></script>
 
+    <script src="../assets/js/verificarSesion.js"></script>
     <script src="../assets/js/barraNavegacion.js"></script>
     <script src="../assets/js/gestorRecursos.js"></script>
 </body>
