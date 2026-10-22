@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../config/config.php";
 require_once __DIR__ . "/../nucleo/Conexion.php";
+require_once __DIR__ . "/../nucleo/TokenJWT.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
 require_once RUTA_MODELO. "/UsuarioDAO.php";
 
@@ -75,6 +76,12 @@ class LoginController {
             $_SESSION["rolActivo"] = $rolActivo;
         }
 
+        //generacion de token JWT
+        $tokenJWT = TokenJWT::generar(
+        $usuario["cedula"],
+        $roles
+        );
+
 
 
         RespuestaJson::exito([
@@ -84,7 +91,8 @@ class LoginController {
             "apellido" => $usuario["apellido"],
             "roles" => $roles,
             "rolActivo" => $rolActivo,
-            "csrfToken" => $_SESSION["csrfToken"]
+            "csrfToken" => $_SESSION["csrfToken"],
+            "tokenJWT" => $tokenJWT
         ]);
     }
 
