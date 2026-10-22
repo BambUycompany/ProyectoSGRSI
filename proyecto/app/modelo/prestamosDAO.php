@@ -16,7 +16,7 @@ class PrestamoDAO {
     public function listarPortatilesDisponibles(): array {
 
         $sql = "SELECT ID, Modelo
-                FROM PORTATIL
+                FROM portatil
                 WHERE Estado = 'disponible'
                 ORDER BY Modelo, ID";
 
@@ -32,7 +32,7 @@ class PrestamoDAO {
             $this->conexion->beginTransaction();
 
             $sqlVerificar = "SELECT Estado
-                            FROM PORTATIL
+                            FROM portatil
                             WHERE ID = :portatilId
                             FOR UPDATE";
 
@@ -52,7 +52,7 @@ class PrestamoDAO {
                 return false;
             }
 
-            $sqlPrestamo = "INSERT INTO PRESTAMO (
+            $sqlPrestamo = "INSERT INTO prestamo (
                                 FechaPrestamo,
                                 FechaDev,
                                 Estado,
@@ -86,7 +86,7 @@ class PrestamoDAO {
                 "portatilId" => $datos["portatilId"]
             ]);
 
-            $sqlActualizar = "UPDATE PORTATIL
+            $sqlActualizar = "UPDATE portatil
                               SET Estado = 'en_prestamo'
                               WHERE ID = :portatilId
                               AND Estado = 'disponible'";
@@ -135,8 +135,8 @@ class PrestamoDAO {
                     p.SolicitanteCedula,
                     p.PortatilID,
                     pt.Modelo AS PortatilModelo
-                FROM PRESTAMO p
-                INNER JOIN PORTATIL pt
+                FROM prestamo p
+                INNER JOIN portatil pt
                     ON pt.ID = p.PortatilID
                 WHERE p.SolicitanteCedula = :cedula
                 ORDER BY
@@ -169,8 +169,8 @@ class PrestamoDAO {
                     pt.Modelo AS PortatilModelo,
                     u.Nombre AS DocenteNombre,
                     u.Apellido AS DocenteApellido
-                FROM PRESTAMO p
-                INNER JOIN PORTATIL pt
+                FROM prestamo p
+                INNER JOIN portatil pt
                     ON pt.ID = p.PortatilID
                 INNER JOIN usuario u
                     ON u.cedula = p.SolicitanteCedula
@@ -188,7 +188,7 @@ class PrestamoDAO {
     public function obtenerPrestamoPorId(int $prestamoId): ?array {
 
         $sql = "SELECT *
-                FROM PRESTAMO
+                FROM prestamo
                 WHERE ID = :id";
 
         $consulta = $this->conexion->prepare($sql);
@@ -208,7 +208,7 @@ class PrestamoDAO {
             $this->conexion->beginTransaction();
 
             $sqlBuscar = "SELECT PortatilID, Estado
-                          FROM PRESTAMO
+                          FROM prestamo
                           WHERE ID = :id
                           FOR UPDATE";
 
@@ -228,7 +228,7 @@ class PrestamoDAO {
                 return false;
             }
 
-            $sqlFinalizar = "UPDATE PRESTAMO
+            $sqlFinalizar = "UPDATE prestamo
                             SET Estado = 'finalizado'
                             WHERE ID = :id
                             AND Estado = 'activo'";
@@ -245,7 +245,7 @@ class PrestamoDAO {
                 );
             }
 
-            $sqlPortatil = "UPDATE PORTATIL
+            $sqlPortatil = "UPDATE portatil
                             SET Estado = 'disponible'
                             WHERE ID = :portatilId
                             AND Estado = 'en_prestamo'";
@@ -288,7 +288,7 @@ class PrestamoDAO {
         string $telefonoAlumno
     ): bool {
 
-        $sql = "UPDATE PRESTAMO
+        $sql = "UPDATE prestamo
                 SET
                     CIAlumno = :ci,
                     Clase = :clase,
@@ -309,7 +309,7 @@ class PrestamoDAO {
 
     public function eliminarPrestamo(int $prestamoId): bool {
 
-        $sql = "DELETE FROM PRESTAMO
+        $sql = "DELETE FROM prestamo
                 WHERE ID = :id
                 AND Estado = 'finalizado'";
 

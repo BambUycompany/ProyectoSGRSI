@@ -25,9 +25,9 @@ class TicketDAO {
                         ELSE 'taller'
                     END AS AulaTipo,
                     COUNT(*) AS CantidadReportes
-                FROM TICKET t
-                INNER JOIN AULA a ON a.ID = t.PcAulaID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM ticket t
+                INNER JOIN aula a ON a.ID = t.PcAulaID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 GROUP BY
                     t.PcNumPc,
                     t.PcAulaID,
@@ -65,9 +65,9 @@ class TicketDAO {
                         WHEN l.AulaID IS NOT NULL THEN 'laboratorio'
                         ELSE 'taller'
                     END AS AulaTipo
-                FROM TICKET t
-                INNER JOIN AULA a ON a.ID = t.PcAulaID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM ticket t
+                INNER JOIN aula a ON a.ID = t.PcAulaID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE t.PcNumPc = :numPc
                   AND t.PcAulaID = :aulaId
                 ORDER BY
@@ -97,7 +97,7 @@ class TicketDAO {
                     t.PcNumPc,
                     t.PcAulaID,
                     t.PlanillaId
-                FROM TICKET t
+                FROM ticket t
                 WHERE t.ID = :id";
 
         $consulta = $this->conexion->prepare($sql);
@@ -126,7 +126,7 @@ class TicketDAO {
                     t.PcNumPc,
                     t.PcAulaID,
                     t.PlanillaId
-                FROM TICKET t
+                FROM ticket t
                 WHERE t.PlanillaId = :planillaId
                 ORDER BY
                     t.FechaCreacion ASC,
@@ -143,7 +143,7 @@ class TicketDAO {
 
     public function registrarTicket(array $datos): bool {
 
-        $sql = "INSERT INTO TICKET (
+        $sql = "INSERT INTO ticket (
                     Descripcion,
                     Fallo,
                     Estado,
@@ -198,7 +198,7 @@ class TicketDAO {
             return false;
         }
 
-        $sql = "UPDATE TICKET
+        $sql = "UPDATE ticket
                 SET Estado = :estado
                 WHERE ID = :id
                   AND Estado <> 'finalizado'";
@@ -240,7 +240,7 @@ class TicketDAO {
             return false;
         }
 
-        $sql = "UPDATE TICKET
+        $sql = "UPDATE ticket
                 SET Prioridad = :prioridad
                 WHERE ID = :id
                   AND Estado <> 'finalizado'";
@@ -279,7 +279,7 @@ class TicketDAO {
             return false;
         }
 
-        $sql = "UPDATE TICKET
+        $sql = "UPDATE ticket
                 SET Estado = 'finalizado',
                     Incidente = :diagnostico
                 WHERE ID = :id

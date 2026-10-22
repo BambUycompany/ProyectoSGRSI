@@ -1,7 +1,7 @@
 
 <?php
 
-require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once __DIR__ . "/../nucleo/Conexion.php";
 require_once RUTA_MODELO . "/PlanillaDAO.php";
 require_once RUTA_MODELO . "/TicketDAO.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
@@ -13,21 +13,7 @@ class planillaController {
     private TicketDAO $ticketDAO;
 
     public function __construct() {
-        $conector = new ConectorPDO(
-            $_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"],
-            $_ENV["DB_USUARIO"],
-            $_ENV["DB_CLAVE"],
-            $_ENV["DB_NOMBRE"]
-        );
-
-        $conexion = $conector->establecerConexion();
-
-        if ($conexion === null) {
-            RespuestaJson::error(
-                "No se pudo conectar a la base de datos.",
-                500
-            );
-        }
+        $conexion = Conexion::conectar();
 
       
         $this->conexion = $conexion;
@@ -94,32 +80,10 @@ class planillaController {
         $cedula = $_SESSION["cedula"];
 
         
-        
-        $vista = trim($_GET["vista"] ?? "");
-
-        if ($vista !== "" && $vista !== "propios") {
-            RespuestaJson::error(
-                "Vista de registros inválida.",
-                400
-            );
-        }
-        if (
-            $vista === "propios" &&
-            empty($_SESSION["solicitante"])
-        ) {
-            RespuestaJson::error(
-                "No tenés permiso para consultar registros propios de este solicitante solicitante.",
-                403
-            );
-        }
-
         $soloPropios =
-            $vista === "propios" ||
-            (
-                !empty($_SESSION["solicitante"]) &&
-                empty($_SESSION["administrador"]) &&
-                empty($_SESSION["soporte"])
-            );
+            !empty($_SESSION["solicitante"]) &&
+            empty($_SESSION["administrador"]) &&
+            empty($_SESSION["soporte"]);
 
         if (isset($_GET["id"])) {
 

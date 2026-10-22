@@ -25,10 +25,10 @@ class UsuarioDAO {
                     CASE WHEN a.cedula IS NOT NULL THEN 1 ELSE 0 END AS administrador,
                     CASE WHEN so.cedula IS NOT NULL THEN 1 ELSE 0 END AS soporte,
                     CASE WHEN s.cedula IS NOT NULL THEN 1 ELSE 0 END AS solicitante
-                FROM USUARIO u
-                LEFT JOIN ADMINISTRADOR a ON a.cedula = u.cedula
-                LEFT JOIN SOPORTE so ON so.cedula = u.cedula
-                LEFT JOIN SOLICITANTE s ON s.cedula = u.cedula
+                FROM usuario u
+                LEFT JOIN administrador a ON a.cedula = u.cedula
+                LEFT JOIN soporte so ON so.cedula = u.cedula
+                LEFT JOIN solicitante s ON s.cedula = u.cedula
                 WHERE u.cedula = :cedula";
 
         $consulta = $this->conexion->prepare($sql);
@@ -65,10 +65,10 @@ class UsuarioDAO {
                     CASE WHEN a.cedula IS NOT NULL THEN 1 ELSE 0 END AS administrador,
                     CASE WHEN so.cedula IS NOT NULL THEN 1 ELSE 0 END AS soporte,
                     CASE WHEN s.cedula IS NOT NULL THEN 1 ELSE 0 END AS solicitante
-                FROM USUARIO u
-                LEFT JOIN ADMINISTRADOR a ON a.cedula = u.cedula
-                LEFT JOIN SOPORTE so ON so.cedula = u.cedula
-                LEFT JOIN SOLICITANTE s ON s.cedula = u.cedula
+                FROM usuario u
+                LEFT JOIN administrador a ON a.cedula = u.cedula
+                LEFT JOIN soporte so ON so.cedula = u.cedula
+                LEFT JOIN solicitante s ON s.cedula = u.cedula
                 ORDER BY u.nombre, u.apellido";
 
         $consulta = $this->conexion->prepare($sql);
@@ -87,7 +87,7 @@ class UsuarioDAO {
                     CASE WHEN a.cedula IS NOT NULL THEN 1 ELSE 0 END AS administrador,
                     CASE WHEN so.cedula IS NOT NULL THEN 1 ELSE 0 END AS soporte,
                     CASE WHEN s.cedula IS NOT NULL THEN 1 ELSE 0 END AS solicitante
-                FROM USUARIO u
+                FROM usuario u
                 LEFT JOIN administrador a ON a.cedula = u.cedula
                 LEFT JOIN soporte so ON so.cedula = u.cedula
                 LEFT JOIN solicitante s ON s.cedula = u.cedula
@@ -115,7 +115,7 @@ class UsuarioDAO {
         try {
             $this->conexion->beginTransaction();
 
-            $sqlUsuario = "INSERT INTO USUARIO (
+            $sqlUsuario = "INSERT INTO usuario (
                                 cedula,
                                 nombre,
                                 apellido,
@@ -172,7 +172,7 @@ class UsuarioDAO {
 
             if ($claveHash !== null) {
 
-                $sqlUsuario = "UPDATE USUARIO
+                $sqlUsuario = "UPDATE usuario
                                SET nombre = :nombre,
                                    apellido = :apellido,
                                    claveHash = :claveHash
@@ -189,7 +189,7 @@ class UsuarioDAO {
 
             } else {
 
-                $sqlUsuario = "UPDATE USUARIO
+                $sqlUsuario = "UPDATE usuario
                                SET nombre = :nombre,
                                    apellido = :apellido
                                WHERE cedula = :cedula";
@@ -277,7 +277,7 @@ class UsuarioDAO {
 
     public function desactivarUsuario(string $cedula): bool {
 
-        $sql = "UPDATE USUARIO
+        $sql = "UPDATE usuario
                 SET activo = 0
                 WHERE cedula = :cedula
                 AND activo = 1";
@@ -293,7 +293,7 @@ class UsuarioDAO {
 
     public function reactivarUsuario(string $cedula): bool {
 
-        $sql = "UPDATE USUARIO
+        $sql = "UPDATE usuario
                 SET activo = 1
                 WHERE cedula = :cedula
                 AND activo = 0";

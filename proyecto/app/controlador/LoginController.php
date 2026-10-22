@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../../config/config.php";
-require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once __DIR__ . "/../nucleo/Conexion.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
 require_once RUTA_MODELO. "/UsuarioDAO.php";
 
@@ -29,7 +29,7 @@ class LoginController {
             RespuestaJson::error("Credenciales incompletas", 400);
         }
 
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new UsuarioDAO($conexion);
 
         $usuario = $dao->buscarUsuario($cedula);
@@ -101,13 +101,6 @@ class LoginController {
         RespuestaJson::exito(["mensaje" => "Sesión cerrada correctamente"]);
     }
 
-    private function conectar(): PDO {
-        $conector = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
-        $conexion = $conector->establecerConexion();
-        if ($conexion === null) {
-            RespuestaJson::error("Error de conexión a la base de datos", 500);
-        }
-        return $conexion;
-    }
+
 }
 ?>

@@ -9,14 +9,14 @@ class GestorRecursosDAO {
 
     public function obtenerAulaPorId(int $aulaId): ?array {
          $sql = "SELECT 
-                    AULA.ID,
-                    AULA.Numero,
+                    aula.ID,
+                    aula.Numero,
                     CASE 
-                        WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
+                        WHEN EXISTS (SELECT 1 FROM laboratorio WHERE laboratorio.AulaID = aula.ID) THEN 'laboratorio'
                         ELSE 'taller'
                     END AS Tipo
-                FROM AULA
-                WHERE AULA.ID = :aulaId";
+                FROM aula
+                WHERE aula.ID = :aulaId";
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["aulaId" => $aulaId]);
@@ -27,15 +27,15 @@ class GestorRecursosDAO {
 
     public function listarAulas(): array {
          $sql = "SELECT 
-                AULA.ID AS ID,
-                AULA.Numero AS Numero,
+                aula.ID AS ID,
+                aula.Numero AS Numero,
                 CASE 
-                    WHEN EXISTS (SELECT 1 FROM LABORATORIO WHERE LABORATORIO.AulaID = AULA.ID) THEN 'laboratorio'
+                    WHEN EXISTS (SELECT 1 FROM laboratorio WHERE laboratorio.AulaID = aula.ID) THEN 'laboratorio'
                     ELSE 'taller'
                 END AS Tipo,
-                (SELECT COUNT(*) FROM PC WHERE PC.AulaID = AULA.ID) AS CantidadPcs
-            FROM AULA
-            ORDER BY Tipo, AULA.Numero";
+                (SELECT COUNT(*) FROM pc WHERE pc.AulaID = aula.ID) AS CantidadPcs
+            FROM aula
+            ORDER BY Tipo, aula.Numero";
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute();
@@ -50,9 +50,9 @@ class GestorRecursosDAO {
             int $excluirId = 0
         ): bool {
 
-            $tabla = $tipo === "laboratorio" ? "LABORATORIO": "TALLER";
+            $tabla = $tipo === "laboratorio" ? "laboratorio": "taller";
             $sql = "SELECT 1
-                    FROM AULA a
+                    FROM aula a
                     INNER JOIN $tabla t ON t.AulaID = a.ID
                     WHERE a.Numero = :numero
                     AND a.ID <> :excluirId
@@ -75,7 +75,7 @@ public function crearAula(string $tipo, string $numero): bool {
     try {
         $this->conexion->beginTransaction();
 
-        $sqlAula = "INSERT INTO AULA
+        $sqlAula = "INSERT INTO aula
                     (Numero, CantDispositivos)
                     VALUES (:numero, 0)";
 
@@ -88,10 +88,10 @@ public function crearAula(string $tipo, string $numero): bool {
         $aulaId = (int)$this->conexion->lastInsertId();
 
         if ($tipo === "laboratorio") {
-            $sqlTipo = "INSERT INTO LABORATORIO
+            $sqlTipo = "INSERT INTO laboratorio
                         (AulaID) VALUES (:aulaId)";
         } elseif ($tipo === "taller") {
-            $sqlTipo = "INSERT INTO TALLER
+            $sqlTipo = "INSERT INTO taller
                         (AulaID) VALUES (:aulaId)";
         } else {
             throw new InvalidArgumentException(
@@ -120,25 +120,25 @@ public function crearAula(string $tipo, string $numero): bool {
         try {
             $this->conexion->beginTransaction();
 
-            $sqlAula = "UPDATE AULA SET Numero = :numero WHERE ID = :aulaId";
+            $sqlAula = "UPDATE aula SET Numero = :numero WHERE ID = :aulaId";
             $consultaAula = $this->conexion->prepare($sqlAula);
             $consultaAula->execute([
                 "numero" => $numero,
                 "aulaId" => $aulaId
             ]);
 
-            $sqlDelLab = "DELETE FROM LABORATORIO WHERE AulaID = :aulaId";
+            $sqlDelLab = "DELETE FROM laboratorio WHERE AulaID = :aulaId";
             $consultaDelLab = $this->conexion->prepare($sqlDelLab);
             $consultaDelLab->execute(["aulaId" => $aulaId]);
 
-            $sqlDelTal = "DELETE FROM TALLER WHERE AulaID = :aulaId";
+            $sqlDelTal = "DELETE FROM taller WHERE AulaID = :aulaId";
             $consultaDelTal = $this->conexion->prepare($sqlDelTal);
             $consultaDelTal->execute(["aulaId" => $aulaId]);
 
             if (strtolower(trim($tipo)) === "laboratorio") {
-                $sqlSubtipo = "INSERT INTO LABORATORIO (AulaID) VALUES (:aulaId)";
+                $sqlSubtipo = "INSERT INTO laboratorio (AulaID) VALUES (:aulaId)";
             } else {
-                $sqlSubtipo = "INSERT INTO TALLER (AulaID) VALUES (:aulaId)";
+                $sqlSubtipo = "INSERT INTO taller (AulaID) VALUES (:aulaId)";
             }
 
             $consultaSubtipo = $this->conexion->prepare($sqlSubtipo);
@@ -160,7 +160,7 @@ public function eliminarAula(int $aulaId): bool {
 
     try {
         $this->conexion->beginTransaction();
-        $sqlExiste = "SELECT ID FROM AULA
+        $sqlExiste = "SELECT ID FROM aula
                       WHERE ID = :aulaId
                       FOR UPDATE";
 
@@ -172,7 +172,7 @@ public function eliminarAula(int $aulaId): bool {
             return false;
         }
 
-        $sql = "DELETE FROM AULA WHERE ID = :aulaId";
+        $sql = "DELETE FROM aula WHERE ID = :aulaId";
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["aulaId" => $aulaId]);
@@ -201,12 +201,12 @@ public function eliminarAula(int $aulaId): bool {
 //
 
     public function listarEquiposDeAula(int $aulaId) {
-        $sql = "SELECT NumPc, Modelo, Monitor FROM PC WHERE AulaID = :aulaId ORDER BY NumPc";
+        $sql = "SELECT NumPc, Modelo, Monitor FROM pc WHERE AulaID = :aulaId ORDER BY NumPc";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["aulaId" => $aulaId]);
         $pcs = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-        $sqlPerifericos = "SELECT Tipo, Modelo, PcNumPc FROM PERIFERICO WHERE PcAulaID = :aulaId";
+        $sqlPerifericos = "SELECT Tipo, Modelo, PcNumPc FROM periferico WHERE PcAulaID = :aulaId";
         $consultaPerifericos = $this->conexion->prepare($sqlPerifericos);
         $consultaPerifericos->execute(["aulaId" => $aulaId]);
         $todosLosPerifericos = $consultaPerifericos->fetchAll(PDO::FETCH_ASSOC);
@@ -230,7 +230,7 @@ public function eliminarAula(int $aulaId): bool {
     }
 
     private function obtenerUltimoNumero(int $aulaId): int {
-        $sql = "SELECT NumPc FROM PC WHERE AulaID = :aulaId";
+        $sql = "SELECT NumPc FROM pc WHERE AulaID = :aulaId";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["aulaId" => $aulaId]);
 
@@ -254,15 +254,15 @@ public function eliminarAula(int $aulaId): bool {
 
             $ultimoNumero = $this->obtenerUltimoNumero($aulaId);
 
-            $sqlPc = "INSERT INTO PC (NumPc, AulaID, Modelo, Monitor) VALUES (:numPc, :aulaId, :modelo, :monitor)";
+            $sqlPc = "INSERT INTO pc (NumPc, AulaID, Modelo, Monitor) VALUES (:numPc, :aulaId, :modelo, :monitor)";
             $consultaPc = $this->conexion->prepare($sqlPc);
 
-            $sqlPeriferico = "INSERT INTO PERIFERICO (Tipo, Modelo, PcNumPc, PcAulaID) VALUES (:tipo, :modelo, :pcNumPc, :pcAulaId)";
+            $sqlPeriferico = "INSERT INTO periferico (Tipo, Modelo, PcNumPc, PcAulaID) VALUES (:tipo, :modelo, :pcNumPc, :pcAulaId)";
             $consultaPeriferico = $this->conexion->prepare($sqlPeriferico);
 
             for ($i = 1; $i <= $cantidad; $i++) {
                 $numeroActual = $ultimoNumero + $i;
-                $numPc = "PC-" . str_pad((string) $numeroActual, 2, "0", STR_PAD_LEFT);
+                $numPc = "pc-" . str_pad((string) $numeroActual, 2, "0", STR_PAD_LEFT);
 
                 $consultaPc->execute([
                     "numPc" => $numPc,
@@ -302,7 +302,7 @@ public function eliminarAula(int $aulaId): bool {
         try {
             $this->conexion->beginTransaction();
 
-            $sqlExiste = "SELECT 1 FROM PC
+            $sqlExiste = "SELECT 1 FROM pc
                         WHERE NumPc = :numPc
                             AND AulaID = :aulaId
                         FOR UPDATE";
@@ -318,7 +318,7 @@ public function eliminarAula(int $aulaId): bool {
                 return false;
             }
 
-            $sqlPc = "UPDATE PC
+            $sqlPc = "UPDATE pc
                     SET Modelo = :modelo,
                         Monitor = :monitor
                     WHERE NumPc = :numPc
@@ -334,7 +334,7 @@ public function eliminarAula(int $aulaId): bool {
             ]);
 
             $sqlExistePeriferico = "SELECT ID
-                                FROM PERIFERICO
+                                FROM periferico
                                 WHERE PcNumPc = :numPc
                                     AND PcAulaID = :aulaId
                                     AND Tipo = :tipo
@@ -343,14 +343,14 @@ public function eliminarAula(int $aulaId): bool {
             $consultaExistePeriferico =
                 $this->conexion->prepare($sqlExistePeriferico);
 
-            $sqlActualizar = "UPDATE PERIFERICO
+            $sqlActualizar = "UPDATE periferico
                             SET Modelo = :modelo
                             WHERE ID = :id";
 
             $consultaActualizar =
                 $this->conexion->prepare($sqlActualizar);
 
-            $sqlInsertar = "INSERT INTO PERIFERICO
+            $sqlInsertar = "INSERT INTO periferico
                             (Tipo, Modelo, PcNumPc, PcAulaID)
                             VALUES
                             (:tipo, :modelo, :numPc, :aulaId)";
@@ -418,14 +418,14 @@ public function eliminarAula(int $aulaId): bool {
     try {
         $this->conexion->beginTransaction();
 
-        $sqlPerifericos = "DELETE FROM PERIFERICO WHERE PcNumPc = :numPc AND PcAulaID = :aulaId";
+        $sqlPerifericos = "DELETE FROM periferico WHERE PcNumPc = :numPc AND PcAulaID = :aulaId";
         $consultaPerifericos = $this->conexion->prepare($sqlPerifericos);
         $consultaPerifericos->execute([
             "numPc" => $numPc,
             "aulaId" => $aulaId
         ]);
 
-        $sqlPc = "DELETE FROM PC WHERE NumPc = :numPc AND AulaID = :aulaId";
+        $sqlPc = "DELETE FROM pc WHERE NumPc = :numPc AND AulaID = :aulaId";
         $consultaPc = $this->conexion->prepare($sqlPc);
         $consultaPc->execute([
             "numPc" => $numPc,
@@ -448,14 +448,14 @@ public function eliminarAula(int $aulaId): bool {
 //
 
      public function listarTodos(){
-        $sql = "SELECT ID, Modelo, Estado FROM PORTATIL ORDER BY Modelo";
+        $sql = "SELECT ID, Modelo, Estado FROM portatil ORDER BY Modelo";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function listarDisponibles(){
-        $sql = "SELECT ID, Modelo FROM PORTATIL WHERE Estado = 'disponible' ORDER BY Modelo";        
+        $sql = "SELECT ID, Modelo FROM portatil WHERE Estado = 'disponible' ORDER BY Modelo";        
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -463,7 +463,7 @@ public function eliminarAula(int $aulaId): bool {
     }
 
     public function obtenerPorId(int $portatilId) {
-        $sql = "SELECT ID, Modelo, Estado FROM PORTATIL WHERE ID = :id";
+        $sql = "SELECT ID, Modelo, Estado FROM portatil WHERE ID = :id";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["id" => $portatilId]);
         $fila = $consulta->fetch(PDO::FETCH_ASSOC);
@@ -471,7 +471,7 @@ public function eliminarAula(int $aulaId): bool {
     }
 
     public function crearPortatil(string $modelo): bool {
-        $sql = "INSERT INTO PORTATIL (Modelo, Estado) VALUES (:modelo, 'disponible')";
+        $sql = "INSERT INTO portatil (Modelo, Estado) VALUES (:modelo, 'disponible')";
         $consulta = $this->conexion->prepare($sql);
         return $consulta->execute(["modelo" => $modelo]);
     }
@@ -481,7 +481,7 @@ public function eliminarAula(int $aulaId): bool {
         if ($this->obtenerPorId($portatilId) === null) {
             return false;
         }
-        $sql = "UPDATE PORTATIL
+        $sql = "UPDATE portatil
                 SET Modelo = :modelo
                 WHERE ID = :id";
         $consulta = $this->conexion->prepare($sql);
@@ -493,14 +493,14 @@ public function eliminarAula(int $aulaId): bool {
 
 
     public function deshabilitarPortatil(int $portatilId): bool {
-    $sql = "UPDATE PORTATIL SET Estado = 'deshabilitado' WHERE ID = :id AND Estado = 'disponible'";
+    $sql = "UPDATE portatil SET Estado = 'deshabilitado' WHERE ID = :id AND Estado = 'disponible'";
     $consulta = $this->conexion->prepare($sql);
     $consulta->execute(["id" => $portatilId]);
     return $consulta->rowCount() > 0;
     }
 
     public function habilitarPortatil(int $portatilId): bool {
-        $sql = "UPDATE PORTATIL SET Estado = 'disponible' WHERE ID = :id AND Estado = 'deshabilitado'";
+        $sql = "UPDATE portatil SET Estado = 'disponible' WHERE ID = :id AND Estado = 'deshabilitado'";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute(["id" => $portatilId]);
         return $consulta->rowCount() > 0;
@@ -508,7 +508,7 @@ public function eliminarAula(int $aulaId): bool {
 
      public function eliminarPortatil(int $portatilId): bool {
         try {
-            $sql = "DELETE FROM PORTATIL WHERE ID = :id AND Estado = 'disponible'";
+            $sql = "DELETE FROM portatil WHERE ID = :id AND Estado = 'disponible'";
             $consulta = $this->conexion->prepare($sql);
             $consulta->execute(["id" => $portatilId]);
             return $consulta->rowCount() > 0;

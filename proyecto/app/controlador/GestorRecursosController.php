@@ -1,5 +1,5 @@
 <?php
-require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once __DIR__ . "/../nucleo/Conexion.php";
 require_once RUTA_MODELO . "/GestorRecursosDAO.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
 
@@ -7,12 +7,7 @@ class GestorRecursosController {
     private GestorRecursosDAO $dao;
 
     public function __construct() {
-        $conector = new ConectorPDO($_ENV["DB_HOST"] . ":" . $_ENV["DB_PUERTO"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
-        $conexion = $conector->establecerConexion();
-        
-        if ($conexion === null) {
-            RespuestaJson::error("Error de conexión a la base de datos", 500);
-        }
+        $conexion = Conexion::conectar();
         $this->dao = new GestorRecursosDAO($conexion);
     }
 

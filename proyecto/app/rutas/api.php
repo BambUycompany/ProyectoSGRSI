@@ -4,7 +4,7 @@ require_once RUTA_VISTA . "/RespuestaJson.php";
 
 
 
-switch ($ruta) {
+switch ($recurso) {
 
     case "login":
         require_once RUTA_CONTROLADOR . "/LoginController.php";
@@ -27,7 +27,7 @@ switch ($ruta) {
     case "recursos":
         require_once RUTA_CONTROLADOR . "/GestorRecursosController.php";
         $controlador = new GestorRecursosController();
-        $controlador->gestionar($metodo, $recurso);
+        $controlador->gestionar($metodo, $identificador);
         break;
 
     case "planilla":
@@ -45,13 +45,13 @@ switch ($ruta) {
     case "prestamos":
         require_once RUTA_CONTROLADOR . "/prestamosController.php";
         $controlador = new PrestamosController();
-        $controlador->gestionar($metodo, $recurso);
+        $controlador->gestionar($metodo, $identificador);
         break;
 
     case "metricas":
         require_once RUTA_CONTROLADOR . "/metricasController.php";
         $controlador = new MetricasController();
-        $controlador->gestionar($metodo, $recurso);
+        $controlador->gestionar($metodo, $identificador);
         break;
     
     case "notificaciones":

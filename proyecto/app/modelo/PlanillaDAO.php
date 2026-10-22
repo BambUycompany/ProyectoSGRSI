@@ -23,7 +23,7 @@ class PlanillaDAO {
      */
 
     public function registrarPlanilla(array $datos) {
-        $sql = "INSERT INTO PLANILLA 
+        $sql = "INSERT INTO planilla 
             (Fecha, HoraEntrada, HoraSalida, Grupo, Turno, Asignatura, nombreSolicitante, cedulaRegistrante, AulaID)
             VALUES (:fecha, :horaEntrada, :horaSalida, :grupo, :turno, :asignatura, :nombreSolicitante, :cedulaRegistrante, :aulaId)";
 
@@ -53,7 +53,7 @@ class PlanillaDAO {
      * @return bool TRUE si la inserción se realiza correctamente, de lo contrario: FALSE .
      */
     public function registrarTicket(array $datos) {
-        $sql = "INSERT INTO TICKET 
+        $sql = "INSERT INTO ticket 
             (Descripcion, Fallo, Estado, FechaCreacion, PcNumPc, PcAulaID, SolicitanteCedula, PlanillaId)
             VALUES (:descripcion, :fallo, 'pendiente', NOW(), :pcNumPc, :pcAulaID, :solicitanteCedula, :planillaId)";
 
@@ -79,7 +79,7 @@ class PlanillaDAO {
      */
     public function listarTicketsDePlanilla(int $planillaId) {
         $sql = "SELECT ID, Descripcion, Fallo, Estado, PcNumPc, FechaCreacion
-                FROM TICKET
+                FROM ticket
                 WHERE PlanillaId = :planillaId 
                 ORDER BY FechaCreacion";
 
@@ -95,11 +95,11 @@ class PlanillaDAO {
      * @return array Array asociativo con el número y tipo de cada aula.
      */
     public function listarAulas(){
-            $sql = "SELECT AULA.Numero, 'laboratorio' AS Tipo 
-                    FROM AULA JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID
+            $sql = "SELECT aula.Numero, 'laboratorio' AS Tipo 
+                    FROM aula JOIN laboratorio ON aula.ID = laboratorio.AulaID
                     UNION ALL
-                    SELECT AULA.Numero, 'taller' AS Tipo 
-                    FROM AULA JOIN TALLER ON AULA.ID = TALLER.AulaID";
+                    SELECT aula.Numero, 'taller' AS Tipo 
+                    FROM aula JOIN taller ON aula.ID = taller.AulaID";
 
             $consulta = $this->conexion->prepare($sql);
             $consulta->execute();
@@ -117,15 +117,15 @@ class PlanillaDAO {
      */
     public function buscarAulaId(string $tipo, string $numero) {
         if ($tipo === "laboratorio") {
-            $sql = "SELECT AULA.ID 
-                    FROM AULA 
-                    JOIN LABORATORIO ON AULA.ID = LABORATORIO.AulaID 
-                    WHERE AULA.Numero = :numero";
+            $sql = "SELECT aula.ID 
+                    FROM aula 
+                    JOIN laboratorio ON aula.ID = laboratorio.AulaID 
+                    WHERE aula.Numero = :numero";
         } elseif ($tipo === "taller") {
-            $sql = "SELECT AULA.ID 
-                    FROM AULA 
-                    JOIN TALLER ON AULA.ID = TALLER.AulaID 
-                    WHERE AULA.Numero = :numero";
+            $sql = "SELECT aula.ID 
+                    FROM aula 
+                    JOIN taller ON aula.ID = taller.AulaID 
+                    WHERE aula.Numero = :numero";
         } else {
             return null;
         }
@@ -171,9 +171,9 @@ class PlanillaDAO {
                         THEN 'laboratorio'
                         ELSE 'taller'
                     END AS AulaTipo
-                FROM PLANILLA p
-                INNER JOIN AULA a ON a.ID = p.AulaID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM planilla p
+                INNER JOIN aula a ON a.ID = p.AulaID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE 1 = 1";
 
         $parametros = [];
@@ -246,9 +246,9 @@ class PlanillaDAO {
                             THEN 'laboratorio'
                             ELSE 'taller'
                         END AS AulaTipo
-                    FROM PLANILLA p
-                    INNER JOIN AULA a ON a.ID = p.AulaID
-                    LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                    FROM planilla p
+                    INNER JOIN aula a ON a.ID = p.AulaID
+                    LEFT JOIN laboratorio l ON l.AulaID = a.ID
                     WHERE p.ID = :planillaId";
 
             $parametros = ["planillaId" => $planillaId];
@@ -274,7 +274,7 @@ class PlanillaDAO {
         ): bool {
 
             $sql = "SELECT 1
-                    FROM PC
+                    FROM pc
                     WHERE NumPc = :numPc
                     AND AulaID = :aulaId
                     LIMIT 1";

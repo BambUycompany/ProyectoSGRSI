@@ -22,7 +22,7 @@ class NotificacionDAO {
             return false;
         }
 
-        $sql = "INSERT INTO NOTIFICACION (
+        $sql = "INSERT INTO notificacion (
                     TicketID,
                     DestinatarioCedula,
                     Leida,
@@ -33,7 +33,7 @@ class NotificacionDAO {
                     t.SolicitanteCedula,
                     0,
                     NOW()
-                FROM TICKET t
+                FROM ticket t
                 WHERE t.ID = :ticketId
                   AND t.Estado = 'finalizado'
                   AND t.SolicitanteCedula IS NOT NULL
@@ -81,15 +81,15 @@ class NotificacionDAO {
                         ELSE 'taller'
                     END AS AulaTipo
 
-                FROM NOTIFICACION n
+                FROM notificacion n
 
-                INNER JOIN TICKET t
+                INNER JOIN ticket t
                     ON t.ID = n.TicketID
 
-                INNER JOIN AULA a
+                INNER JOIN aula a
                     ON a.ID = t.PcAulaID
 
-                LEFT JOIN LABORATORIO l
+                LEFT JOIN laboratorio l
                     ON l.AulaID = a.ID
 
                 WHERE n.DestinatarioCedula = :cedula
@@ -124,9 +124,9 @@ class NotificacionDAO {
         }
 
         $sql = "SELECT COUNT(*)
-                FROM NOTIFICACION n
+                FROM notificacion n
 
-                INNER JOIN TICKET t
+                INNER JOIN ticket t
                     ON t.ID = n.TicketID
 
                 WHERE n.DestinatarioCedula = :cedula
@@ -161,13 +161,13 @@ class NotificacionDAO {
             return false;
         }
 
-        $sql = "UPDATE NOTIFICACION
+        $sql = "UPDATE notificacion
                 SET Leida = 1
                 WHERE ID = :id
                   AND DestinatarioCedula = :cedula
                   AND TicketID IN (
                       SELECT t.ID
-                      FROM TICKET t
+                      FROM ticket t
                       WHERE t.SolicitanteCedula = :cedulaTicket
                         AND t.Estado = 'finalizado'
                   )";
@@ -186,9 +186,9 @@ class NotificacionDAO {
 
     
         $sqlVerificacion = "SELECT COUNT(*)
-                            FROM NOTIFICACION n
+                            FROM notificacion n
 
-                            INNER JOIN TICKET t
+                            INNER JOIN ticket t
                                 ON t.ID = n.TicketID
 
                             WHERE n.ID = :id

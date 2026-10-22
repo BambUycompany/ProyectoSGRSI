@@ -47,7 +47,7 @@ class MetricasDAO {
     ): int {
 
         $sql = "SELECT COUNT(*)
-                FROM TICKET
+                FROM ticket
                 WHERE 1 = 1" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -69,7 +69,7 @@ class MetricasDAO {
     ): int {
 
         $sql = "SELECT COUNT(*)
-                FROM PLANILLA
+                FROM planilla
                 WHERE 1 = 1" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -92,7 +92,7 @@ class MetricasDAO {
     ): int {
 
         $sql = "SELECT COUNT(*)
-                FROM TICKET
+                FROM ticket
                 WHERE Estado = :estado" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -129,7 +129,7 @@ class MetricasDAO {
     ): int {
 
         $sql = "SELECT COUNT(*)
-                FROM TICKET
+                FROM ticket
                 WHERE Fallo = 'bajo_rendimiento'" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -148,7 +148,7 @@ class MetricasDAO {
     public function contarPortatilesPrestadas(): int {
 
         $sql = "SELECT COUNT(*)
-                FROM PORTATIL
+                FROM portatil
                 WHERE Estado = 'en_prestamo'";
 
         $consulta = $this->conexion->prepare($sql);
@@ -171,9 +171,9 @@ class MetricasDAO {
                         ELSE 'taller'
                     END AS AulaTipo,
                     COUNT(*) AS CantidadReportes
-                FROM TICKET t
-                INNER JOIN AULA a ON a.ID = t.PcAulaID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM ticket t
+                INNER JOIN aula a ON a.ID = t.PcAulaID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE 1 = 1" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -225,9 +225,9 @@ class MetricasDAO {
                         ELSE 'taller'
                     END AS Tipo,
                     COUNT(t.ID) AS CantidadTickets
-                FROM AULA a
-                INNER JOIN TICKET t ON t.PcAulaID = a.ID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM aula a
+                INNER JOIN ticket t ON t.PcAulaID = a.ID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE 1 = 1" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -272,7 +272,7 @@ class MetricasDAO {
         $sql = "SELECT
                     Fallo,
                     COUNT(*) AS CantidadReportes
-                FROM TICKET
+                FROM ticket
                 WHERE 1 = 1" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -306,9 +306,9 @@ class MetricasDAO {
                         ELSE 'taller'
                     END AS AulaTipo,
                     COUNT(*) AS CantidadVandalismo
-                FROM TICKET t
-                INNER JOIN AULA a ON a.ID = t.PcAulaID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM ticket t
+                INNER JOIN aula a ON a.ID = t.PcAulaID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE t.Fallo IN ('falta_mouse', 'falta_teclado')" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -348,9 +348,9 @@ class MetricasDAO {
                         ELSE 'taller'
                     END AS AulaTipo,
                     COUNT(*) AS CantidadVandalismo
-                FROM TICKET t
-                INNER JOIN AULA a ON a.ID = t.PcAulaID
-                LEFT JOIN LABORATORIO l ON l.AulaID = a.ID
+                FROM ticket t
+                INNER JOIN aula a ON a.ID = t.PcAulaID
+                LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE t.Fallo IN ('falta_mouse', 'falta_teclado')" .
                 $this->filtroFecha(
                     $fechaInicio,
@@ -384,8 +384,8 @@ class MetricasDAO {
         $sql = "SELECT
                     p.Modelo,
                     COUNT(*) AS CantidadReportes
-                FROM TICKET t
-                INNER JOIN PERIFERICO p
+                FROM ticket t
+                INNER JOIN periferico p
                     ON p.PcNumPc = t.PcNumPc
                     AND p.PcAulaID = t.PcAulaID
                     AND p.Tipo = 'mouse'
@@ -417,8 +417,8 @@ class MetricasDAO {
         $sql = "SELECT
                     p.Modelo,
                     COUNT(*) AS CantidadReportes
-                FROM TICKET t
-                INNER JOIN PERIFERICO p
+                FROM ticket t
+                INNER JOIN periferico p
                     ON p.PcNumPc = t.PcNumPc
                     AND p.PcAulaID = t.PcAulaID
                     AND p.Tipo = 'teclado'
