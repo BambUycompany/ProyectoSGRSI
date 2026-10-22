@@ -1,6 +1,6 @@
 
 (function () {
-    const API_TICKETS = "../index.php?ruta=tickets&accion=listarAgrupados";
+    const API_TICKETS = "../index.php?recurso=tickets&accion=listarAgrupados";
 
     const cuerpoTabla = document.getElementById("listadoTablaTickets");
     const mensajeTickets = document.getElementById("mensajeTickets");

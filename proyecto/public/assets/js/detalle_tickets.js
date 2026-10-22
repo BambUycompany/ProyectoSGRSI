@@ -1,6 +1,6 @@
 
 (function () {
-    const API_TICKETS = "../index.php?ruta=tickets";
+    const API_TICKETS = "../index.php?recurso=tickets";
 
     const parametros = new URLSearchParams(window.location.search);
     const numeroPc = parametros.get("pc");

@@ -1,4 +1,4 @@
-const API_RECURSOS = "../index.php?ruta=recursos";
+const API_RECURSOS = "../index.php?recurso=recursos";
 
 const btnAgregarAula = document.getElementById("btnAgregarAula");
 const btnCerrarAgregarAula = document.getElementById("btnCerrarAgregarAula");
@@ -70,20 +70,20 @@ function cabecerasMutacion() {
 }
 
 async function obtenerAulas() {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=aula`);
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=aula`);
     return await leerRespuestaAPI(respuesta);
 }
 
 async function obtenerAulaConEquipos(aulaId) {
     const respuesta = await fetch(
-        `${API_RECURSOS}&recurso=aula&aulaId=${encodeURIComponent(aulaId)}`
+        `${API_RECURSOS}&identificador=aula&aulaId=${encodeURIComponent(aulaId)}`
     );
 
     return await leerRespuestaAPI(respuesta);
 }
 
 async function altaAula(tipo, numero) {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=aula`, {
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=aula`, {
         method: "POST",
         headers: cabecerasMutacion(),
         body: JSON.stringify({ recurso: "aula", tipo, numero })
@@ -93,7 +93,7 @@ async function altaAula(tipo, numero) {
 }
 
 async function modificarAula(aulaId, tipo, numero) {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=aula`, {
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=aula`, {
         method: "PUT",
         headers: cabecerasMutacion(),
         body: JSON.stringify({ aulaId, tipo, numero })
@@ -109,7 +109,7 @@ async function eliminarAula(aulaId) {
 
     try {
         const respuesta = await fetch(
-            `${API_RECURSOS}&recurso=aula&aulaId=${encodeURIComponent(aulaId)}`,
+            `${API_RECURSOS}&identificador=aula&aulaId=${encodeURIComponent(aulaId)}`,
             {
                 method: "DELETE",
                 headers: cabecerasMutacion()
@@ -256,7 +256,7 @@ async function abrirDetalleAula(aulaId) {
 }
 
 async function agregarEquipo(datosEquipo) {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=equipo`, {
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=equipo`, {
         method: "POST",
         headers: cabecerasMutacion(),
         body: JSON.stringify({
@@ -269,7 +269,7 @@ async function agregarEquipo(datosEquipo) {
 }
 
 async function modificarEquipo(datosEquipo) {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=equipo`, {
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=equipo`, {
         method: "PUT",
         headers: cabecerasMutacion(),
         body: JSON.stringify(datosEquipo)
@@ -285,7 +285,7 @@ async function eliminarEquipo(numPc, aulaId) {
 
     try {
         const respuesta = await fetch(
-            `${API_RECURSOS}&recurso=equipo&numPc=${encodeURIComponent(numPc)}&aulaId=${encodeURIComponent(aulaId)}`,
+            `${API_RECURSOS}&identificador=equipo&numPc=${encodeURIComponent(numPc)}&aulaId=${encodeURIComponent(aulaId)}`,
             {
                 method: "DELETE",
                 headers: cabecerasMutacion()
@@ -475,13 +475,13 @@ async function gestionarEquipo(eventoFormulario) {
 
 
 async function obtenerPortatiles() {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=portatil`);
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=portatil`);
     return await leerRespuestaAPI(respuesta);
 }
 
 async function altaPortatil(modeloPortatil) {
     const respuesta = await fetch(
-        `${API_RECURSOS}&recurso=portatil`,
+        `${API_RECURSOS}&identificador=portatil`,
         {
             method: "POST",
             headers: cabecerasMutacion(),
@@ -493,7 +493,7 @@ async function altaPortatil(modeloPortatil) {
 }
 
 async function modificarPortatil(portatilId, modeloPortatil) {
-    const respuesta = await fetch(`${API_RECURSOS}&recurso=portatil`, {
+    const respuesta = await fetch(`${API_RECURSOS}&identificador=portatil`, {
         method: "PUT",
         headers: cabecerasMutacion(),
         body: JSON.stringify({
@@ -512,7 +512,7 @@ async function eliminarPortatil(portatilId) {
 
     try {
         const respuesta = await fetch(
-            `${API_RECURSOS}&recurso=portatil&portatilId=${encodeURIComponent(portatilId)}`,
+            `${API_RECURSOS}&identificador=portatil&portatilId=${encodeURIComponent(portatilId)}`,
             {
                 method: "DELETE",
                 headers: cabecerasMutacion()
@@ -528,7 +528,7 @@ async function eliminarPortatil(portatilId) {
 
 async function cambiarEstadoPortatil(portatilId, accion) {
     try {
-        const respuesta = await fetch(`${API_RECURSOS}&recurso=portatil`, {
+        const respuesta = await fetch(`${API_RECURSOS}&identificador=portatil`, {
             method: "PATCH",
             headers: cabecerasMutacion(),
             body: JSON.stringify({

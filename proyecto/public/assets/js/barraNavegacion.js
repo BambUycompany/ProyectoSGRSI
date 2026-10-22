@@ -2,7 +2,7 @@
 (function () {
     "use strict";
 
-    const API_LOGOUT = "../index.php?ruta=logout";
+    const API_LOGOUT = "../index.php?recurso=logout";
 
     const PAGINAS_POR_ROL = {
         administrador: "./administrador.html",

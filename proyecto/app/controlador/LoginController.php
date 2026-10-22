@@ -101,6 +101,5 @@ class LoginController {
         RespuestaJson::exito(["mensaje" => "Sesión cerrada correctamente"]);
     }
 
-
 }
 ?>

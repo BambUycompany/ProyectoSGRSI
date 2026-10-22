@@ -1,4 +1,3 @@
-
 <?php
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";

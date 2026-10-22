@@ -1,5 +1,5 @@
 
-const API_LOGIN = "../index.php?ruta=login";
+const API_LOGIN = "../index.php?recurso=login";
 
 const formularioLogin = document.getElementById("formularioLogin");
 const entradaCedula = document.getElementById("cedula");

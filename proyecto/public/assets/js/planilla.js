@@ -1,5 +1,5 @@
 
-const API_PLANILLA = "../index.php?ruta=planilla";
+const API_PLANILLA = "../index.php?recurso=planilla";
 
 const formularioRegistro = document.getElementById(
     "formularioRegistroPlanilla"

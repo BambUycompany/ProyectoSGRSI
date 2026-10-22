@@ -1,5 +1,5 @@
 
-const API_PRESTAMOS = "../index.php?ruta=prestamos";
+const API_PRESTAMOS = "../index.php?recurso=prestamos";
  
 const formularioPrestamo = document.getElementById("formularioRegistroPrestamo");
 const selectPortatil = document.getElementById("portatilId");
@@ -54,7 +54,7 @@ function cabecerasMutacion() {
 async function obtenerPortatilesDisponibles() {
 
     const respuesta = await fetch(
-        `${API_PRESTAMOS}&recurso=portatiles_disponibles`
+        `${API_PRESTAMOS}&identificador=portatiles_disponibles`
     );
 
     return await leerRespuestaAPI(respuesta);
@@ -68,7 +68,7 @@ async function obtenerPrestamos() {
         : "propios";
 
     const respuesta = await fetch(
-        `${API_PRESTAMOS}&recurso=prestamo&vista=${vista}`
+        `${API_PRESTAMOS}&identificador=prestamo&vista=${vista}`
     );
 
     return await leerRespuestaAPI(respuesta);
@@ -78,7 +78,7 @@ async function obtenerPrestamos() {
 async function registrarPrestamo(datos) {
 
     const respuesta = await fetch(
-        `${API_PRESTAMOS}&recurso=prestamo`,
+        `${API_PRESTAMOS}&identificador=prestamo`,
         {
             method: "POST",
             headers: cabecerasMutacion(),
@@ -103,7 +103,7 @@ async function finalizarPrestamo(prestamoId) {
 
     try {
         const respuesta = await fetch(
-            `${API_PRESTAMOS}&recurso=prestamo`,
+            `${API_PRESTAMOS}&identificador=prestamo`,
             {
                 method: "PATCH",
                 headers: cabecerasMutacion(),

@@ -1,156 +1,310 @@
-// Notificaciones del rol solicitante.
-const API_NOTIFICACIONES = "../index.php?ruta=notificaciones";
-let notificacionesIniciadas = false;
-let cargandoNotificaciones = false;
 
-async function solicitarNotificaciones(accion, metodo = "GET", datos = null) {
-    const opciones = { method: metodo, cache: "no-store" };
+(function () {
+    "use strict";
 
-    if (metodo !== "GET") {
-        opciones.headers = {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": sessionStorage.getItem("csrfToken") || ""
+    const API = "../index.php?recurso=notificaciones";
+
+    let iniciado = false;
+    let actualizando = false;
+
+    function mostrarError(mensaje) {
+        const contenedor = document.getElementById("listaNotificaciones");
+
+        if (!contenedor) {
+            return;
+        }
+
+        const parrafo = document.createElement("p");
+        parrafo.className = "notifMensaje notifError";
+        parrafo.textContent = mensaje;
+
+        contenedor.replaceChildren(parrafo);
+    }
+
+    async function peticion(accion, metodo = "GET", datos = null) {
+        const url = new URL(API, window.location.href);
+
+        url.searchParams.set("accion", accion);
+
+        const opciones = {
+            method: metodo,
+            cache: "no-store"
         };
-        opciones.body = JSON.stringify(datos);
+
+        if (metodo !== "GET") {
+            opciones.headers = {
+                "Content-Type": "application/json",
+                "X-CSRF-Token":
+                    sessionStorage.getItem("csrfToken") ?? ""
+            };
+
+            opciones.body = JSON.stringify(datos);
+        }
+
+        const respuesta = await fetch(url, opciones);
+
+        let resultado;
+
+        try {
+            resultado = await respuesta.json();
+        } catch {
+            throw new Error(
+                "El servidor no devolvió una respuesta JSON válida."
+            );
+        }
+
+        if (!respuesta.ok) {
+            throw new Error(
+                resultado.mensaje ??
+                "No se pudieron consultar las notificaciones."
+            );
+        }
+
+        return resultado.datos;
     }
 
-    const respuesta = await fetch(`${API_NOTIFICACIONES}&accion=${accion}`, opciones);
-    const resultado = await respuesta.json();
+    function actualizarContador(cantidad) {
+        const contador = document.getElementById(
+            "contadorNotificaciones"
+        );
 
-    if (!respuesta.ok) {
-        throw new Error(resultado.mensaje || "No se pudieron gestionar las notificaciones.");
+        const campana = document.getElementById(
+            "btnCampanaNotif"
+        );
+
+        if (!contador || !campana) {
+            return;
+        }
+
+        const numero = Number(cantidad) || 0;
+
+        contador.hidden = numero === 0;
+
+        contador.textContent = numero > 99
+            ? "99+"
+            : String(numero);
+
+        campana.setAttribute(
+            "aria-label",
+            numero === 1
+                ? "Notificaciones: 1 sin leer"
+                : `Notificaciones: ${numero} sin leer`
+        );
     }
 
-    return resultado.datos;
-}
+    function fechaLegible(valor) {
+        if (!valor) {
+            return "";
+        }
 
-function mostrarMensajeNotificaciones(mensaje, error = false) {
-    const lista = document.getElementById("listaNotificaciones");
-    if (!lista) return;
+        const fecha = new Date(
+            String(valor).replace(" ", "T")
+        );
 
-    const parrafo = document.createElement("p");
-    parrafo.className = error ? "notifMensaje notifError" : "notifMensaje";
-    parrafo.textContent = mensaje;
-    lista.replaceChildren(parrafo);
-}
-
-function actualizarContadorNotificaciones(cantidad) {
-    const contador = document.getElementById("contadorNotificaciones");
-    const campana = document.getElementById("btnCampanaNotif");
-    if (!contador || !campana) return;
-
-    const numero = Number(cantidad) || 0;
-    contador.hidden = numero === 0;
-    contador.textContent = numero > 99 ? "99+" : String(numero);
-    campana.setAttribute("aria-label", `Notificaciones: ${numero} sin leer`);
-}
-
-function fechaNotificacion(valor) {
-    if (!valor) return "";
-    const fecha = new Date(String(valor).replace(" ", "T"));
-    return Number.isNaN(fecha.getTime()) ? String(valor) : fecha.toLocaleString("es-UY");
-}
-
-async function abrirRegistroNotificacion(notificacion) {
-    const planillaId = Number(notificacion.PlanillaId);
-    if (!Number.isInteger(planillaId) || planillaId <= 0) {
-        mostrarMensajeNotificaciones("La notificación no tiene un registro asociado válido.", true);
-        return;
+        return Number.isNaN(fecha.getTime())
+            ? String(valor)
+            : fecha.toLocaleString("es-UY");
     }
 
-    try {
+    async function abrirRegistro(notificacion) {
+        const idNotificacion = Number(notificacion.ID);
+        const planillaId = Number(notificacion.PlanillaId);
+
+        if (!Number.isInteger(planillaId) || planillaId <= 0) {
+            mostrarError(
+                "La notificación no tiene un registro asociado válido."
+            );
+            return;
+        }
+
         if (Number(notificacion.Leida) !== 1) {
-            await solicitarNotificaciones("marcarLeida", "PUT", { id: Number(notificacion.ID) });
+            try {
+                await peticion(
+                    "marcarLeida",
+                    "PUT",
+                    { id: idNotificacion }
+                );
+            } catch (error) {
+                mostrarError(error.message);
+                return;
+            }
         }
-        window.location.href = `./detalle_registros.html?id=${encodeURIComponent(planillaId)}`;
-    } catch (error) {
-        mostrarMensajeNotificaciones(error.message, true);
+
+        window.location.href =
+            `./detalle_registros.html?id=${encodeURIComponent(planillaId)}`;
     }
-}
 
-function crearElementoNotificacion(notificacion) {
-    const articulo = document.createElement("article");
-    articulo.className = "notifItem";
-    if (Number(notificacion.Leida) === 0) articulo.classList.add("notifNoLeida");
+    function crearNotificacion(notificacion) {
+        const articulo = document.createElement("article");
+        articulo.className = "notifItem";
 
-    const titulo = document.createElement("h4");
-    const tipo = notificacion.AulaTipo || "aula";
-    const aula = notificacion.AulaNumero ?? "-";
-    const pc = notificacion.PcNumPc ?? "-";
-    titulo.textContent = `${pc} del ${tipo} ${aula} resuelta`;
-
-    const diagnostico = document.createElement("p");
-    diagnostico.className = "notifDiagnostico";
-    diagnostico.textContent = `Diagnóstico: ${notificacion.Diagnostico || "Sin diagnóstico registrado."}`;
-
-    const fecha = document.createElement("small");
-    fecha.textContent = fechaNotificacion(notificacion.FechaCreacion);
-
-    const boton = document.createElement("button");
-    boton.type = "button";
-    boton.className = "notifVerRegistro";
-    boton.textContent = "Ver registro completo";
-    boton.addEventListener("click", () => abrirRegistroNotificacion(notificacion));
-
-    articulo.append(titulo, diagnostico, fecha, boton);
-    return articulo;
-}
-
-async function cargarNotificaciones() {
-    if (cargandoNotificaciones || sessionStorage.getItem("rolActivo") !== "solicitante") return;
-    const lista = document.getElementById("listaNotificaciones");
-    if (!lista) return;
-
-    cargandoNotificaciones = true;
-    try {
-        const datos = await solicitarNotificaciones("listar");
-        const notificaciones = Array.isArray(datos.notificaciones) ? datos.notificaciones : [];
-        actualizarContadorNotificaciones(datos.sinLeer);
-
-        if (notificaciones.length === 0) {
-            mostrarMensajeNotificaciones("Todavía no tenés notificaciones.");
-        } else {
-            lista.replaceChildren(...notificaciones.map(crearElementoNotificacion));
+        if (Number(notificacion.Leida) === 0) {
+            articulo.classList.add("notifNoLeida");
         }
-    } catch (error) {
-        mostrarMensajeNotificaciones(error.message, true);
-    } finally {
-        cargandoNotificaciones = false;
+
+        const titulo = document.createElement("h4");
+
+        const tipo = String(
+            notificacion.AulaTipo ?? "aula"
+        );
+
+        const aula = String(
+            notificacion.AulaNumero ?? "-"
+        );
+
+        const pc = String(
+            notificacion.PcNumPc ?? "-"
+        );
+
+        titulo.textContent =
+            `${pc} del ${tipo} ${aula} resuelta`;
+
+        const diagnostico = document.createElement("p");
+        diagnostico.className = "notifDiagnostico";
+
+        diagnostico.textContent =
+            "Diagnóstico: " +
+            (
+                notificacion.Diagnostico ||
+                "Sin diagnóstico registrado."
+            );
+
+        const fecha = document.createElement("small");
+
+        fecha.textContent = fechaLegible(
+            notificacion.FechaCreacion
+        );
+
+        const enlace = document.createElement("button");
+        enlace.type = "button";
+        enlace.className = "notifVerRegistro";
+        enlace.textContent = "Ver registro completo";
+
+        enlace.addEventListener("click", function () {
+            abrirRegistro(notificacion);
+        });
+
+        articulo.append(
+            titulo,
+            diagnostico,
+            fecha,
+            enlace
+        );
+
+        return articulo;
     }
-}
 
-function iniciarNotificaciones() {
-    if (notificacionesIniciadas || sessionStorage.getItem("rolActivo") !== "solicitante") return;
+    async function cargarNotificaciones() {
+        if (
+            actualizando ||
+            sessionStorage.getItem("rolActivo") !== "solicitante"
+        ) {
+            return;
+        }
 
-    const campana = document.getElementById("btnCampanaNotif");
-    const dialogo = document.getElementById("dialogNotificaciones");
-    if (!campana || !dialogo) return;
+        actualizando = true;
 
-    notificacionesIniciadas = true;
-    campana.addEventListener("click", () => {
-        dialogo.showModal();
+        try {
+            const datos = await peticion("listar");
+
+            const lista = document.getElementById(
+                "listaNotificaciones"
+            );
+
+            if (!lista) {
+                return;
+            }
+
+            const notificaciones = Array.isArray(
+                datos.notificaciones
+            )
+                ? datos.notificaciones
+                : [];
+
+            actualizarContador(datos.sinLeer);
+
+            if (notificaciones.length === 0) {
+                const mensaje = document.createElement("p");
+                mensaje.className = "notifMensaje";
+
+                mensaje.textContent =
+                    "Todavía no tenés notificaciones.";
+
+                lista.replaceChildren(mensaje);
+                return;
+            }
+
+            lista.replaceChildren(
+                ...notificaciones.map(crearNotificacion)
+            );
+
+        } catch (error) {
+            mostrarError(error.message);
+
+        } finally {
+            actualizando = false;
+        }
+    }
+
+    function iniciar() {
+        if (
+            iniciado ||
+            sessionStorage.getItem("rolActivo") !== "solicitante"
+        ) {
+            return;
+        }
+
+        const campana = document.getElementById(
+            "btnCampanaNotif"
+        );
+
+        const dialogo = document.getElementById(
+            "dialogNotificaciones"
+        );
+
+        if (!campana || !dialogo) {
+            return;
+        }
+
+        iniciado = true;
+
+        campana.addEventListener("click", function () {
+            dialogo.showModal();
+            cargarNotificaciones();
+        });
+
+        document.getElementById("btnCerrarDialog")
+            ?.addEventListener("click", function () {
+                dialogo.close();
+            });
+
+        dialogo.addEventListener("click", function (evento) {
+            if (evento.target === dialogo) {
+                dialogo.close();
+            }
+        });
+
         cargarNotificaciones();
-    });
 
-    document.getElementById("btnCerrarDialog")?.addEventListener("click", () => dialogo.close());
-    dialogo.addEventListener("click", evento => {
-        if (evento.target === dialogo) dialogo.close();
-    });
+        window.setInterval(function () {
+            if (!document.hidden) {
+                cargarNotificaciones();
+            }
+        }, 60000);
+    }
 
-    cargarNotificaciones();
-    setInterval(() => {
-        if (!document.hidden) cargarNotificaciones();
-    }, 60000);
-}
+    window.SGRSINotificaciones = {
+        iniciar,
+        cargarNotificaciones
+    };
 
-// Compatible con las páginas que ya llaman SGRSINotificaciones.iniciar().
-window.SGRSINotificaciones = {
-    iniciar: iniciarNotificaciones,
-    cargarNotificaciones
-};
-
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", iniciarNotificaciones);
-} else {
-    iniciarNotificaciones();
-}
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            iniciar,
+            { once: true }
+        );
+    } else {
+        iniciar();
+    }
+})();

@@ -1,6 +1,6 @@
 
 const API_AULAS =
-    "../index.php?ruta=recursos&recurso=aula";
+    "../index.php?recurso=recursos&identificador=aula";
 
 const selectTipo = document.getElementById("tipo");
 const selectNumero = document.getElementById("numero");

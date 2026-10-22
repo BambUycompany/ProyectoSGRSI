@@ -1,5 +1,5 @@
 
-const API_USUARIOS = "../index.php?ruta=usuarios";
+const API_USUARIOS = "../index.php?recurso=usuarios";
 
 const cuerpoTablaEmpleados = document.getElementById("cuerpoTablaEmpleados");
 const formAgregarEmpleado = document.getElementById("formAgregarEmpleado");

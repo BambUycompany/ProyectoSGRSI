@@ -1,4 +1,4 @@
-const API_TICKETS = "../index.php?ruta=tickets";
+const API_TICKETS = "../index.php?recurso=tickets";
 
 const cuerpoTablaTicketsAgrupados = document.getElementById("cuerpoTablaTicketsAgrupados");
 

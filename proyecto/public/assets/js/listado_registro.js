@@ -1,6 +1,6 @@
 
 (function () {
-    const API_PLANILLA = "../index.php?ruta=planilla";
+    const API_PLANILLA = "../index.php?recurso=planilla";
 
     const cuerpoTabla = document.getElementById("cuerpoTablaRegistros");
     const mensajeRegistros = document.getElementById("mensajeRegistros");

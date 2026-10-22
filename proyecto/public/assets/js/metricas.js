@@ -1,6 +1,6 @@
 
 (function () {
-    const API_METRICAS = "../index.php?ruta=metricas";
+    const API_METRICAS = "../index.php?recurso=metricas";
 
     const mensajeMetricas = document.getElementById("mensajeMetricas");
     const mensajeSinFallas = document.getElementById("mensajeSinFallas");
