@@ -39,8 +39,8 @@
     async function consultarDetalle() {
         
         const parametrosAPI = new URLSearchParams({
-            ruta: "planilla",
-            id: planillaId
+            recurso:"planilla",
+            id:planillaId
         });
 
         if (sessionStorage.getItem("rolActivo") === "solicitante") {
@@ -51,7 +51,8 @@
             "../index.php?" + parametrosAPI.toString(),
             {
                 method: "GET",
-                cache: "no-store"
+                cache: "no-store",
+                credentials: "same-origin"
             }
         );
 
@@ -204,22 +205,6 @@
 
         fila.appendChild(celdaDiagnostico);
 
-        const celdaAcciones = document.createElement("td");
-        const enlace = document.createElement("a");
-
-        const parametrosDetalle = new URLSearchParams({
-            pc: String(ticket.PcNumPc),
-            aulaId: String(ticket.PcAulaID ?? planilla.AulaID)
-        });
-
-        enlace.href =
-            "./detalle_tickets.html?" + parametrosDetalle.toString();
-
-        enlace.textContent = "Ver tickets de la PC";
-        enlace.className = "botones";
-
-        celdaAcciones.appendChild(enlace);
-        fila.appendChild(celdaAcciones);
 
         cuerpoTablaTickets.appendChild(fila);
     }
@@ -232,11 +217,6 @@
         enlaceVolver.textContent = "← Volver";
     }
 
-    if (sessionStorage.getItem("rolActivo") === "solicitante") {
-        document.querySelectorAll(
-            'a[href*="detalle_tickets.html"]'
-        ).forEach(enlace => enlace.remove());
-    }
 
 
     async function cargarDetalleRegistro() {

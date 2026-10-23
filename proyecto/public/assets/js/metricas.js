@@ -73,8 +73,8 @@
     
 async function obtenerMetricas(periodo) {
     const parametros = new URLSearchParams({
-        ruta: "metricas",
-        recurso: "dashboard",
+        recurso: "metricas",
+        identificador: "dashboard",
         periodo: periodo
     });
 

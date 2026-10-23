@@ -39,14 +39,20 @@ async function cerrarModalTicket() {
     inputDescripcion.value = "";
 }
 
+
 async function agregarTicketALaLista() {
-    const numeroPc = inputNumeroPc.value.trim().toUpperCase();
+    const numeroIngresado = inputNumeroPc.value.trim();
     const fallo = inputFallo.value;
     const descripcion = inputDescripcion.value.trim();
 
     const pcs = window.pcsDelAulaActual ?? [];
 
-    if (!pcs.includes(numeroPc)) {
+    const numeroPc = pcs.find(
+        pc => String(pc).trim().toLowerCase() ===
+              numeroIngresado.toLowerCase()
+    );
+
+    if (!numeroPc) {
         await mostrarToast(
             "La PC indicada no existe en el aula seleccionada.",
             "advertencia"
@@ -64,7 +70,7 @@ async function agregarTicketALaLista() {
 
     const ticket = {
         idTemporal: contadorTickets++,
-        numeroPc,
+        numeroPc: numeroPc,
         fallo,
         descripcion
     };
@@ -79,6 +85,7 @@ async function agregarTicketALaLista() {
         "exito"
     );
 }
+
 
 async function quitarTicket(idTemporal) {
     let indice = -1;

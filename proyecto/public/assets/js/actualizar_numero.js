@@ -52,8 +52,8 @@ async function cargarAulas() {
     }
 }
 
-function actualizarNumeros() {
 
+async function actualizarNumeros() {
     const tipo = selectTipo.value;
 
     selectNumero.replaceChildren();
@@ -65,24 +65,72 @@ function actualizarNumeros() {
 
     window.pcsDelAulaActual = [];
 
-    limpiarTickets();
-
-    const aulas = aulasDisponibles.filter(
-        aula => (aula.Tipo ?? "").toLowerCase() === tipo
+    const listaPcs = document.getElementById(
+        "listaPcsDisponibles"
     );
 
+    if (listaPcs) {
+        listaPcs.replaceChildren();
+    }
+
+    if (inputNumeroPcTicket) {
+        inputNumeroPcTicket.value = "";
+    }
+
+    await limpiarTickets();
+
+    const aulas = aulasDisponibles.filter(
+        aula => String(aula.Tipo ?? "")
+            .trim()
+            .toLowerCase() === tipo
+    );
+
+    const cantidadPorNumero = new Map();
+    const idsMostrados = new Set();
+
     for (const aula of aulas) {
+        const numero = String(aula.Numero ?? "").trim();
+        const numeroNormalizado = /^\d+$/.test(numero)
+            ? String(Number(numero))
+            : numero.toLowerCase();
+
+        cantidadPorNumero.set(
+            numeroNormalizado,
+            (cantidadPorNumero.get(numeroNormalizado) ?? 0) + 1
+        );
+    }
+
+    for (const aula of aulas) {
+        const aulaId = String(aula.ID);
+
+        if (idsMostrados.has(aulaId)) {
+            continue;
+        }
+
+        idsMostrados.add(aulaId);
+
+        const numero = String(aula.Numero ?? "").trim();
+
+        const numeroNormalizado = /^\d+$/.test(numero)
+            ? String(Number(numero))
+            : numero.toLowerCase();
+
+        const repetido =
+            cantidadPorNumero.get(numeroNormalizado) > 1;
 
         const opcion = document.createElement("option");
 
-        opcion.value = aula.Numero;
-        opcion.textContent = aula.Numero;
+        opcion.value = numero;
+        opcion.dataset.aulaId = aulaId;
 
-        opcion.dataset.aulaId = aula.ID;
+        opcion.textContent = repetido
+            ? `${numero} (aula ID ${aulaId})`
+            : numero;
 
         selectNumero.appendChild(opcion);
     }
 }
+
 
 async function cargarPcsDelAula() {
 

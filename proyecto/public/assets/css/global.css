@@ -294,3 +294,112 @@ button.botones {
 }
 
 }
+
+
+.barraNav .listaNavegacion {
+    align-items: center;
+}
+
+.barraNav .menuUsuario {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.barraNav #btnIconoUsuario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin: 0;
+    cursor: pointer;
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.barraNav #btnIconoUsuario i {
+    color: #ffffff;
+    font-size: 1.4rem;
+}
+
+.barraNav #btnIconoUsuario:hover,
+.barraNav #btnIconoUsuario:focus-visible {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.barraNav .opcionesUsuario {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: auto;
+    margin: 0;
+    padding: 0.4rem;
+    min-width: 180px;
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    background-color: #ffffff;
+    border: 1px solid #d7deeb;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    z-index: 300;
+}
+
+.barraNav .opcionesUsuario.visible {
+    display: block;
+}
+
+.barraNav .opcionesUsuario li {
+    width: 100%;
+    list-style: none;
+}
+
+.barraNav .opcionesUsuario button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: 0;
+    color: #19337c;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.barraNav .opcionesUsuario button:hover,
+.barraNav .opcionesUsuario button:focus-visible {
+    background-color: #eaf0fb;
+    color: #19337c;
+}
+
+
+@media (max-width: 768px) {
+    .barraNav .menuUsuario {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .barraNav #btnIconoUsuario {
+        width: 100%;
+    }
+
+    .barraNav .opcionesUsuario {
+        position: static;
+        width: calc(100% - 20px);
+        min-width: 0;
+        max-width: 100%;
+        margin: 6px auto 0;
+        box-shadow: none;
+    }
+}

@@ -14,7 +14,7 @@
         {
             texto: "Registro Sala",
             pagina: "./registro_planilla.html",
-            roles: ["administrador", "soporte", "solicitante"]
+            roles: ["soporte", "solicitante"]
         },
         {
             texto: "Empleados",

@@ -289,29 +289,31 @@ class UsuarioController {
 
         $claveHash = null;
 
-        if ($clave !== "") {
+        if (!is_string($clave) || !is_string($confirmarClave)) {
+            RespuestaJson::error("Los datos de contraseña no son válidos.", 400);
+        }
 
-            if (
-                !is_string($clave) ||
-                strlen($clave) < 12
-            ) {
-                RespuestaJson::error(
-                    "La nueva contraseña debe tener al menos 12 caracteres.",
-                    400
-                );
-            }
-
+        if ($clave !== "" || $confirmarClave !== "") {
             if ($clave !== $confirmarClave) {
+                RespuestaJson::error("Las contraseñas no coinciden.", 400);
+            }
+
+            if (strlen($clave) < 8) {
                 RespuestaJson::error(
-                    "Las contraseñas no coinciden.",
+                    "La contraseña debe contener al menos 8 caracteres.",
                     400
                 );
             }
 
-            $claveHash = password_hash(
-                $clave,
-                PASSWORD_DEFAULT
-            );
+            $usuarioConHash = $this->dao->buscarUsuario($cedula);
+
+            if ($usuarioConHash === null) {
+                RespuestaJson::error("Empleado no encontrado.", 404);
+            }
+
+            if (!password_verify($clave, $usuarioConHash["claveHash"])) {
+                $claveHash = password_hash($clave, PASSWORD_DEFAULT);
+            }
         }
 
         if (!$this->dao->modificarUsuario(
