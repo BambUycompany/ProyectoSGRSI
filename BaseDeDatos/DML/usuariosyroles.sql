@@ -30,10 +30,29 @@ INSERT INTO administrador (cedula) VALUES ('87654322');
 INSERT INTO soporte (cedula) VALUES ('87654322');
 INSERT INTO solicitante (cedula) VALUES ('87654322');
 
-//Usuario sin rol
 INSERT INTO usuario (cedula, nombre, apellido, claveHash, activo)
 VALUES ('87654323', 'Juan', 'Perez', '$2y$10$V5k2en.l4goJX8kkUzGQVeJR.qK3/W0bFT.56xK02OffnZ01rLcw6', TRUE);
 
+INSERT INTO usuario (cedula, nombre, apellido, claveHash, activo)
+VALUES (:cedula, :nombre, :apellido, :claveHash, 1);
+
+UPDATE usuario SET nombre = :nombre, apellido = :apellido, claveHash = :claveHash
+WHERE cedula = :cedula;
+
+UPDATE usuario SET nombre = :nombre, apellido = :apellido
+WHERE cedula = :cedula;
+
+INSERT INTO administrador (cedula) VALUES (:cedula);
+INSERT INTO soporte       (cedula) VALUES (:cedula);
+INSERT INTO solicitante   (cedula) VALUES (:cedula);
+
+DELETE FROM administrador WHERE cedula = :cedula;
+DELETE FROM soporte       WHERE cedula = :cedula;
+DELETE FROM solicitante   WHERE cedula = :cedula;
+
+UPDATE usuario SET activo = 0 WHERE cedula = :cedula AND activo = 1;
+
+UPDATE usuario SET activo = 1 WHERE cedula = :cedula AND activo = 0;
 /*
     "clave1234567" ~ "$2y$12$ki0bVkt8cnZuR4v6aJvhhelaeQc1/4fec2txUcuG1Ybr4cvnhg2sS"
 

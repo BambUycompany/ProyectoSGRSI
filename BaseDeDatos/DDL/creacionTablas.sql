@@ -32,7 +32,8 @@ CREATE TABLE PC (
     AulaID  INT NOT NULL,
     PRIMARY KEY (NumPc,AulaID),
     Modelo  VARCHAR(100) NOT NULL,
-    FOREIGN KEY (AulaID) REFERENCES aula(ID) ON DELETE CASCADE);
+    AulaID REFERENCES aula(ID) ON DELETE CASCADE
+);
 
 CREATE TABLE PERIFERICO (
     ID      INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,36 +57,31 @@ CREATE TABLE PLANILLA (
     HoraSalida             TIME,
     Grupo                  VARCHAR(50),
     Turno                  VARCHAR(30),
-    Asignatura             VARCHAR(100),             
+    Asignatura             VARCHAR(100),
+    NombreSolicitante      VARCHAR(150),               
     CedulaRegistrante   VARCHAR(20) NOT NULL,         
     AulaID                 INT NOT NULL,                 
     FOREIGN KEY (CedulaRegistrante) REFERENCES USUARIO(Cedula),
     FOREIGN KEY (AulaID) REFERENCES aula(ID)
 );
 
-
-CREATE TABLE ticket (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Descripcion TEXT NOT NULL,
-    Incidente VARCHAR(150) NULL,
-    Fallo VARCHAR(150) NOT NULL,
-    Estado VARCHAR(30) NOT NULL DEFAULT 'pendiente',
-    Prioridad VARCHAR(20) NULL,
-    PcNumPc VARCHAR(20) NOT NULL,
-    PcAulaID INT NOT NULL,
-    SolicitanteCedula VARCHAR(20) NOT NULL,
-    SoporteCedula VARCHAR(20) NULL,
-    PlanillaId INT NOT NULL,
-    FechaCreacion DATETIME NOT NULL,
-    FOREIGN KEY (PcNumPc, PcAulaID)
-        REFERENCES pc(NumPc, AulaID),
-    FOREIGN KEY (SolicitanteCedula)
-        REFERENCES solicitante(cedula),
-    FOREIGN KEY (SoporteCedula)
-        REFERENCES soporte(cedula),
-    INDEX (PlanillaId)
+CREATE TABLE TICKET (
+    ID                    INT AUTO_INCREMENT PRIMARY KEY,
+    Descripcion           TEXT,
+    Incidente             VARCHAR(150),
+    Fallo                 VARCHAR(150),
+    Estado                VARCHAR(30) NOT NULL,          
+    Prioridad             VARCHAR(20) NOT NULL DEFAULT '0',          
+    PcNumPc               VARCHAR(20) NOT NULL,         
+    PcAulaID              INT NOT NULL,
+    SolicitanteCedula     VARCHAR(20) NOT NULL,         
+    SoporteCedula         VARCHAR(20) NOT NULL,          
+    PlanillaId            INT UNIQUE,                   
+    FOREIGN KEY (PcNumPc, PcAulaID) REFERENCES PC(NumPc, AulaID) ON DELETE CASCADE,
+    FOREIGN KEY (SolicitanteCedula) REFERENCES SOLICITANTE(Cedula),
+    FOREIGN KEY (SoporteCedula) REFERENCES SOPORTE(Cedula),
+    FOREIGN KEY (PlanillaId) REFERENCES PLANILLA(Id)
 );
-  
 
 
 CREATE TABLE PRESTAMO (
