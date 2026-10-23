@@ -187,7 +187,8 @@ class planillaController {
         $horaEntrada = trim($datos["horaEntrada"] ?? "");
         $horaSalida = trim($datos["horaSalida"] ?? "");
         $nombreSolicitante = trim(
-            $datos["nombreSolicitante"] ?? ""
+            ($_SESSION["nombre"] ?? "") . " " .
+            ($_SESSION["apellido"] ?? "")
         );
         $asignatura = trim($datos["Asignatura"] ?? "");
         $grupo = trim($datos["grupo"] ?? "");
@@ -195,17 +196,6 @@ class planillaController {
         $tickets = $datos["tickets"] ?? [];
 
         $cedula = $_SESSION["cedula"];
-
-        if (
-            $nombreSolicitante === "" &&
-            !empty($_SESSION["soporte"])
-        ) {
-            $nombreSolicitante = trim(
-                ($_SESSION["nombre"] ?? "") . " " .
-                ($_SESSION["apellido"] ?? "")
-            );
-        }
-
         if (
             !in_array($tipo, ["laboratorio", "taller"], true) ||
             $numero === "" ||

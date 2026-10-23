@@ -106,6 +106,9 @@ async function gestionarLogin(eventoFormulario) {
     } catch (error) {
 
         mensajeError.textContent = error.message;
+        if (typeof mostrarToast === "function") {
+            await mostrarToast(error.message, "error");
+        }
     }
 }
 
@@ -120,5 +123,8 @@ const errorAcceso = sessionStorage.getItem("errorAcceso");
 
 if (errorAcceso && mensajeError) {
     mensajeError.textContent = errorAcceso;
+    if (typeof mostrarToast === "function") {
+        mostrarToast(errorAcceso, "advertencia");
+    }
     sessionStorage.removeItem("errorAcceso");
 }

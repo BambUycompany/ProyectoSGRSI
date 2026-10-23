@@ -17,15 +17,15 @@ class PlanillaDAO {
      * Registra una nueva planilla en la base de datos.
      *
      * @param array $datos Array asociativo con las claves: fecha, horaEntrada, horaSalida,
-     * grupo, turno, asignatura, nombreSolicitante, documentoRegistrante y aulaId.
+     * grupo, turno, asignatura, documentoRegistrante y aulaId.
      *
      * @return string El ID autogenerado de la planilla recién insertada.
      */
 
     public function registrarPlanilla(array $datos) {
         $sql = "INSERT INTO planilla 
-            (Fecha, HoraEntrada, HoraSalida, Grupo, Turno, Asignatura, nombreSolicitante, cedulaRegistrante, AulaID)
-            VALUES (:fecha, :horaEntrada, :horaSalida, :grupo, :turno, :asignatura, :nombreSolicitante, :cedulaRegistrante, :aulaId)";
+            (Fecha, HoraEntrada, HoraSalida, Grupo, Turno, Asignatura, CedulaRegistrante, AulaID)
+            VALUES (:fecha, :horaEntrada, :horaSalida, :grupo, :turno, :asignatura, :cedulaRegistrante, :aulaId)";
 
         $consulta = $this->conexion->prepare($sql);
 
@@ -36,7 +36,6 @@ class PlanillaDAO {
             "grupo" => $datos["grupo"],
             "turno" => $datos["turno"],
             "asignatura" => $datos["asignatura"],
-            "nombreSolicitante" => $datos["nombreSolicitante"],
             "cedulaRegistrante" => $datos["documentoRegistrante"],
             "aulaId" => $datos["aulaId"],
         ]);
@@ -163,7 +162,7 @@ class PlanillaDAO {
                     p.Grupo,
                     p.Turno,
                     p.Asignatura,
-                    p.NombreSolicitante,
+                    TRIM(CONCAT_WS(' ', u.Nombre, u.Apellido)) AS NombreSolicitante,
                     p.CedulaRegistrante,
                     a.Numero AS AulaNumero,
                     CASE
@@ -173,6 +172,7 @@ class PlanillaDAO {
                     END AS AulaTipo
                 FROM planilla p
                 INNER JOIN aula a ON a.ID = p.AulaID
+                INNER JOIN usuario u ON u.Cedula = p.CedulaRegistrante
                 LEFT JOIN laboratorio l ON l.AulaID = a.ID
                 WHERE 1 = 1";
 
@@ -237,7 +237,7 @@ class PlanillaDAO {
                         p.Grupo,
                         p.Turno,
                         p.Asignatura,
-                        p.NombreSolicitante,
+                        TRIM(CONCAT_WS(' ', u.Nombre, u.Apellido)) AS NombreSolicitante,
                         p.CedulaRegistrante,
                         p.AulaID,
                         a.Numero AS AulaNumero,
@@ -248,6 +248,7 @@ class PlanillaDAO {
                         END AS AulaTipo
                     FROM planilla p
                     INNER JOIN aula a ON a.ID = p.AulaID
+                    INNER JOIN usuario u ON u.Cedula = p.CedulaRegistrante
                     LEFT JOIN laboratorio l ON l.AulaID = a.ID
                     WHERE p.ID = :planillaId";
 

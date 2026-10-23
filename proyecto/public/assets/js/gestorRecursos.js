@@ -39,6 +39,72 @@ const entradaModeloPortatil = document.getElementById("modeloPortatil");
 let portatilEnEdicion = false;
 let portatilIdEnEdicion = null;
 
+const aulasPorId = new Map();
+const equiposPorNumero = new Map();
+const portatilesPorId = new Map();
+
+async function alClickDetalleAula(evento) {
+    evento.preventDefault();
+    await abrirDetalleAula(evento.currentTarget.dataset.aulaId);
+}
+
+async function alClickModificarAula(evento) {
+    const aula = aulasPorId.get(evento.currentTarget.dataset.aulaId);
+    if (aula) await abrirModificarAula(aula);
+}
+
+async function alClickEliminarAula(evento) {
+    await eliminarAula(evento.currentTarget.dataset.aulaId);
+}
+
+async function alClickModificarEquipo(evento) {
+    const equipo = equiposPorNumero.get(evento.currentTarget.dataset.numPc);
+    if (equipo) await abrirModificarEquipo(equipo);
+}
+
+async function alClickEliminarEquipo(evento) {
+    await eliminarEquipo(evento.currentTarget.dataset.numPc, aulaIdActual);
+}
+
+async function alClickModificarPortatil(evento) {
+    const portatil = portatilesPorId.get(evento.currentTarget.dataset.portatilId);
+    if (portatil) await abrirModificarPortatil(portatil);
+}
+
+async function alClickEliminarPortatil(evento) {
+    await eliminarPortatil(evento.currentTarget.dataset.portatilId);
+}
+
+async function alClickCambiarEstadoPortatil(evento) {
+    await cambiarEstadoPortatil(
+        evento.currentTarget.dataset.portatilId,
+        evento.currentTarget.dataset.accion
+    );
+}
+
+async function alCancelarAula(evento) {
+    evento.preventDefault();
+    await cerrarAula();
+}
+
+async function alCancelarEquipo(evento) {
+    evento.preventDefault();
+    await cerrarEquipo();
+}
+
+async function alCancelarPortatil(evento) {
+    evento.preventDefault();
+    await cerrarPortatil();
+}
+
+async function alCerrarDetalleEquipos() {
+    aulaIdActual = null;
+}
+
+async function alClickCerrarDetalleEquipos() {
+    dialogEquiposAula.close();
+}
+
 async function leerRespuestaAPI(respuesta) {
     const texto = await respuesta.text();
 
@@ -62,7 +128,7 @@ async function leerRespuestaAPI(respuesta) {
     return json.datos;
 }
 
-function cabecerasMutacion() {
+async function cabecerasMutacion() {
     return {
         "Content-Type": "application/json",
         "X-CSRF-Token": sessionStorage.getItem("csrfToken") ?? ""
@@ -85,7 +151,7 @@ async function obtenerAulaConEquipos(aulaId) {
 async function altaAula(tipo, numero) {
     const respuesta = await fetch(`${API_RECURSOS}&identificador=aula`, {
         method: "POST",
-        headers: cabecerasMutacion(),
+        headers: await cabecerasMutacion(),
         body: JSON.stringify({ recurso: "aula", tipo, numero })
     });
 
@@ -95,7 +161,7 @@ async function altaAula(tipo, numero) {
 async function modificarAula(aulaId, tipo, numero) {
     const respuesta = await fetch(`${API_RECURSOS}&identificador=aula`, {
         method: "PUT",
-        headers: cabecerasMutacion(),
+        headers: await cabecerasMutacion(),
         body: JSON.stringify({ aulaId, tipo, numero })
     });
 
@@ -112,18 +178,19 @@ async function eliminarAula(aulaId) {
             `${API_RECURSOS}&identificador=aula&aulaId=${encodeURIComponent(aulaId)}`,
             {
                 method: "DELETE",
-                headers: cabecerasMutacion()
+                headers: await cabecerasMutacion()
             }
         );
 
         await leerRespuestaAPI(respuesta);
         await actualizarTablaAulas();
+        await mostrarToast("Aula eliminada correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
-function agregarFilaAula(aula) {
+async function agregarFilaAula(aula) {
     const fila = document.createElement("tr");
 
     const campoTipo = document.createElement("td");
@@ -132,10 +199,10 @@ function agregarFilaAula(aula) {
     linkAula.href = "#";
     linkAula.textContent = aula.Tipo ?? aula.tipo;
 
-    linkAula.addEventListener("click", (evento) => {
-        evento.preventDefault();
-        abrirDetalleAula(aula.ID ?? aula.id);
-    });
+    const idAula = String(aula.ID ?? aula.id);
+    aulasPorId.set(idAula, aula);
+    linkAula.dataset.aulaId = idAula;
+    linkAula.addEventListener("click", alClickDetalleAula);
 
     campoTipo.appendChild(linkAula);
 
@@ -150,13 +217,15 @@ function agregarFilaAula(aula) {
     btnModificar.type = "button";
     btnModificar.textContent = "Modificar";
     btnModificar.classList.add("btnOperacion");
-    btnModificar.addEventListener("click", () => abrirModificarAula(aula));
+    btnModificar.dataset.aulaId = idAula;
+    btnModificar.addEventListener("click", alClickModificarAula);
 
     const btnEliminar = document.createElement("button");
     btnEliminar.type = "button";
     btnEliminar.textContent = "Eliminar";
     btnEliminar.classList.add("btnOperacion");
-    btnEliminar.addEventListener("click", () => eliminarAula(aula.ID ?? aula.id));
+    btnEliminar.dataset.aulaId = idAula;
+    btnEliminar.addEventListener("click", alClickEliminarAula);
 
     caja.appendChild(btnModificar);
     caja.appendChild(btnEliminar);
@@ -180,18 +249,18 @@ async function actualizarTablaAulas() {
             agregarFilaAula(aula);
         }
     } catch (error) {
-        window.alert("No se pudieron cargar las aulas: " + error.message);
+        await mostrarToast("No se pudieron cargar las aulas: " + error.message, "error");
     }
 }
 
-function abrirAltaAula() {
+async function abrirAltaAula() {
     aulaEnEdicion = false;
     aulaIdEnEdicion = null;
     formularioAula.reset();
     dialogAgregarAula.showModal();
 }
 
-function abrirModificarAula(aula) {
+async function abrirModificarAula(aula) {
     aulaEnEdicion = true;
     aulaIdEnEdicion = aula.ID ?? aula.id;
 
@@ -201,7 +270,7 @@ function abrirModificarAula(aula) {
     dialogAgregarAula.showModal();
 }
 
-function cerrarAula() {
+async function cerrarAula() {
     formularioAula.reset();
     dialogAgregarAula.close();
 }
@@ -219,10 +288,11 @@ async function gestionarAula(eventoFormulario) {
             await modificarAula(aulaIdEnEdicion, tipo, numero);
         }
 
-        cerrarAula();
+        await cerrarAula();
         await actualizarTablaAulas();
+        await mostrarToast("Aula guardada correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
@@ -249,8 +319,8 @@ async function abrirDetalleAula(aulaId) {
             dialogEquiposAula.showModal();
         }
     } catch (error) {
-        window.alert(
-            "No se pudo abrir el detalle del aula: " + error.message
+        await mostrarToast(
+            "No se pudo abrir el detalle del aula: " + error.message, "error"
         );
     }
 }
@@ -258,7 +328,7 @@ async function abrirDetalleAula(aulaId) {
 async function agregarEquipo(datosEquipo) {
     const respuesta = await fetch(`${API_RECURSOS}&identificador=equipo`, {
         method: "POST",
-        headers: cabecerasMutacion(),
+        headers: await cabecerasMutacion(),
         body: JSON.stringify({
             recurso: "equipo",
             ...datosEquipo
@@ -271,7 +341,7 @@ async function agregarEquipo(datosEquipo) {
 async function modificarEquipo(datosEquipo) {
     const respuesta = await fetch(`${API_RECURSOS}&identificador=equipo`, {
         method: "PUT",
-        headers: cabecerasMutacion(),
+        headers: await cabecerasMutacion(),
         body: JSON.stringify(datosEquipo)
     });
 
@@ -288,18 +358,19 @@ async function eliminarEquipo(numPc, aulaId) {
             `${API_RECURSOS}&identificador=equipo&numPc=${encodeURIComponent(numPc)}&aulaId=${encodeURIComponent(aulaId)}`,
             {
                 method: "DELETE",
-                headers: cabecerasMutacion()
+                headers: await cabecerasMutacion()
             }
         );
 
         await leerRespuestaAPI(respuesta);
         await abrirDetalleAula(aulaId);
+        await mostrarToast("Equipo eliminado correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
-function agregarFilaEquipo(equipo) {
+async function agregarFilaEquipo(equipo) {
     const fila = document.createElement("tr");
 
     const numPc = equipo.NumPc ?? equipo.numPc ?? equipo.num_pc;
@@ -331,18 +402,17 @@ function agregarFilaEquipo(equipo) {
     btnModificar.textContent = "Modificar";
     btnModificar.classList.add("btnOperacion");
 
-    btnModificar.addEventListener("click", () => {
-        abrirModificarEquipo(equipo);
-    });
+    equiposPorNumero.set(String(numPc), equipo);
+    btnModificar.dataset.numPc = String(numPc);
+    btnModificar.addEventListener("click", alClickModificarEquipo);
 
     const btnEliminar = document.createElement("button");
     btnEliminar.type = "button";
     btnEliminar.textContent = "Eliminar";
     btnEliminar.classList.add("btnOperacion");
 
-    btnEliminar.addEventListener("click", () => {
-        eliminarEquipo(numPc, aulaIdActual);
-    });
+    btnEliminar.dataset.numPc = String(numPc);
+    btnEliminar.addEventListener("click", alClickEliminarEquipo);
 
     caja.appendChild(btnModificar);
     caja.appendChild(btnEliminar);
@@ -361,9 +431,9 @@ async function actualizarTablaEquipos(equipos) {
     }
 }
 
-function abrirAltaEquipo() {
+async function abrirAltaEquipo() {
     if (!aulaIdActual) {
-        window.alert("Seleccione un aula antes de agregar equipos.");
+        await mostrarToast("Seleccione un aula antes de agregar equipos.", "advertencia");
         return;
     }
 
@@ -381,7 +451,7 @@ function abrirAltaEquipo() {
     dialogAgregarEquipo.showModal();
 }
 
-function abrirModificarEquipo(equipo) {
+async function abrirModificarEquipo(equipo) {
     equipoEnEdicion = true;
     formularioEquipo.reset();
 
@@ -410,7 +480,7 @@ function abrirModificarEquipo(equipo) {
     dialogAgregarEquipo.showModal();
 }
 
-function cerrarEquipo() {
+async function cerrarEquipo() {
     formularioEquipo.reset();
     dialogAgregarEquipo.close();
 }
@@ -434,7 +504,7 @@ async function gestionarEquipo(eventoFormulario) {
             !datosEquipo.modeloMouse ||
             !datosEquipo.modeloTeclado
         ) {
-            window.alert("Complete todos los campos del equipo.");
+            await mostrarToast("Complete todos los campos del equipo.", "advertencia");
             return;
         }
 
@@ -446,8 +516,8 @@ async function gestionarEquipo(eventoFormulario) {
                 cantidad < 1 ||
                 cantidad > 100
             ) {
-                window.alert(
-                    "Indique una cantidad entera entre 1 y 100."
+                await mostrarToast(
+                    "Indique una cantidad entera entre 1 y 100.", "advertencia"
                 );
                 return;
             }
@@ -458,17 +528,18 @@ async function gestionarEquipo(eventoFormulario) {
             datosEquipo.numPc = entradaNumPc.value.trim();
 
             if (!datosEquipo.numPc) {
-                window.alert("No se pudo identificar la PC.");
+                await mostrarToast("No se pudo identificar la PC.", "advertencia");
                 return;
             }
 
             await modificarEquipo(datosEquipo);
         }
 
-        cerrarEquipo();
+        await cerrarEquipo();
         await abrirDetalleAula(aulaIdActual);
+        await mostrarToast("Equipo guardado correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
@@ -484,7 +555,7 @@ async function altaPortatil(modeloPortatil) {
         `${API_RECURSOS}&identificador=portatil`,
         {
             method: "POST",
-            headers: cabecerasMutacion(),
+            headers: await cabecerasMutacion(),
             body: JSON.stringify({ modeloPortatil })
         }
     );
@@ -495,7 +566,7 @@ async function altaPortatil(modeloPortatil) {
 async function modificarPortatil(portatilId, modeloPortatil) {
     const respuesta = await fetch(`${API_RECURSOS}&identificador=portatil`, {
         method: "PUT",
-        headers: cabecerasMutacion(),
+        headers: await cabecerasMutacion(),
         body: JSON.stringify({
             portatilId,
             modeloPortatil
@@ -515,14 +586,15 @@ async function eliminarPortatil(portatilId) {
             `${API_RECURSOS}&identificador=portatil&portatilId=${encodeURIComponent(portatilId)}`,
             {
                 method: "DELETE",
-                headers: cabecerasMutacion()
+                headers: await cabecerasMutacion()
             }
         );
 
         await leerRespuestaAPI(respuesta);
         await actualizarTablaPortatiles();
+        await mostrarToast("Operación realizada correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
@@ -530,7 +602,7 @@ async function cambiarEstadoPortatil(portatilId, accion) {
     try {
         const respuesta = await fetch(`${API_RECURSOS}&identificador=portatil`, {
             method: "PATCH",
-            headers: cabecerasMutacion(),
+            headers: await cabecerasMutacion(),
             body: JSON.stringify({
                 portatilId,
                 accion
@@ -539,12 +611,13 @@ async function cambiarEstadoPortatil(portatilId, accion) {
 
         await leerRespuestaAPI(respuesta);
         await actualizarTablaPortatiles();
+        await mostrarToast("Operación realizada correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
-function agregarFilaPortatil(portatil) {
+async function agregarFilaPortatil(portatil) {
     const fila = document.createElement("tr");
 
     const campoModelo = document.createElement("td");
@@ -565,9 +638,10 @@ function agregarFilaPortatil(portatil) {
     btnModificar.textContent = "Modificar";
     btnModificar.classList.add("btnOperacion");
 
-    btnModificar.addEventListener("click", () => {
-        abrirModificarPortatil(portatil);
-    });
+    const idPortatil = String(id);
+    portatilesPorId.set(idPortatil, portatil);
+    btnModificar.dataset.portatilId = idPortatil;
+    btnModificar.addEventListener("click", alClickModificarPortatil);
 
     caja.appendChild(btnModificar);
 
@@ -577,9 +651,8 @@ function agregarFilaPortatil(portatil) {
         btnEliminar.textContent = "Eliminar";
         btnEliminar.classList.add("btnOperacion");
 
-        btnEliminar.addEventListener("click", () => {
-            eliminarPortatil(id);
-        });
+        btnEliminar.dataset.portatilId = idPortatil;
+        btnEliminar.addEventListener("click", alClickEliminarPortatil);
 
         caja.appendChild(btnEliminar);
 
@@ -588,9 +661,9 @@ function agregarFilaPortatil(portatil) {
         btnDeshabilitar.textContent = "Deshabilitar";
         btnDeshabilitar.classList.add("btnOperacion");
 
-        btnDeshabilitar.addEventListener("click", () => {
-            cambiarEstadoPortatil(id, "deshabilitar");
-        });
+        btnDeshabilitar.dataset.portatilId = idPortatil;
+        btnDeshabilitar.dataset.accion = "deshabilitar";
+        btnDeshabilitar.addEventListener("click", alClickCambiarEstadoPortatil);
 
         caja.appendChild(btnDeshabilitar);
     } else if (estado === "deshabilitado") {
@@ -599,9 +672,9 @@ function agregarFilaPortatil(portatil) {
         btnHabilitar.textContent = "Habilitar";
         btnHabilitar.classList.add("btnOperacion");
 
-        btnHabilitar.addEventListener("click", () => {
-            cambiarEstadoPortatil(id, "habilitar");
-        });
+        btnHabilitar.dataset.portatilId = idPortatil;
+        btnHabilitar.dataset.accion = "habilitar";
+        btnHabilitar.addEventListener("click", alClickCambiarEstadoPortatil);
 
         caja.appendChild(btnHabilitar);
     }
@@ -625,13 +698,13 @@ async function actualizarTablaPortatiles() {
             agregarFilaPortatil(portatil);
         }
     } catch (error) {
-        window.alert(
-            "No se pudieron cargar los portátiles: " + error.message
+        await mostrarToast(
+            "No se pudieron cargar los portátiles: " + error.message, "error"
         );
     }
 }
 
-function abrirAltaPortatil() {
+async function abrirAltaPortatil() {
     portatilEnEdicion = false;
     portatilIdEnEdicion = null;
 
@@ -639,7 +712,7 @@ function abrirAltaPortatil() {
     dialogAgregarPortatil.showModal();
 }
 
-function abrirModificarPortatil(portatil) {
+async function abrirModificarPortatil(portatil) {
     portatilEnEdicion = true;
     portatilIdEnEdicion = portatil.id ?? portatil.ID;
 
@@ -649,7 +722,7 @@ function abrirModificarPortatil(portatil) {
     dialogAgregarPortatil.showModal();
 }
 
-function cerrarPortatil() {
+async function cerrarPortatil() {
     formularioPortatil.reset();
     dialogAgregarPortatil.close();
 }
@@ -669,10 +742,11 @@ async function gestionarPortatil(eventoFormulario) {
             );
         }
 
-        cerrarPortatil();
+        await cerrarPortatil();
         await actualizarTablaPortatiles();
+        await mostrarToast("Portátil guardado correctamente.", "exito");
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 
@@ -687,10 +761,7 @@ if (btnCerrarAgregarAula) {
 }
 
 if (dialogAgregarAula) {
-    dialogAgregarAula.addEventListener("cancel", (evento) => {
-        evento.preventDefault();
-        cerrarAula();
-    });
+    dialogAgregarAula.addEventListener("cancel", alCancelarAula);
 }
 
 if (formularioAula) {
@@ -698,15 +769,11 @@ if (formularioAula) {
 }
 
 if (btnCerrarEquiposAula) {
-    btnCerrarEquiposAula.addEventListener("click", () => {
-        dialogEquiposAula.close();
-    });
+    btnCerrarEquiposAula.addEventListener("click", alClickCerrarDetalleEquipos);
 }
 
 if (dialogEquiposAula) {
-    dialogEquiposAula.addEventListener("close", () => {
-        aulaIdActual = null;
-    });
+    dialogEquiposAula.addEventListener("close", alCerrarDetalleEquipos);
 }
 
 if (btnAgregarEquipo) {
@@ -718,10 +785,7 @@ if (btnCerrarAgregarEquipo) {
 }
 
 if (dialogAgregarEquipo) {
-    dialogAgregarEquipo.addEventListener("cancel", (evento) => {
-        evento.preventDefault();
-        cerrarEquipo();
-    });
+    dialogAgregarEquipo.addEventListener("cancel", alCancelarEquipo);
 }
 
 if (formularioEquipo) {
@@ -737,10 +801,7 @@ if (btnCerrarAgregarPortatil) {
 }
 
 if (dialogAgregarPortatil) {
-    dialogAgregarPortatil.addEventListener("cancel", (evento) => {
-        evento.preventDefault();
-        cerrarPortatil();
-    });
+    dialogAgregarPortatil.addEventListener("cancel", alCancelarPortatil);
 }
 
 if (formularioPortatil) {

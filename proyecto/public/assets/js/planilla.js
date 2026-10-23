@@ -1,4 +1,5 @@
 
+
 const API_PLANILLA = "../index.php?recurso=planilla";
 
 const formularioRegistro = document.getElementById(
@@ -9,8 +10,19 @@ const cuerpoTablaRegistros = document.getElementById(
     "cuerpoTablaRegistros"
 );
 
-async function leerRespuestaAPI(respuesta) {
+async function completarNombreSolicitante() {
+    const campo = document.getElementById("nombreSolicitante");
 
+    if (!campo) return;
+
+    const nombre = sessionStorage.getItem("nombre") ?? "";
+    const apellido = sessionStorage.getItem("apellido") ?? "";
+
+    campo.value = `${nombre} ${apellido}`.trim();
+    campo.readOnly = true;
+}
+
+async function leerRespuestaAPI(respuesta) {
     const texto = await respuesta.text();
 
     if (!texto.trim()) {
@@ -42,7 +54,6 @@ async function leerRespuestaAPI(respuesta) {
 }
 
 async function obtenerPlanillas(periodo = "todo") {
-
     const respuesta = await fetch(
         `${API_PLANILLA}&periodo=${encodeURIComponent(periodo)}`
     );
@@ -51,9 +62,7 @@ async function obtenerPlanillas(periodo = "todo") {
 }
 
 async function registrarPlanilla(datosPlanilla) {
-
     const respuesta = await fetch(API_PLANILLA, {
-
         method: "POST",
 
         headers: {
@@ -68,8 +77,7 @@ async function registrarPlanilla(datosPlanilla) {
     return await leerRespuestaAPI(respuesta);
 }
 
-function agregarFilaRegistro(planilla) {
-
+async function agregarFilaRegistro(planilla) {
     if (!cuerpoTablaRegistros) return;
 
     const fila = document.createElement("tr");
@@ -82,7 +90,9 @@ function agregarFilaRegistro(planilla) {
 
     for (const valor of valores) {
         const celda = document.createElement("td");
+
         celda.textContent = valor ?? "-";
+
         fila.appendChild(celda);
     }
 
@@ -90,7 +100,6 @@ function agregarFilaRegistro(planilla) {
 }
 
 async function actualizarTablaRegistros() {
-
     if (!cuerpoTablaRegistros) return;
 
     try {
@@ -101,19 +110,19 @@ async function actualizarTablaRegistros() {
         const planillas = resultado.planillas ?? [];
 
         for (const planilla of planillas) {
-            agregarFilaRegistro(planilla);
+            await agregarFilaRegistro(planilla);
         }
 
     } catch (error) {
-        window.alert(
+        await mostrarToast(
             "No se pudieron cargar los registros: " +
-            error.message
+            error.message,
+            "error"
         );
     }
 }
 
 async function gestionarRegistroPlanilla(eventoFormulario) {
-
     eventoFormulario.preventDefault();
 
     if (!formularioRegistro.reportValidity()) {
@@ -121,7 +130,6 @@ async function gestionarRegistroPlanilla(eventoFormulario) {
     }
 
     try {
-
         const datosFormulario = new FormData(
             formularioRegistro
         );
@@ -132,6 +140,7 @@ async function gestionarRegistroPlanilla(eventoFormulario) {
             fecha: datosFormulario.get("fecha"),
             horaEntrada: datosFormulario.get("horaEntrada"),
             horaSalida: datosFormulario.get("horaSalida"),
+
             nombreSolicitante:
                 datosFormulario.get("nombreSolicitante"),
 
@@ -144,29 +153,56 @@ async function gestionarRegistroPlanilla(eventoFormulario) {
             turno:
                 datosFormulario.get("turno") ?? "",
 
-            tickets: obtenerTicketsDelFormulario()
+            tickets: await obtenerTicketsDelFormulario()
         };
 
         const resultado = await registrarPlanilla(
             datosPlanilla
         );
 
-        window.alert(
+        await mostrarToast(
             "Planilla registrada correctamente.\n" +
             "ID: " + resultado.planillaId + "\n" +
-            "Tickets creados: " + resultado.cantidadTickets
+            "Tickets creados: " + resultado.cantidadTickets,
+            "exito"
         );
 
         formularioRegistro.reset();
-        limpiarTickets();
 
-        actualizarNumeros();
-
+        await limpiarTickets();
+        await actualizarNumeros();
         await actualizarTablaRegistros();
 
-    } catch (error) {
+        await completarNombreSolicitante();
 
-        window.alert(error.message);
+    } catch (error) {
+        await mostrarToast(
+            error.message,
+            "error"
+        );
+    }
+}
+
+async function configurarCamposDocente() {
+    const camposDocente = document.getElementById("camposDocente");
+
+    if (!camposDocente) return;
+
+    const rolActivoRegistro = sessionStorage.getItem("rolActivo");
+    const mostrarCampos = rolActivoRegistro === "solicitante";
+
+    camposDocente.hidden = !mostrarCampos;
+
+    for (
+        const campo of camposDocente.querySelectorAll(
+            "input, select, textarea"
+        )
+    ) {
+        campo.disabled = !mostrarCampos;
+
+        if (!mostrarCampos) {
+            campo.required = false;
+        }
     }
 }
 
@@ -181,19 +217,6 @@ if (cuerpoTablaRegistros) {
     actualizarTablaRegistros();
 }
 
-const camposDocente = document.getElementById("camposDocente");
-const rolActivoRegistro = sessionStorage.getItem("rolActivo");
+completarNombreSolicitante();
+configurarCamposDocente();
 
-if (camposDocente) {
-    const mostrarCampos = rolActivoRegistro === "solicitante";
-
-    camposDocente.hidden = !mostrarCampos;
-
-    for (const campo of camposDocente.querySelectorAll("input, select, textarea")) {
-        campo.disabled = !mostrarCampos;
-
-        if (!mostrarCampos) {
-            campo.required = false;
-        }
-    }
-}

@@ -92,7 +92,7 @@
 
     async function consultarRegistros(periodo) {
         const parametros = new URLSearchParams({
-            ruta: "planilla",
+            recurso: "planilla",
             vista: "propios",
             periodo: periodo
         });

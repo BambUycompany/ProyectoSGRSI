@@ -413,6 +413,31 @@
             }
         );
     }
+    
+    async function configurarAlertasGlobales() {
+        if (!document.querySelector('link[data-css-alertas]')) {
+            const estilo = document.createElement("link");
+
+            estilo.rel = "stylesheet";
+            estilo.href = "../assets/css/notificaciones.css";
+            estilo.dataset.cssAlertas = "true";
+
+            document.head.appendChild(estilo);
+        }
+
+        if (
+            !window.mostrarToast &&
+            !document.querySelector('script[data-js-alertas]')
+        ) {
+            const script = document.createElement("script");
+
+            script.src = "../assets/js/alertas.js";
+            script.dataset.jsAlertas = "true";
+
+            document.body.appendChild(script);
+        }
+    }
+
 
     configurarEnlaceInicio();
     configurarNavegacion();
@@ -422,4 +447,5 @@
     configurarMenuUsuario();
     configurarCambioRol();
     configurarCierreSesion();
+    configurarAlertasGlobales();
 })();

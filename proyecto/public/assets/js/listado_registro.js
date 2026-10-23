@@ -30,7 +30,7 @@
 
     async function consultarPlanillas(periodo) {
         const parametros = new URLSearchParams({
-            ruta: "planilla",
+            recurso: "planilla",
             periodo: periodo
         });
 

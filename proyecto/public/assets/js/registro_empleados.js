@@ -1,4 +1,3 @@
-
 const API_USUARIOS = "../index.php?recurso=usuarios";
 
 const cuerpoTablaEmpleados = document.getElementById("cuerpoTablaEmpleados");
@@ -25,21 +24,20 @@ let modoFormulario = "alta";
 let empleadosActuales = [];
 
 
-function mostrarMensajeEmpleados(mensaje, tipo = "error") {
-    if (!mensajeEmpleados) {
-        console.error(mensaje);
-        return;
+async function mostrarMensajeEmpleados(mensaje, tipo = "error") {
+    // Conservamos el mensaje en pantalla como respaldo y para accesibilidad.
+    if (mensajeEmpleados) {
+        mensajeEmpleados.textContent = mensaje;
+        mensajeEmpleados.className = "mensajeEmpleados " + tipo;
+        mensajeEmpleados.hidden = false;
     }
 
-    mensajeEmpleados.textContent = mensaje;
-    mensajeEmpleados.className = "mensajeEmpleados " + tipo;
-    mensajeEmpleados.hidden = false;
-     mensajeEmpleados.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
+    if (typeof mostrarToast === "function") {
+        await mostrarToast(mensaje, tipo);
+    } else if (!mensajeEmpleados) {
+        console.error(mensaje);
+    }
 }
-
 
 function limpiarMensajeEmpleados() {
     if (!mensajeEmpleados) {
@@ -196,30 +194,52 @@ function agregarFilaEmpleado(empleado) {
 
     cajaOperaciones.className = "cajaOperaciones";
 
-    cajaOperaciones.appendChild(
-        crearBoton("Modificar", "btnModificar", () => {
-            abrirModificarEmpleado(empleado);
-        })
+    const botonModificar = crearBoton(
+        "Modificar", "btnModificar", gestionarAccionEmpleado
     );
+    botonModificar.dataset.cedula = empleado.cedula;
+    botonModificar.dataset.accion = "modificar";
+    cajaOperaciones.appendChild(botonModificar);
 
-    if (activo) {
-        cajaOperaciones.appendChild(
-            crearBoton("Desactivar", "btnDesactivar", () => {
-                cambiarEstadoEmpleado(empleado, false);
-            })
-        );
-    } else {
-        cajaOperaciones.appendChild(
-            crearBoton("Reactivar", "btnReactivar", () => {
-                cambiarEstadoEmpleado(empleado, true);
-            })
-        );
-    }
+    const botonEstado = crearBoton(
+        activo ? "Desactivar" : "Reactivar",
+        activo ? "btnDesactivar" : "btnReactivar",
+        gestionarAccionEmpleado
+    );
+    botonEstado.dataset.cedula = empleado.cedula;
+    botonEstado.dataset.accion = activo ? "desactivar" : "reactivar";
+    cajaOperaciones.appendChild(botonEstado);
 
     celdaAcciones.appendChild(cajaOperaciones);
     fila.appendChild(celdaAcciones);
 
     cuerpoTablaEmpleados.appendChild(fila);
+}
+
+
+async function gestionarAccionEmpleado(evento) {
+    const boton = evento.currentTarget;
+    let empleado = null;
+    for (const empleadoActual of empleadosActuales) {
+        if (String(empleadoActual.cedula) === boton.dataset.cedula) {
+            empleado = empleadoActual;
+            break;
+        }
+    }
+
+    if (!empleado) {
+        await mostrarMensajeEmpleados("No se encontró el empleado seleccionado.", "error");
+        return;
+    }
+
+    if (boton.dataset.accion === "modificar") {
+        abrirModificarEmpleado(empleado);
+    } else {
+        await cambiarEstadoEmpleado(
+            empleado,
+            boton.dataset.accion === "reactivar"
+        );
+    }
 }
 
 

@@ -93,7 +93,7 @@ async function registrarPrestamo(datos) {
 async function finalizarPrestamo(prestamoId) {
 
     if (rolActivoPrestamos !== "soporte") {
-        window.alert("Solo soporte puede confirmar devoluciones.");
+        await mostrarToast("Solo soporte puede confirmar devoluciones.", "advertencia");
         return;
     }
 
@@ -115,13 +115,19 @@ async function finalizarPrestamo(prestamoId) {
 
         await leerRespuestaAPI(respuesta);
 
-        window.alert("Devolución registrada correctamente.");
+        await mostrarToast("Devolución registrada correctamente.", "exito");
 
         await actualizarTablaPrestamos();
 
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
+}
+
+
+async function gestionarDevolucionDesdeBoton(evento) {
+    const prestamoId = evento.currentTarget.dataset.prestamoId;
+    await finalizarPrestamo(prestamoId);
 }
 
 
@@ -164,9 +170,8 @@ function agregarFilaPrestamo(prestamo) {
         btnFinalizar.textContent = "Marcar como devuelto";
         btnFinalizar.classList.add("btnOperacion");
 
-        btnFinalizar.addEventListener("click", () => {
-            finalizarPrestamo(prestamo.ID);
-        });
+        btnFinalizar.dataset.prestamoId = prestamo.ID;
+        btnFinalizar.addEventListener("click", gestionarDevolucionDesdeBoton);
 
         celdaAcciones.appendChild(btnFinalizar);
 
@@ -199,8 +204,9 @@ async function actualizarTablaPrestamos() {
         }
 
     } catch (error) {
-        window.alert(
-            "No se pudieron cargar los préstamos: " + error.message
+        await mostrarToast(
+            "No se pudieron cargar los préstamos: " + error.message,
+            "error"
         );
     }
 }
@@ -241,8 +247,9 @@ async function cargarSelectPortatiles() {
         }
 
     } catch (error) {
-        window.alert(
-            "No se pudieron cargar los portátiles: " + error.message
+        await mostrarToast(
+            "No se pudieron cargar los portátiles: " + error.message,
+            "error"
         );
     }
 }
@@ -253,7 +260,7 @@ async function gestionarRegistroPrestamo(evento) {
     evento.preventDefault();
 
     if (rolActivoPrestamos !== "solicitante") {
-        window.alert("Solo el docente puede registrar préstamos.");
+        await mostrarToast("Solo el docente puede registrar préstamos.", "advertencia");
         return;
     }
 
@@ -274,14 +281,14 @@ async function gestionarRegistroPrestamo(evento) {
 
         await registrarPrestamo(datos);
 
-        window.alert("Préstamo registrado correctamente.");
+        await mostrarToast("Préstamo registrado correctamente.", "exito");
 
         formularioPrestamo.reset();
 
         await cargarSelectPortatiles();
 
     } catch (error) {
-        window.alert(error.message);
+        await mostrarToast(error.message, "error");
     }
 }
 

@@ -109,6 +109,163 @@ main {
     cursor: not-allowed;
 }
 
+
+
+
+body {
+    background-color: #ffffff;
+}
+
+.seccionListadoPrestamos {
+    width: min(1120px, calc(100% - 40px));
+    margin: 40px auto 60px;
+    color: #243047;
+}
+
+
+#tituloListadoPrestamos {
+    color: #19337c;
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    padding-bottom: 12px;
+  
+}
+
+#descripcionListadoPrestamos {
+    color: #5e6b80;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 28px;
+}
+
+/* Contenedor de tabla */
+.contenedorTablaPrestamos {
+    width: 100%;
+    overflow-x: auto;
+    background-color: #ffffff;
+    border: 1px solid #e1e6f0;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(25, 51, 124, 0.08);
+}
+
+/* Tabla */
+.seccionListadoPrestamos table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Cabeceras */
+.seccionListadoPrestamos thead {
+    background-color: #19337c;
+    color: #ffffff;
+}
+
+.seccionListadoPrestamos th {
+    padding: 17px 18px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.seccionListadoPrestamos td {
+    padding: 16px 18px;
+    font-size: 14px;
+    color: #344054;
+    border-bottom: 1px solid #e9edf4;
+    vertical-align: middle;
+}
+
+.seccionListadoPrestamos tbody tr:nth-child(even) {
+    background-color: #f8faff;
+}
+
+.seccionListadoPrestamos tbody tr:hover {
+    background-color: #eef3fc;
+    transition: background-color 0.2s ease;
+}
+
+.seccionListadoPrestamos tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.seccionListadoPrestamos th:nth-child(5),
+.seccionListadoPrestamos td:nth-child(5) {
+    text-align: center;
+}
+
+.seccionListadoPrestamos th:last-child,
+.seccionListadoPrestamos td:last-child {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.seccionListadoPrestamos td button,
+.seccionListadoPrestamos td a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.seccionListadoPrestamos td a {
+    background-color: #19337c;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.seccionListadoPrestamos td a:hover {
+    background-color: #284a9b;
+}
+
+#mensajeSinPrestamos:not([hidden]) {
+    display: block;
+    background-color: #eef3fc;
+    color: #19337c;
+    border: 1px dashed #bac9e8;
+    border-radius: 9px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    text-align: center;
+    font-size: 15px;
+}
+
+#mensajeSinPrestamos[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .seccionListadoPrestamos {
+        width: calc(100% - 24px);
+        margin: 24px auto 40px;
+    }
+
+    #tituloListadoPrestamos {
+        font-size: 24px;
+    }
+
+    #descripcionListadoPrestamos {
+        font-size: 14px;
+    }
+
+    .seccionListadoPrestamos th,
+    .seccionListadoPrestamos td {
+        padding: 13px 12px;
+        font-size: 13px;
+    }
+}
+
+
 @media (max-width: 48rem) {
     main {
         padding: 1rem;

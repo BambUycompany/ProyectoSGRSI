@@ -15,6 +15,8 @@
 
     <link rel="stylesheet"
           href="../assets/css/registroPlanillaCSS.css">
+    <link rel="stylesheet"
+          href="../assets/css/alertasCSS.css">
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -156,10 +158,13 @@
 
                     <label for="nombreSolicitante">Solicitante:</label>
                     <input type="text"
-                           id="nombreSolicitante"
-                           name="nombreSolicitante"
-                           maxlength="150"
-                           required>
+                        id="nombreSolicitante"
+                        name="nombreSolicitante"
+                        maxlength="150"
+                        placeholder="Se cargará desde tu sesión"
+                        autocomplete="off"
+                        readonly
+                        required>
 
                         <label for="Asignatura">Asignatura:</label>
                         <input type="text"
@@ -244,13 +249,14 @@
         </button>
 
     </section>
-
+    <script src="../assets/js/actualizar_numero.js"></script>
     <script src="../assets/js/verificarSesion.js"></script>
     <script src="../assets/js/barraNavegacion.js"></script>
+    <script src="../assets/js/alertas.js"></script>
     <script src="../assets/js/registro_planilla.js"></script>
-    <script src="../assets/js/actualizar_numero.js"></script>
     <script src="../assets/js/planilla.js"></script>
     <script src="../../public/assets/js/barraNavegacion.js"></script>
 
 </body>
 </html>
+¿

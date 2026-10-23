@@ -2,35 +2,36 @@
 const btnCrearTicket = document.getElementById("btnCrearTicket");
 const btnCerrarModalTicket = document.getElementById("btnCerrarModalTicket");
 const creacionTicket = document.getElementById("creacionTicket");
+
 const btnAgregarTicketALaLista = document.getElementById(
     "btnAgregarTicketALaLista"
 );
+
 const resumenTickets = document.getElementById("resumenTickets");
 
 const inputNumeroPc = document.getElementById("numeroPc");
 const inputFallo = document.getElementById("fallo");
 const inputDescripcion = document.getElementById("descripcion");
 
-
 const ticketsAgregados = [];
 let contadorTickets = 0;
 
-function abrirModalTicket() {
-
-    
+async function abrirModalTicket() {
     const tipo = document.getElementById("tipo").value;
     const numero = document.getElementById("numero").value;
 
     if (!tipo || !numero) {
-        window.alert("Primero seleccioná una sala.");
+        await mostrarToast(
+            "Primero seleccioná una sala.",
+            "advertencia"
+        );
         return;
     }
 
     creacionTicket.style.display = "block";
 }
 
-function cerrarModalTicket() {
-
+async function cerrarModalTicket() {
     creacionTicket.style.display = "none";
 
     inputNumeroPc.value = "";
@@ -38,8 +39,7 @@ function cerrarModalTicket() {
     inputDescripcion.value = "";
 }
 
-function agregarTicketALaLista() {
-
+async function agregarTicketALaLista() {
     const numeroPc = inputNumeroPc.value.trim().toUpperCase();
     const fallo = inputFallo.value;
     const descripcion = inputDescripcion.value.trim();
@@ -47,14 +47,18 @@ function agregarTicketALaLista() {
     const pcs = window.pcsDelAulaActual ?? [];
 
     if (!pcs.includes(numeroPc)) {
-        window.alert(
-            "La PC indicada no existe en el aula seleccionada."
+        await mostrarToast(
+            "La PC indicada no existe en el aula seleccionada.",
+            "advertencia"
         );
         return;
     }
 
     if (!inputFallo.checkValidity() || !descripcion) {
-        window.alert("Completá todos los datos de la falla.");
+        await mostrarToast(
+            "Completá todos los datos de la falla.",
+            "advertencia"
+        );
         return;
     }
 
@@ -67,24 +71,41 @@ function agregarTicketALaLista() {
 
     ticketsAgregados.push(ticket);
 
-    renderizarResumen();
-    cerrarModalTicket();
+    await renderizarResumen();
+    await cerrarModalTicket();
+
+    await mostrarToast(
+        "Ticket agregado al registro.",
+        "exito"
+    );
 }
 
-function quitarTicket(idTemporal) {
+async function quitarTicket(idTemporal) {
+    let indice = -1;
 
-    const indice = ticketsAgregados.findIndex(
-        ticket => ticket.idTemporal === idTemporal
-    );
+    for (let i = 0; i < ticketsAgregados.length; i++) {
+        if (ticketsAgregados[i].idTemporal === idTemporal) {
+            indice = i;
+            break;
+        }
+    }
 
     if (indice !== -1) {
         ticketsAgregados.splice(indice, 1);
     }
 
-    renderizarResumen();
+    await renderizarResumen();
 }
 
-function renderizarResumen() {
+async function quitarTicketDesdeBoton(evento) {
+    const boton = evento.currentTarget;
+    const idTemporal = Number(boton.dataset.idTemporal);
+
+    await quitarTicket(idTemporal);
+}
+
+async function renderizarResumen() {
+    if (!resumenTickets) return;
 
     resumenTickets.replaceChildren();
 
@@ -94,10 +115,10 @@ function renderizarResumen() {
 
     const titulo = document.createElement("h3");
     titulo.textContent = "Fallas reportadas en este registro:";
+
     resumenTickets.appendChild(titulo);
 
     for (const ticket of ticketsAgregados) {
-
         const item = document.createElement("div");
         item.classList.add("itemTicketResumen");
 
@@ -110,10 +131,12 @@ function renderizarResumen() {
         const btnQuitar = document.createElement("button");
         btnQuitar.type = "button";
         btnQuitar.textContent = "Quitar";
+        btnQuitar.dataset.idTemporal = ticket.idTemporal;
 
-        btnQuitar.addEventListener("click", () => {
-            quitarTicket(ticket.idTemporal);
-        });
+        btnQuitar.addEventListener(
+            "click",
+            quitarTicketDesdeBoton
+        );
 
         item.appendChild(descripcion);
         item.appendChild(btnQuitar);
@@ -122,22 +145,25 @@ function renderizarResumen() {
     }
 }
 
-
-function limpiarTickets() {
-
+async function limpiarTickets() {
     ticketsAgregados.length = 0;
     contadorTickets = 0;
 
-    renderizarResumen();
+    await renderizarResumen();
 }
 
-function obtenerTicketsDelFormulario() {
+async function obtenerTicketsDelFormulario() {
+    const tickets = [];
 
-    return ticketsAgregados.map(ticket => ({
-        numeroPc: ticket.numeroPc,
-        fallo: ticket.fallo,
-        descripcion: ticket.descripcion
-    }));
+    for (const ticket of ticketsAgregados) {
+        tickets.push({
+            numeroPc: ticket.numeroPc,
+            fallo: ticket.fallo,
+            descripcion: ticket.descripcion
+        });
+    }
+
+    return tickets;
 }
 
 if (btnCrearTicket) {
