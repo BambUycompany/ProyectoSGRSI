@@ -2,7 +2,6 @@ SGRSI / BambUy - USUARIOS DE PRUEBA
 ===================================
 
 MISMA CONTRASENA PARA TODOS: Prueba2026!
-(11 caracteres; cumple el minimo de 8.)
 
 1. SOLICITANTE
    Cedula:       82003141
@@ -20,33 +19,4 @@ MISMA CONTRASENA PARA TODOS: Prueba2026!
    Cedula:       82003144
    Contrasena:   Prueba2026!
 
-COMO DEJARLOS PRECARGADOS EN EL SERVIDOR
----------------------------------------
-1. Hacer una copia de seguridad de la base bambuy.
-2. Entrar al phpMyAdmin del servidor institucional.
-3. Seleccionar la base bambuy.
-4. Ir a Importar, elegir SGRSI_usuarios_prueba.sql y ejecutar.
-5. Confirmar las cuatro cuentas en el resultado de la consulta final.
-6. Probar el inicio de sesion y los permisos de cada cuenta.
 
-PERSISTENCIA
-------------
-Las cuentas quedan almacenadas en MariaDB, incluso despues de reiniciar el
-servidor o actualizar archivos mediante Git. No hay que importar el SQL en
-cada inicio. Si se restaura o reemplaza la base de datos, hay que volver a
-importarlo o incluir las cuentas en el respaldo restaurado.
-
-El SQL se puede ejecutar nuevamente: actualiza los datos y contrasenas de
-estas cuatro cedulas y agrega los roles faltantes sin duplicarlos (con las
-restricciones UNIQUE/PRIMARY KEY habituales de las tablas de roles).
-No quita roles extras que pudieran tener previamente estas cuentas.
-
-PRECAUCIONES
-------------
-- Verificar que esas cuatro cedulas esten reservadas para cuentas de prueba.
-- No publicar este TXT: contiene las credenciales de acceso al sistema.
-- El SQL contiene hashes, pero las contrasenas son conocidas y faciles;
-  el SQL tampoco debe publicarse en un repositorio accesible a terceros.
-- El perfil administrador de prueba tiene privilegios elevados: usar estas
-  cuentas solo en un entorno de demostracion controlado y desactivarlas
-  cuando deje de ser necesario.
