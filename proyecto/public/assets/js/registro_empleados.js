@@ -102,12 +102,22 @@ function manejarError(error) {
 
 
 async function solicitarUsuarios(metodo = "GET", datos = null) {
+    const tokenJWT = sessionStorage.getItem("tokenJWT");
+
+    if (!tokenJWT) {
+        throw new Error("Falta el token de autenticación. Volvé a iniciar sesión.");
+    }
+
     const opciones = {
-        method: metodo
+        method: metodo,
+        headers: {
+            "Authorization": "Bearer " + tokenJWT
+        },
+        credentials: "same-origin"
     };
 
     if (metodo !== "GET") {
-        opciones.headers = cabecerasMutacion();
+        Object.assign(opciones.headers, cabecerasMutacion());
         opciones.body = JSON.stringify(datos);
     }
 

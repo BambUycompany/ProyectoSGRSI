@@ -3,6 +3,7 @@
 
 require_once __DIR__ . "/../nucleo/Conexion.php";
 require_once RUTA_MODELO . "/UsuarioDAO.php";
+require_once __DIR__ . "/../nucleo/TokenJWT.php";
 require_once RUTA_VISTA . "/RespuestaJson.php";
 
 class UsuarioController {
@@ -31,6 +32,8 @@ class UsuarioController {
                 403
             );
         }
+
+
 
         if ($metodo !== "GET") {
 

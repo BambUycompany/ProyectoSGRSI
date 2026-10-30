@@ -61,7 +61,9 @@ async function gestionarLogin(eventoFormulario) {
             !sesion.csrfToken ||
             !sesion.cedula ||
             !Array.isArray(sesion.roles) ||
-            sesion.roles.length === 0
+            sesion.roles.length === 0 ||
+            typeof sesion.tokenJWT !== "string" ||
+            sesion.tokenJWT.length === 0
         ) {
             throw new Error(
                 "La API devolvió datos de sesión incompletos."
@@ -71,6 +73,7 @@ async function gestionarLogin(eventoFormulario) {
         sessionStorage.clear();
 
         sessionStorage.setItem("csrfToken", sesion.csrfToken);
+        sessionStorage.setItem("tokenJWT", sesion.tokenJWT);
         sessionStorage.setItem("cedula", sesion.cedula);
         sessionStorage.setItem("nombre", sesion.nombre);
         sessionStorage.setItem("apellido", sesion.apellido);
@@ -106,9 +109,6 @@ async function gestionarLogin(eventoFormulario) {
     } catch (error) {
 
         mensajeError.textContent = error.message;
-        if (typeof mostrarToast === "function") {
-            await mostrarToast(error.message, "error");
-        }
     }
 }
 
@@ -123,8 +123,5 @@ const errorAcceso = sessionStorage.getItem("errorAcceso");
 
 if (errorAcceso && mensajeError) {
     mensajeError.textContent = errorAcceso;
-    if (typeof mostrarToast === "function") {
-        mostrarToast(errorAcceso, "advertencia");
-    }
     sessionStorage.removeItem("errorAcceso");
 }
